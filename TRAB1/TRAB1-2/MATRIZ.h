@@ -29,6 +29,13 @@
 *
 ***************************************************************************/
 
+
+/***** Declarações exportadas pelo módulo *****/
+
+/* Tipo referência para uma matriz */
+
+typedef struct tgMatriz * tpMatriz;
+
 /***********************************************************************
 *
 *  $TC Tipo de dados: MAT Condicoes de retorno
