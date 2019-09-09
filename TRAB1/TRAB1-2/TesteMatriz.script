@@ -1,0 +1,42 @@
+// Script:    TesteArvore.script
+// Autor:     Pedro Costa
+// Data:      08/09/2019
+// Propósito: Testar o módulo de matrizes com listas.
+
+==Verificar se os comandos estão funcionando
+=criarmatriz 1 0
+=selectmatriz 1
+=criarmatriz 2 0
+=selectmatriz 2
+=criarmatriz 3 0
+
+==Verifica inserção e obtenção de elementos
+=selectmatriz 0
+=inserirelem 'c' 0
+=inserirelem 'b' 3
+=obterelem 'c' 0
+
+==Verifica navegação 1x1
+=selectmatriz 0
+=ircima 1
+=irbaixo 1
+=irdireita 1
+=iresquerda 1
+
+==Verifica navegação 2x2
+=selectmatriz 1
+=irbaixo 0
+=irbaixo 1
+=irdireita 0
+=irdireita 1
+=ircima 0
+=ircima 1
+=iresquerda 0
+=iresquerda 1
+=irdireitainf 0
+=irdireitainf 1
+
+==Verifica destrução
+=selectmatriz 0
+=destruirmatriz
+=obterelem 'c' 5
