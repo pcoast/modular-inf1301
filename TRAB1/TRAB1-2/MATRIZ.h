@@ -79,7 +79,7 @@ typedef enum
 *       MAT_CondRetFaltouMemoria
 *
 ****************************************************/
-MAT_tpCondRet MAT_cria(int LinhasEColunas, MAT_tppMatriz *MatrizCriada);
+MAT_tpCondRet MAT_cria(int LinhasEColunas,void (*destroiElemento) (void *elemento) ,MAT_tppMatriz *MatrizCriada);
 
 /*******************************************************
 *

@@ -22,6 +22,7 @@
 *                                   das condições de retorno, comentários no
 *                                   código
 *		5.00	pc		07/09/2019	Correção de erros e adptação à mudanças no módulo de definição.
+*       6.00    pc      08/09/2019  Correção da destrução
 *
 ***************************************************************************/
 
@@ -115,6 +116,8 @@ typedef struct tgMatriz
     tpNoMatriz *pNoCorr;
     /* Ponteiro para o nó corrente da matriz */
 
+    void (*destruirElemento) (void *elemento);
+    /* Ponteiro para a função de destrução de um elemento */
 } tpMatriz;
 
 /***** Protótipos das funções encapsuladas no módulo *****/
@@ -157,7 +160,7 @@ tpNoMatriz *MAT_criaNo(void)
 *       interconectando.
 *
 ****************************************************/
-MAT_tpCondRet MAT_cria(int LinhasEColunas, MAT_tppMatriz *MatrizCriada)
+MAT_tpCondRet MAT_cria(int LinhasEColunas, void (*destruirElemento)(void *elemento), MAT_tppMatriz *MatrizCriada)
 {
 	int i;
 	int nNos = LinhasEColunas * LinhasEColunas;
@@ -207,6 +210,7 @@ MAT_tpCondRet MAT_cria(int LinhasEColunas, MAT_tppMatriz *MatrizCriada)
 
     (*MatrizCriada)->pNoPrimeiro = VetorDeNosDaMatriz[0]; /* Primeiro nó da matriz é o nó mais encima e mais à esquerda possível */
 	(*MatrizCriada)->pNoCorr = (*MatrizCriada)->pNoPrimeiro; /* Nó corrente é inicialmente o mesmo que o primeiro nó */
+    (*MatrizCriada)->destruirElemento = destruirElemento;
 
 	free(VetorDeNosDaMatriz);
 
@@ -384,6 +388,7 @@ void MAT_destroi(MAT_tppMatriz CabecaDaMatriz)
         CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoPrimeiro->pNoDireita; /* Nó corrente é o nó à direita do primeiro nó da matriz */
         do
         {
+            CabecaDaMatriz->destruirElemento(CabecaDaMatriz->pNoPrimeiro->Elemento); /* Libera o ponteiro do elemento */
             free(CabecaDaMatriz->pNoPrimeiro); /* Libera primeiro nó da matriz */
             if (CabecaDaMatriz->pNoCorr == NULL) /* Liberou o último nó desta linha da matriz */
                 break; /* Segue para próxima linha da matriz */

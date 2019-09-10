@@ -98,7 +98,7 @@ TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 		if (numLidos != 2)
 			return TST_CondRetParm;
 
-		condRetObtida = MAT_cria(intValorDado, &matrizesCriadas[cursorVetor]);
+		condRetObtida = MAT_cria(intValorDado, destruirLista,&matrizesCriadas[cursorVetor]);
 
 		return TST_CompararInt(condRetEsperada, condRetObtida, "Condicao de retorno errada ao criar matriz.");
 	}
@@ -245,6 +245,10 @@ TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 	}
 
 	return TST_CondRetNaoConhec;
+}
+
+void destruirLista (void *lista) {
+	LIS_DestruirLista((LIS_tppLista)lista);
 }
 
 void excluiElemento (MAT_tppMatriz cabecaDaMatriz) {
