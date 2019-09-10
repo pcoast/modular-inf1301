@@ -79,7 +79,7 @@ typedef enum
 *       MAT_CondRetFaltouMemoria
 *
 ****************************************************/
-MAT_tpCondRet MAT_cria(int LinhasEColunas,void (*destroiElemento) (void *elemento) ,MAT_tppMatriz *MatrizCriada);
+MAT_tpCondRet MAT_cria(char LinhasEColunas,void (*destroiElemento) (void *elemento) ,MAT_tppMatriz *MatrizCriada);
 
 /*******************************************************
 *
@@ -257,19 +257,3 @@ MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void *elemento);
 *
 ********************************************************/
 MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento);
-
-/*******************************************************
-*
-*	$FC Função: Exclui elemento do nó corrente.
-*
-*   $EP Parâmetros
-*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a cabeça da matriz.
-*           Este parâmetro é passado por referência.
-*
-*   $FV Valor retornado
-*       MAT_CondRetOK
-*       MAT_CondRetNoVazio
-*
-********************************************************/
-MAT_tpCondRet MAT_excluirElemento(MAT_tppMatriz CabecaDaMatriz);
-

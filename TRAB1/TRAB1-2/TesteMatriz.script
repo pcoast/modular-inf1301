@@ -10,20 +10,27 @@
 =selectmatriz 2
 =criarmatriz 3 0
 
-==Verifica inserção e obtenção de elementos
-=selectmatriz 0
-=inserirelem 'c' 0
-=inserirelem 'b' 3
-=obterelem 'c' 0
-
-==Verifica navegação 1x1
+==Manipulando matriz 1x1
 =selectmatriz 0
 =ircima 1
 =irbaixo 1
 =irdireita 1
 =iresquerda 1
+=irdireitainf 1
+=irdireitasup 1
+=iresquerdainf 1
+=iresquerdasup 1
+=obterelem 'c' 0
+=recuperar
+=inserirelem 'c' 0
+=inserirelem 'd' 3
+=obterelem 'c' 0
 
-==Verifica navegação 2x2
+==Verifica destrução
+=selectmatriz 0
+=destruirmatriz
+
+==Manipulando matriz 2x2
 =selectmatriz 1
 =irbaixo 0
 =irbaixo 1
@@ -35,7 +42,19 @@
 =iresquerda 1
 =irdireitainf 0
 =irdireitainf 1
+=iresquerdasup 0
+=iresquerdasup 1
 
-==Verifica destrução
-=selectmatriz 0
-=destruirmatriz
+==Manipulando matriz 3x3
+=selectmatriz 2
+=irdireitainf 0
+=irdireitainf 0
+=irdireitainf 1
+=iresquerdasup 0
+=iresquerdainf 0
+=iresquerdainf 1
+=irdireitasup 0
+=irdireitasup 0
+=irdireitasup 1
+
+

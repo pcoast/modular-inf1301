@@ -35,15 +35,13 @@ static const char RESET_MATRIZ_CMD[] = "=resetteste";
 static const char CRIAR_MATRIZ_CMD[] = "=criarmatriz";
 static const char SELECIONAR_MATRIZ[] = "=selectmatriz";
 static const char DESTRUIR_MATRIZ_CMD[] = "=destruirmatriz";
-static const char ESVAZIAR_MATRIZ_CMD[] = "=esvaziarmatriz";
 static const char INS_ELEM_CMD[] = "=inserirelem";
 static const char OBTER_VALOR_CMD[] = "=obterelem";
-static const char EXC_ELEM_CMD[] = "=excluirelem";
 static const char IR_CIMA_CMD[] = "=ircima";
 static const char IR_BAIXO_CMD[] = "=irbaixo";
 static const char IR_DIREITA_CMD[] = "=irdireita";
 static const char IR_ESQUERDA_CMD[] = "=iresquerda";
-static const char IR_ESQUERDASUP_CMD[] = "=iresqierdasup";
+static const char IR_ESQUERDASUP_CMD[] = "=iresquerdasup";
 static const char IR_DIREITASUP_CMD[] = "=irdireitasup";
 static const char IR_ESQUERDAINF_CMD[] = "=iresquerdainf";
 static const char IR_DIREITAINF_CMD[] = "=irdireitainf";
@@ -63,14 +61,9 @@ static const char IR_DIREITAINF_CMD[] = "=irdireitainf";
 	=esvaziarmatriz - esvazia a matriz atual
 	=inserirelem <c> - insere o elemento <c> numa lista que é inserida na matriz atual
 	=obterelem <c> - checa se o valor obtido da matriz atual é <c>
-	=excluirelem - exclui o elemento do nó corrente
 	=ir<direção> - move o "cursor" para o nó na direção 
 		(ex.: ircima, irbaixo, irdireita, irdireitasup, iresquerdainf, ...)
 */
-
-void destruirLista(void *lista) {
-	LIS_DestruirLista((LIS_tppLista)lista);
-}
 
 TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 {
@@ -102,7 +95,7 @@ TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 		if (numLidos != 2)
 			return TST_CondRetParm;
 
-		condRetObtida = MAT_cria(intValorDado, destruirLista,&matrizesCriadas[cursorVetor]);
+		condRetObtida = MAT_cria(intValorDado, &LIS_DestruirLista,&matrizesCriadas[cursorVetor]);
 
 		return TST_CompararInt(condRetEsperada, condRetObtida, "Condicao de retorno errada ao criar matriz.");
 	}
@@ -121,9 +114,6 @@ TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 		matrizesCriadas[cursorVetor] = NULL;
 
 		return TST_CondRetOK;
-	}
-	else if (strcmp(ComandoTeste, ESVAZIAR_MATRIZ_CMD) == 0) {
-		/*TODO*/
 	}
 	else if (strcmp(ComandoTeste, INS_ELEM_CMD) == 0) {
 		LIS_tppLista lista = LIS_CriarLista(free);
@@ -158,14 +148,13 @@ TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 			valor = LIS_ObterValor(elemento);
 			ret = TST_CompararChar(valorDado, *valor, "Valor obtido não bate com o esperado");
 
+			//LIS_DestruirLista(elemento);
+
 			if (ret != TST_CondRetOK)
 				return ret;
 		}
 
 		return TST_CompararInt(condRetEsperada, condRetObtida, "Retorno errado ao obter elemento.");
-	}
-	else if (strcmp(ComandoTeste, EXC_ELEM_CMD) == 0) {
-		/*TODO*/
 	}
 	else if (strcmp(ComandoTeste, IR_CIMA_CMD) == 0) {
 		numLidos = LER_LerParametros("i", &condRetEsperada);
@@ -249,16 +238,4 @@ TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 	}
 
 	return TST_CondRetNaoConhec;
-}
-
-void excluiElemento (MAT_tppMatriz cabecaDaMatriz) {
-	LIS_tppLista elemento;
-
-	MAT_tpCondRet condRetObter = MAT_obterElemento(cabecaDaMatriz, &elemento);
-	MAT_tpCondRet condRetInserir = MAT_inserir(cabecaDaMatriz, NULL);
-
-	if (condRetObter == MAT_CondRetOK)
-		LIS_DestruirLista(elemento);
-	
-	/* TOOD */
 }

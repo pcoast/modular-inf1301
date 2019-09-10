@@ -8,14 +8,16 @@
 !!!    0  Linha:     3  // Data:      08/09/2019 
 !!!    0  Linha:     4  // PropÃ³sito: Testar o mÃ³dulo de matrizes com listas. 
     6  ==Verificar se os comandos estÃ£o funcionando
-   13  ==Verifica inserÃ§Ã£o e obtenÃ§Ã£o de elementos
-   19  ==Verifica navegaÃ§Ã£o 1x1
-   26  ==Verifica navegaÃ§Ã£o 2x2
-   39  ==Verifica destruÃ§Ã£o
+   13  ==Manipulando matriz 1x1
+>>>    1  Linha:    23  Retorno errado ao obter elemento. Deveria ser: 0  É: 4
+<<<    0  Linha:    24  Falha esperada foi recuperada. 
+   29  ==Verifica destruÃ§Ã£o
+   33  ==Manipulando matriz 2x2
+   48  ==Manipulando matriz 3x3
 
-!!! Número de linhas lidas:          41
+!!! Número de linhas lidas:          60
 !!! Número de casos de teste:         5
-!!! Número comandos corretos:        27
+!!! Número comandos corretos:        42
 !!! Número de falhas encontradas:     0
 
 !!! Não foram encontrados problemas

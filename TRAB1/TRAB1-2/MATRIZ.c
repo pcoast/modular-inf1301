@@ -160,7 +160,7 @@ tpNoMatriz *MAT_criaNo(void)
 *       interconectando.
 *
 ****************************************************/
-MAT_tpCondRet MAT_cria(int LinhasEColunas, void (*destruirElemento)(void *elemento), MAT_tppMatriz *MatrizCriada)
+MAT_tpCondRet MAT_cria(char LinhasEColunas, void (*destruirElemento)(void *elemento), MAT_tppMatriz *MatrizCriada)
 {
 	int i;
 	int nNos = LinhasEColunas * LinhasEColunas;
@@ -440,4 +440,5 @@ MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento)
     return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
 
 }
+
 
