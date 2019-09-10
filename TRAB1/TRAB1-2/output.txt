@@ -1,0 +1,24 @@
+
+!!! Inicio dos testes
+!!!      Construto sob teste: teste_matriz.exe
+!!!      Script de teste:     TesteMatriz.script
+
+!!!    0  Linha:     1  // Script:    TesteArvore.script 
+!!!    0  Linha:     2  // Autor:     Pedro Costa 
+!!!    0  Linha:     3  // Data:      08/09/2019 
+!!!    0  Linha:     4  // Propósito: Testar o módulo de matrizes com listas. 
+    6  ==Verificar se os comandos estão funcionando
+   13  ==Verifica inserção e obtenção de elementos
+   19  ==Verifica navegação 1x1
+   26  ==Verifica navegação 2x2
+   39  ==Verifica destrução
+
+!!! N�mero de linhas lidas:          41
+!!! N�mero de casos de teste:         5
+!!! N�mero comandos corretos:        27
+!!! N�mero de falhas encontradas:     0
+
+!!! N�o foram encontrados problemas
+
+
+!!! Numero de espacos ainda alocados: 0

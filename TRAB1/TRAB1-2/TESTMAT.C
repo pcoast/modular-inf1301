@@ -68,6 +68,10 @@ static const char IR_DIREITAINF_CMD[] = "=irdireitainf";
 		(ex.: ircima, irbaixo, irdireita, irdireitasup, iresquerdainf, ...)
 */
 
+void destruirLista(void *lista) {
+	LIS_DestruirLista((LIS_tppLista)lista);
+}
+
 TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 {
 	int i;
@@ -245,10 +249,6 @@ TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 	}
 
 	return TST_CondRetNaoConhec;
-}
-
-void destruirLista (void *lista) {
-	LIS_DestruirLista((LIS_tppLista)lista);
 }
 
 void excluiElemento (MAT_tppMatriz cabecaDaMatriz) {

@@ -39,4 +39,3 @@
 ==Verifica destrução
 =selectmatriz 0
 =destruirmatriz
-=obterelem 'c' 5
