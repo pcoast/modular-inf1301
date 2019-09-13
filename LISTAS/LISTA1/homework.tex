@@ -1,0 +1,207 @@
+\documentclass[]{article}
+\usepackage[brazilian]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fancyhdr}
+\usepackage{extramarks}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage[plain]{algorithm}
+\usepackage{algpseudocode}
+
+\usetikzlibrary{automata,positioning}
+
+%
+% Basic Document Settings
+%
+
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in
+
+\linespread{1.1}
+
+\pagestyle{fancy}
+\lhead{AVC, JPP, PC}
+\chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle}
+\rhead{\firstxmark}
+\lfoot{\lastxmark}
+\cfoot{\thepage}
+
+\renewcommand\headrulewidth{0.4pt}
+\renewcommand\footrulewidth{0.4pt}
+
+\setlength\parindent{0pt}
+
+%
+% Create Questão Sections
+%
+
+\newcommand{\enterProblemHeader}[1]{
+    \nobreak\extramarks{}{Questão \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Questão \arabic{#1} (continued)}{Questão \arabic{#1} continued on next page\ldots}\nobreak{}
+}
+
+\newcommand{\exitProblemHeader}[1]{
+    \nobreak\extramarks{Questão \arabic{#1} (continued)}{Questão \arabic{#1} continued on next page\ldots}\nobreak{}
+    \stepcounter{#1}
+    \nobreak\extramarks{Questão \arabic{#1}}{}\nobreak{}
+}
+
+\setcounter{secnumdepth}{0}
+\newcounter{partCounter}
+\newcounter{homeworkProblemCounter}
+\setcounter{homeworkProblemCounter}{1}
+\nobreak\extramarks{Questão \arabic{homeworkProblemCounter}}{}\nobreak{}
+
+%
+% Homework Questão Environment
+%
+% This environment takes an optional argument. When given, it will adjust the
+% problem counter. This is useful for when the problems given for your
+% assignment aren't sequential. See the last 3 problems of this template for an
+% example.
+%
+\newenvironment{homeworkProblem}[1][-1]{
+    \ifnum#1>0
+        \setcounter{homeworkProblemCounter}{#1}
+    \fi
+    \section{Questão \arabic{homeworkProblemCounter}}
+    \setcounter{partCounter}{1}
+    \enterProblemHeader{homeworkProblemCounter}
+}{
+    \exitProblemHeader{homeworkProblemCounter}
+}
+
+%
+% Homework Details
+%   - Title
+%   - Due date
+%   - Class
+%   - Section/Time
+%   - Instructor
+%   - Author
+%
+
+\newcommand{\hmwkTitle}{Lista 1}
+\newcommand{\hmwkDueDate}{February 12, 2014}
+\newcommand{\hmwkClass}{Programação Modular}
+\newcommand{\hmwkClassTime}{}
+\newcommand{\hmwkClassInstructor}{Professor Flavio Bevilacqua}
+
+
+\newcommand{\hmwkAuthorName}{
+\begin{tabular}{c} Antônio Vasconcellos Chaves \\ Engenharia da Computaçāo \\ Pontifícia Universidade Católica \\ do Rio de Janeiro \\ Rio de Janeiro, RJ 22451-900 \\ antoniovasconcelloschaves@gmail.com \end{tabular} \and
+\begin{tabular}{c} João Pedro Paiva \\ Ciência da Computaçāo \\ Pontifícia Universidade Católica \\ do Rio de Janeiro \\ Rio de Janeiro, RJ 22451-900 \\ joaopedrordepaiva@gmail.com \end{tabular} \and
+\\\begin{tabular}{c} Pedro Moreira Costa \\ Engenharia da Computaçāo \\ Pontifícia Universidade Católica \\ do Rio de Janeiro \\ Rio de Janeiro, RJ 22451-900 \\ pedromoreiramcosta@gmail.com \end{tabular}
+}
+
+%
+% Title Page
+%
+
+\title{
+    \vspace{2in}
+    \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+    \normalsize\vspace{0.1in}\small{Entrega\ no dia\ \hmwkDueDate\ às 17h}\\
+    \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+    \vspace{1.5in}
+}
+
+\author{\hmwkAuthorName}
+\date{}
+
+\renewcommand{\part}[1]{\textbf{\large Parte \Alph{partCounter}}\stepcounter{partCounter}\\}
+
+%
+% Various Helper Commands
+%
+
+% Useful for algorithms
+\newcommand{\alg}[1]{\textsc{\bfseries \footnotesize #1}}
+
+% For derivatives
+\newcommand{\deriv}[1]{\frac{\mathrm{d}}{\mathrm{d}x} (#1)}
+
+% For partial derivatives
+\newcommand{\pderiv}[2]{\frac{\partial}{\partial #1} (#2)}
+
+% Integral dx
+\newcommand{\dx}{\mathrm{d}x}
+
+% Alias for the Solution section header
+\newcommand{\solution}{\textbf{\large Solução}}
+
+% Probability commands: Expectation, Variance, Covariance, Bias
+\newcommand{\E}{\mathrm{E}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Bias}{\mathrm{Bias}}
+
+\begin{document}
+
+\maketitle
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+    Explique com um exemplo o conceito de callback.
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+    Apresente um requisito funcional bem formulado, derivado de um requisito não funcional, diferente do exemplo de login visto em aula.
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+    Um bom acoplamento resulta em um bom encapsulamento. Certo, errado, tipo assim, justifique.
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+    Nem toda coesão funcional é lógica. Certo, errado, tipo assim (depende), justifique.
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\begin{homeworkProblem}
+
+    É possível existir mais de um módulo de definição para um módulo de implementação? Porque alguém faria isso?
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+\end{homeworkProblem}
+
+\pagebreak
+
+\end{document}

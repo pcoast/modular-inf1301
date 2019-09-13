@@ -1,0 +1,12 @@
+TRABALHO 1 de MODULAR:
+
+TRAB1-1: Teste do Módulo Lista
+Instruções para execução: 
+1) Clique duas vezes no arquivo EXECUTAR.bat, contido na pasta TRAB1-1
+
+
+TRAB1-2: Teste do Módulo Matriz de Listas
+Instruções para execução: 
+1) Clique duas vezes no arquivo EXECUTAR.bat, contido na pasta TRAB1-2
+
+Os arquivos de nome output.txt, presentes em cada uma das pastas, contêm a saída dos testes realizados.

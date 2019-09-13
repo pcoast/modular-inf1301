@@ -1,58 +1,65 @@
-\chapter{Overall Description}
+\chapter{Descrição Geral}
 
-\section{Product Perspective}
-$<$Describe the context and origin of the product being specified in this SRS.
-For example, state whether this product is a follow-on member of a product
-family, a replacement for certain existing systems, or a new, self-contained
-product. If the SRS defines a component of a larger system, relate the
-requirements of the larger system to the functionality of this software and
-identify interfaces between the two. A simple diagram that shows the major
-components of the overall system, subsystem interconnections, and external
-interfaces can be helpful.$>$
+\section{Perspectiva do Produto}
+% $<$Describe the context and origin of the product being specified in this SRS.
+% For example, state whether this product is a follow-on member of a product
+% family, a replacement for certain existing systems, or a new, self-contained
+% product. If the SRS defines a component of a larger system, relate the
+% requirements of the larger system to the functionality of this software and
+% identify interfaces between the two. A simple diagram that shows the major
+% components of the overall system, subsystem interconnections, and external
+% interfaces can be helpful.$>$
+A aplicação Labirinto é completamente autocontida, não é um componente de outro sistema.
 
-\section{Product Functions}
-$<$Summarize the major functions the product must perform or must let the user
-perform. Details will be provided in Section 3, so only a high level summary
-(such as a bullet list) is needed here. Organize the functions to make them
-understandable to any reader of the SRS. A picture of the major groups of
-related requirements and how they relate, such as a top level data flow diagram
-or object class diagram, is often effective.$>$
+\section{Funções do Projeto}
+% $<$Summarize the major functions the product must perform or must let the user
+% perform. Details will be provided in Section 3, so only a high level summary
+% (such as a bullet list) is needed here. Organize the functions to make them
+% understandable to any reader of the SRS. A picture of the major groups of
+% related requirements and how they relate, such as a top level data flow diagram
+% or object class diagram, is often effective.$>$
+Será possível construir manualmente um labirinto através de funções específicas (com apenas quatro direções a serem tomadas a cada decisão: norte, sul, leste, oeste) e uma função adicional deverá imprimir o caminho da entrada até a saída.
 
-\section{User Classes and Characteristics}
-$<$Identify the various user classes that you anticipate will use this product.
-User classes may be differentiated based on frequency of use, subset of product
-functions used, technical expertise, security or privilege levels, educational
-level, or experience. Describe the pertinent characteristics of each user class.
-Certain requirements may pertain only to certain user classes. Distinguish the
-most important user classes for this product from those who are less important
-to satisfy.$>$
+% \section{User Classes and Characteristics}
+% $<$Identify the various user classes that you anticipate will use this product.
+% User classes may be differentiated based on frequency of use, subset of product
+% functions used, technical expertise, security or privilege levels, educational
+% level, or experience. Describe the pertinent characteristics of each user class.
+% Certain requirements may pertain only to certain user classes. Distinguish the
+% most important user classes for this product from those who are less important
+% to satisfy.$>$
 
-\section{Operating Environment}
-$<$Describe the environment in which the software will operate, including the
-hardware platform, operating system and versions, and any other software
-components or applications with which it must peacefully coexist.$>$
+\section{Ambiente de Operação}
+% $<$Describe the environment in which the software will operate, including the
+% hardware platform, operating system and versions, and any other software
+% components or applications with which it must peacefully coexist.$>$
+A aplicação deve operar em computadores 64-bit com OS Windows 7, 8 e 10.
 
-\section{Design and Implementation Constraints}
-$<$Describe any items or issues that will limit the options available to the
-developers. These might include: corporate or regulatory policies; hardware
-limitations (timing requirements, memory requirements); interfaces to other
-applications; specific technologies, tools, and databases to be used; parallel
-operations; language requirements; communications protocols; security
-considerations; design conventions or programming standards (for example, if the
-customer’s organization will be responsible for maintaining the delivered
-software).$>$
+\section{Restrições de Design e Implementação}
+% $<$Describe any items or issues that will limit the options available to the
+% developers. These might include: corporate or regulatory policies; hardware
+% limitations (timing requirements, memory requirements); interfaces to other
+% applications; specific technologies, tools, and databases to be used; parallel
+% operations; language requirements; communications protocols; security
+% considerations; design conventions or programming standards (for example, if the
+% customer’s organization will be responsible for maintaining the delivered
+% software).$>$
+A aplicação Labirinto deve ser desenvolvida por completo utilizando a linguagem de programação C. Será obrigatório que a arquitetura da aplicação tenha pelo menos dois tipos abstratos de dados (um pode utilizar o outro) além de um módulo centralizador principal. É proibida a utilização de LISTAS
+ENCADEADAS e QUALQUER ESTRUTURA ESTÁTICA (por exemplo: VETORES ESTÁTICOS). O algorítmo de resolução do labirinto é... Todos os programas devem estar em conformidade com os padrões dos apêndices de 1 a 10 do livro-texto da disciplina. Em particular, os módulos e funções devem estar devidamente especificados.
 
 \section{User Documentation}
 $<$List the user documentation components (such as user manuals, on-line help,
 and tutorials) that will be delivered along with the software. Identify any
 known user documentation delivery formats or standards.$>$
-\section{Assumptions and Dependencies}
 
-$<$List any assumed factors (as opposed to known facts) that could affect the
-requirements stated in the SRS. These could include third-party or commercial
-components that you plan to use, issues around the development or operating
-environment, or constraints. The project could be affected if these assumptions
-are incorrect, are not shared, or change. Also identify any dependencies the
-project has on external factors, such as software components that you intend to
-reuse from another project, unless they are already documented elsewhere (for
-example, in the vision and scope document or the project plan).$>$
+\section{Suposições e Dependências}
+% $<$List any assumed factors (as opposed to known facts) that could affect the
+% requirements stated in the SRS. These could include third-party or commercial
+% components that you plan to use, issues around the development or operating
+% environment, or constraints. The project could be affected if these assumptions
+% are incorrect, are not shared, or change. Also identify any dependencies the
+% project has on external factors, such as software components that you intend to
+% reuse from another project, unless they are already documented elsewhere (for
+% example, in the vision and scope document or the project plan).$>$
+A versão final da aplicação Labirinto, a ser completada no Trabalho 3, rodará fora do arcabouço
+com uma interface com o usuário, ou seja, terá um módulo principal.
