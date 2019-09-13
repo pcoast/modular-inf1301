@@ -1,4 +1,4 @@
 Data		Horas Trabalhadas	Tipo Tarefa	Descrição da Tarefa Realizada
 10/09/19	3			estudar		Inicio do esqueleto do Latex de requisitos
 10/09/19	1			estudar		Leitura do livro da disciplina
-12/09/19	1			estudar		Trabalhar no layout e conteúdo do latex de requisitos
+12/09/19	6			estudar		Trabalhar no layout e conteúdo do latex de 								requisitos e na lista 1
