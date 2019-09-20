@@ -89,16 +89,20 @@
 %
 
 \newcommand{\hmwkTitle}{Lista 1}
-\newcommand{\hmwkDueDate}{February 12, 2014}
+\newcommand{\hmwkDueDate}{16 de outubro de 2019}
 \newcommand{\hmwkClass}{Programação Modular}
 \newcommand{\hmwkClassTime}{}
 \newcommand{\hmwkClassInstructor}{Professor Flavio Bevilacqua}
 
-
+% \setlength{\textfloatsep}{1in}
 \newcommand{\hmwkAuthorName}{
-\begin{tabular}{c} Antônio Vasconcellos Chaves \\ Engenharia da Computaçāo \\ Pontifícia Universidade Católica \\ do Rio de Janeiro \\ Rio de Janeiro, RJ 22451-900 \\ antoniovasconcelloschaves@gmail.com \end{tabular} \and
-\begin{tabular}{c} João Pedro Paiva \\ Ciência da Computaçāo \\ Pontifícia Universidade Católica \\ do Rio de Janeiro \\ Rio de Janeiro, RJ 22451-900 \\ joaopedrordepaiva@gmail.com \end{tabular} \and
-\\\begin{tabular}{c} Pedro Moreira Costa \\ Engenharia da Computaçāo \\ Pontifícia Universidade Católica \\ do Rio de Janeiro \\ Rio de Janeiro, RJ 22451-900 \\ pedromoreiramcosta@gmail.com \end{tabular}
+
+\begin{tabular}{c}\textbf{Antônio Vasconcellos Chaves} \\ Engenharia da Computaçāo \\ Pontifícia Universidade Católica \\ do Rio de Janeiro \\ Rio de Janeiro, RJ 22451-900 \\ antoniovasconcelloschaves@gmail.com \end{tabular}\and
+
+\begin{tabular}{c}\textbf{João Pedro Paiva} \\ Ciência da Computaçāo \\ Pontifícia Universidade Católica \\ do Rio de Janeiro \\ Rio de Janeiro, RJ 22451-900 \\ joaopedrordepaiva@gmail.com \end{tabular}\and
+
+\\[\baselineskip]\begin{tabular}{c}\textbf{Pedro Moreira Costa} \\ Engenharia da Computaçāo \\ Pontifícia Universidade Católica \\ do Rio de Janeiro \\ Rio de Janeiro, RJ 22451-900 \\ pedromoreiramcosta@gmail.com \end{tabular}
+
 }
 
 %
@@ -110,7 +114,7 @@
     \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
     \normalsize\vspace{0.1in}\small{Entrega\ no dia\ \hmwkDueDate\ às 17h}\\
     \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
-    \vspace{1.5in}
+    \vspace{1.25in}
 }
 
 \author{\hmwkAuthorName}
@@ -156,14 +160,11 @@
     \vspace{\baselineskip}
     \textbf{Solução}
 
-<<<<<<< HEAD
-	Callback é o termo usado para quando ao ter os dados requisitados, enviados pelo cliente, ainda há requisitos não preenchidos que não são obrigatórios. Por exemplo, em um cadastro, o servidor precisa das informações (nome, sobrenome e CPF) do cliente. O cliente esquece de preencher o CPF. Então o servidor volta/gera para interface com um aviso de que aquele campo é de preenchimento obrigatório.
-=======
-	Callback é o termo usado quando 
->>>>>>> a9f2bc796558efd2f92366720cb3c767e09469ee
+    Callback é o termo usado para quando ao ter os dados requisitados, enviados pelo cliente, ainda há requisitos não preenchidos que não são obrigatórios. Por exemplo, em um cadastro, o servidor precisa das informações (nome, sobrenome e CPF) do cliente. O cliente esquece de preencher o CPF. Então o servidor volta/gera para interface com um aviso de que aquele campo é de preenchimento obrigatório.
 
 \end{homeworkProblem}
 
+\vspace{\baselineskip}
 
 \begin{homeworkProblem}
 
@@ -171,11 +172,12 @@
 
     \vspace{\baselineskip}
     \textbf{Solução}
-	
-	A necessidade que a solução seja descentralizada, por exemplo. Pois torna necessária a implementação de módulos para estabelecer a conexão entre os nós do sistema distribuído.
+
+    A necessidade que a solução seja descentralizada, por exemplo. Pois torna necessária a implementação de módulos para estabelecer a conexão entre os nós do sistema distribuído.
 
 \end{homeworkProblem}
 
+\vspace{\baselineskip}
 
 \begin{homeworkProblem}
 
@@ -184,14 +186,11 @@
     \vspace{\baselineskip}
     \textbf{Solução}
 
-<<<<<<< HEAD
-	Errado. Ambos estão relacionados mas não têm influência um sobre o outro. O acoplamento pode ser feito com diversos parâmetros por função e conectores complexos e, mesmo assim, manter a integridade da estrutura a ser protegida e ter fácil manutenção se tudo que está relacionado à parte protegida encontra-se no mesmo local. 
-=======
-	Errado. Ambos estão relacionados mas não têm influência um sobre o outro. 
->>>>>>> a9f2bc796558efd2f92366720cb3c767e09469ee
+    Errado. Ambos estão relacionados mas não têm influência um sobre o outro. O acoplamento pode ser feito com diversos parâmetros por função e conectores complexos e, mesmo assim, manter a integridade da estrutura a ser protegida e ter fácil manutenção se tudo que está relacionado à parte protegida encontra-se no mesmo local.
 
 \end{homeworkProblem}
 
+\vspace{\baselineskip}
 
 \begin{homeworkProblem}
 
@@ -204,6 +203,7 @@
 
 \end{homeworkProblem}
 
+\vspace{\baselineskip}
 
 \begin{homeworkProblem}
 
@@ -212,23 +212,152 @@
     \vspace{\baselineskip}
     \textbf{Solução}
 
-	Não.
+    Não.
 
-<<<<<<< HEAD
 \end{homeworkProblem}
 
+\vspace{\baselineskip}
 
 \begin{homeworkProblem}
 
-    Explique se existe diferença entre requisito inverso e restrição. 
+    Explique se existe diferença entre requisito inverso e restrição.
 
     \vspace{\baselineskip}
     \textbf{Solução}
 
-	Existe sim diferença entre requisito inverso e restrição. Requisito inverso é aquilo que não será feito. Por exemplo, "Não implementaremos o login porque não foi pedido". Rrestrições são regras que restringem as alternativas de solução de um problema. Por exemplo, "A aplicação deve ser redigida em C++".
+    Existe sim diferença entre requisito inverso e restrição. Requisito inverso é aquilo que não será feito. Por exemplo, "Não implementaremos o login porque não foi pedido". Rrestrições são regras que restringem as alternativas de solução de um problema. Por exemplo, "A aplicação deve ser redigida em C++".
 
-=======
->>>>>>> a9f2bc796558efd2f92366720cb3c767e09469ee
+\end{homeworkProblem}
+
+\vspace{\baselineskip}
+
+\begin{homeworkProblem}
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+
+\end{homeworkProblem}
+
+\vspace{\baselineskip}
+
+\begin{homeworkProblem}
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+
+\end{homeworkProblem}
+
+\vspace{\baselineskip}
+
+\begin{homeworkProblem}
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+
+\end{homeworkProblem}
+
+\vspace{\baselineskip}
+
+\begin{homeworkProblem}
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+
+\end{homeworkProblem}
+
+\vspace{\baselineskip}
+
+\begin{homeworkProblem}
+
+    Um programa deve ser capaz de ler um documento de texto e criar um índice remissivo para cada substantivo encontrado. No índice remissivo é apresentada a lista de páginas e que a palavra é encontrada. Elabore a arquitetura modularizada deste programa (tal como foi vista na disciplina) considerando a criação de um tipo abstrato de dados para a estrutura principal a ser acoplada na aplicação. Neste tipo abstrato de dados deve ser utilizada a estrutura Lista Duplamente Encadeada com Cabeça.
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+\end{homeworkProblem}
+
+\vspace{\baselineskip}
+
+\begin{homeworkProblem}
+
+    Uma estrutura de chamadas de funções pode ser simultaneamente recursiva direta, indireta e gerar dependência circular entre módulos. Comente essa afirmação.
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+
+\end{homeworkProblem}
+
+\vspace{\baselineskip}
+
+\begin{homeworkProblem}
+
+    Dê um exemplo de função morta existente nos seus trabalhos. Justifique sua resposta.
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+
+\end{homeworkProblem}
+
+\vspace{\baselineskip}
+
+\begin{homeworkProblem}
+
+    Dado o seguinte requisito funcional: "Após o término da entrada das notas dos alunos na funcionalidade 'Apresentar Situação Final', a Média Final é calculada e apresentada na tela.". Avalie a necessidade da criação de um requisito inverso. Caso seja necessário, apresente este requisito e explique sua necessidade. Caso não seja necessário, explique a razão de não especificar este requisito.
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+
+    Especifique as asssertivas de entrada e saída de uma função que é armazenada no cabeça de uma lista para ser utilizada na exclusão do conteúdo apontado por um nó.
+    
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+
+    A validação de requisitos é feita pela equipe técnica junto com o cliente. Certo/Errado. Justifique.
+    
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+    Certo. Após elicitar do cliente aquilo que ele deseja, documentar a elicitação e verificar se aquilo que o cliente deseja é factível, o Analista de Requisitos valida os requisitos documentados com o cliente.
+
+
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+
+    Explique o que um gerente de configuração de software faz em um processo de desenvolvimento.
+    
+    \vspace{\baselineskip}
+    \textbf{Solução}
+    
+    O gerente de configuração de software maneja baselines e ambientes de configuração.
+
+
+\end{homeworkProblem}
+
+\begin{homeworkProblem}
+
+    "O relatório deve ter no máximo dez linhas por página". Requisito funcional, não funcional, restrição ou hipótese? Justifique.
+    
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+
 \end{homeworkProblem}
 
 
