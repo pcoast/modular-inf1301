@@ -1,0 +1,158 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% fphw Assignment
+% LaTeX Template
+% Version 1.0 (27/04/2019)
+%
+% This template originates from:
+% https://www.LaTeXTemplates.com
+%
+% Authors:
+% Class by Felipe Portales-Oliva (f.portales.oliva@gmail.com) with template 
+% content and modifications by Vel (vel@LaTeXTemplates.com)
+%
+% Template (this file) License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+	12pt, % Default font size, values between 10pt-12pt are allowed
+	%letterpaper, % Uncomment for US letter paper size
+	%spanish, % Uncomment for Spanish
+]{fphw}
+
+% Template-specific packages
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage{mathpazo} % Use the Palatino font
+\usepackage{setspace}
+
+\usepackage{graphicx} % Required for including images
+
+\usepackage{booktabs} % Required for better horizontal rules in tables
+
+\usepackage{listings} % Required for insertion of code
+
+\usepackage{enumerate} % To modify the enumerate environment
+
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{AULA - Especificação de requisitos} % Assignment title
+
+\author{AVC, JPP, PC} % Student name
+
+\date{} % Due date
+
+\institute{Pontifícia Universidade Católica do Rio de Janeiro \\ Departamento de Informática} % Institute or school name
+
+\class{Programação Modular (INF1301)} % Course or class name
+
+\professor{Flavio Bevilacqua} % Professor or teacher in charge of the assignment
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Output the assignment title, created automatically using the information in the custom commands above
+
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT CONTENT
+%----------------------------------------------------------------------------------------
+\begin{doublespace}
+
+As demandas do cliente são transformadas em documento.
+
+\begin{enumerate}
+
+    \item Requisito
+    
+    \begin{itemize}
+
+        \item O que deve ser feito.
+        \item Não descreve como fazer.
+        \item Itens curtos e diretos.
+        \item Em linguagem natural. O problema é a ambiguidade.
+        \item Faz parte do contrato assinado junto ao cliente. Caso o cliente decida que o que foi feito não é o que ele pediu, temos refazer de graça.
+        
+    \end{itemize}
+
+    \item Etapas
+    
+    \begin{itemize}
+
+        \item Elicitação
+        
+        Conversa inicial onde o cliente relata o que ele quer. Técnicas: reunião (entrevista), brainstorming, questionário. O resultado da elicitação é uma ata. Na elicitação, se o assunto entrar numa tangente desnecessária para o desenvolvimento do sistema, devemos retomar ao elementar rapidamente.
+        
+        OBS: Escopo de efeito - requisito mais abrangente vs requisito mais específico. Na ata estarão escritos requisitos abrangentes, como "quero uma aplicação de labirinto", e os mais específicos, como "quero que use o algorimo X".
+
+        \item Documentação
+        
+        Gerar um documento organizando o conteúdo adquirido na etapa de elicitação. Podemos durante esta etapa, voltar para a etapa de elicitação. É importante retirar todas as ambiguidades e partes pouco claras do documento.
+
+        \item Verificação
+        
+        Participam os técnicos (equipe que desenvolve) para determinar se o que foi pedido e documentado é plausível e possível de desenvolver.
+
+        \item Validação pelo cliente
+        
+        Clinente confirma a documentação escrita.
+
+    \end{itemize}
+
+    \item Tipos de requisito
+    
+    \begin{itemize}
+
+        \item Requisitos funcionais
+        
+        O que deve ser feito de acordo com o objetvio da aplicação (funcionalidades e regras de negócio).
+
+        \item Requisitos não funcionais
+        
+        Requisitos que não têm relação com um a funcionalidade específica. Conjunto de propriedades que a aplicação deve possuir. Por exemplo, disponibilidade 24x7, segurança com login, disponibilidade de tempo de resposta.
+
+        \item Requisito inverso
+        
+        Aquilo que não será feito. Especificado para combater ambiguidades e partes pouco claras.
+
+        \item Hipóteses
+        
+        Regras consideradas válidas antes do desenvolvimento da aplicação. Premisas que definem aquilo que precisa ou não ser feito.
+
+        \item Restrições
+        
+        Regras que restringem as alternativas de resolução de um problema.
+        
+    \end{itemize}
+
+    \item Exemplos de Requisitos
+    
+    \begin{itemize}
+
+        \item Bem formulados:
+
+        - "os dados armazenados de aluno são matrícula e nome."
+
+        - "tempo de resposta das consultas não pode ultrapassar 2 segundos."
+
+        \item Mal formulados:
+        
+        - "a interface deve ser de fácil utilização pelo usuário."
+        
+        - "a consulta tem que ser rápida."
+
+    \end{itemize}
+
+\end{enumerate}
+
+\end{doublespace}
+    %----------------------------------------------------------------------------------------
+
+\end{document}
