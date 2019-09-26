@@ -17,11 +17,18 @@
 ***************************************************************************/
 
 #include "LABIRINTO.H"
+#include "MATRIZ.H"
 #include <stdlib.h>
 
 /***** Protótipos das funções encapsuladas no módulo *****/
 
 /*****  Código das funções exportadas pelo módulo  *****/
+
+LAB_tpCondRet LAB_cria(FILE *fp, MAT_tppMatriz* mariz)
+{
+    return LAB_CondRetOK;
+}
+
 
 int main(void)
 {

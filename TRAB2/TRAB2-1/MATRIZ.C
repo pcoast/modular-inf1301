@@ -44,23 +44,11 @@
 typedef struct tgNoMatriz
 {
 
-    struct tgNoMatriz *pNoEsquerdaSuperior;
-    /* Ponteiro para nó da esquerda superior
-               *
-               *$EED Assertivas estruturais
-               *    */
-
     struct tgNoMatriz *pNoCima;
     /* Ponteiro para nó de cima
         *
         *$EED Assertivas estruturais
         *    */
-
-    struct tgNoMatriz *pNoDireitaSuperior;
-    /* Ponteiro para nó da direita superior
-               *
-               *$EED Assertivas estruturais
-               *    */
 
     struct tgNoMatriz *pNoEsquerda;
     /* Ponteiro para nó da esquerda
@@ -77,20 +65,8 @@ typedef struct tgNoMatriz
                *$EED Assertivas estruturais
                *    */
 
-    struct tgNoMatriz *pNoEsquerdaInferior;
-    /* Ponteiro para nó da esquerda inferior
-               *
-               *$EED Assertivas estruturais
-               *    */
-
     struct tgNoMatriz *pNoBaixo;
     /* Ponteiro para nó de baixo
-               *
-               *$EED Assertivas estruturais
-               *    */
-
-    struct tgNoMatriz *pNoDireitaInferior;
-    /* Ponteiro para nó da direita inferior
                *
                *$EED Assertivas estruturais
                *    */
@@ -129,6 +105,10 @@ typedef struct tgMatriz
 /***** Protótipos das funções encapsuladas no módulo *****/
 
 static tpNoMatriz *MAT_criaNo(void);
+
+static void MAT_criaColuna(tpNoMatriz *PrimeiroNo);
+
+static void MAT_criaLinha(tpNoMatriz *PrimeiroNo);
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -173,84 +153,121 @@ tpNoMatriz *MAT_criaNo(void)
 
 /***************************************************
 *
-*	$FC Função:
-*       MAT Criar a estrutura da matriz,
-*       criando os nós com a MAT_criaNo() e os
-*       interconectando.
+*   $FC Função:
+*       MAT Adiciona uma coluna à matriz.
 *
 *
-*   $AE Assertivas de entrada esperadas:
-*       Dimensões da matriz desejada são > 0.
+*	$AE Assertivas de entrada esperadas:
+*       Cabeça da Matriz != NULL.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
 *
 *	$AS Assertivas de saída esperadas:
-*       Matriz foi criada.
+*       Coluna foi adicionada à matriz.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
+*
+****************************************************/
+void MAT_adicionaColuna(MAT_tppMatriz *Matriz)
+{
+    tpNoMatriz *Caminha = (*Matriz)->pNoPrimeiro;
+
+    while (Caminha->pNoDireita != NULL)
+        Caminha = Caminha->pNoDireita;
+
+    do
+    {
+        Caminha->pNoDireita = MAT_criaNo();
+        if (Caminha->pNoCima)
+        {
+            Caminha->pNoDireita->pNoCima = Caminha->pNoCima->pNoDireita;
+            Caminha->pNoCima->pNoDireita->pNoBaixo = Caminha->pNoDireita;
+        }
+        Caminha = Caminha->pNoBaixo;
+    } while (Caminha);
+}
+
+/***************************************************
+*
+*   $FC Função:
+*       MAT Adiciona uma linha à matriz.
+*
+*
+*	$AE Assertivas de entrada esperadas:
+*       Cabeça da Matriz != NULL.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
+*
+*
+*	$AS Assertivas de saída esperadas:
+*       Linha foi adicionada à matriz.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
+*
+****************************************************/
+void MAT_adicionaLinha(MAT_tppMatriz *Matriz)
+{
+    tpNoMatriz *Caminha = (*Matriz)->pNoPrimeiro;
+
+    while (Caminha->pNoBaixo != NULL)
+        Caminha = Caminha->pNoBaixo;
+
+    do
+    {
+        Caminha->pNoBaixo = MAT_criaNo();
+        if (Caminha->pNoEsquerda)
+        {
+            Caminha->pNoBaixo->pNoEsquerda = Caminha->pNoEsquerda->pNoBaixo;
+            Caminha->pNoEsquerda->pNoBaixo->pNoDireita = Caminha->pNoBaixo;
+        }
+        Caminha = Caminha->pNoDireita;
+    } while (Caminha);
+}
+
+/***************************************************
+*
+*	$FC Função:
+*       MAT Criar a estrutura da matriz. Cria os
+*       nós com a MAT_criaNo(), cria as colunas e
+*       as interconecta com a MAT_adicionaColuna() 
+*       e cria as linhas e as interconecta com a
+*       MAT_adicionaLinha().
+*
+*
+*   $AE Assertivas de entrada esperadas:
+*       Dimensões da matriz desejada estão entre
+*       2x1 ou 1x2 e 10x10.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
+*
+*
+*	$AS Assertivas de saída esperadas:
+*       Matriz foi criada com as dimensões desejadas.
 *       Primeiro nó e nó corrente apontam para o nó
 *       mais à esquerda e mais em cima possível.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
 ****************************************************/
-MAT_tpCondRet MAT_cria(char LinhasEColunas, void (*destruirElemento)(void *elemento), MAT_tppMatriz *MatrizCriada)
+MAT_tpCondRet MAT_cria(char Linhas, char Colunas, void (*destruirElemento)(void *elemento), MAT_tppMatriz *MatrizCriada)
 {
-    int i;
-    int nNos = LinhasEColunas * LinhasEColunas;
-    tpNoMatriz **VetorDeNosDaMatriz = (tpNoMatriz **)malloc(sizeof(tpNoMatriz *) * nNos); /* Cria vetor nxn para armazenar os nós da matriz e interconectá-los posteriormente */
 
-    for (i = 0; i < nNos; i++)
-    {
-        VetorDeNosDaMatriz[i] = MAT_criaNo();
+    tpNoMatriz *PrimeiroNo;
 
-        if (VetorDeNosDaMatriz[i] == NULL)   /* Memória não pôde ser alocada */
-            return MAT_CondRetFaltouMemoria; /* Retorna condição de insufficiência de memória */
-    }
+    PrimeiroNo = MAT_criaNo();
 
-    for (i = 0; i < nNos; i++) /* Interconecta os nós da matriz dentro do vetor nxn */
-    {
-        if (i % LinhasEColunas != 0)
-        { /* Checa se o nó não está "encostado" no canto esquerdo da matriz */
-            VetorDeNosDaMatriz[i]->pNoEsquerda = VetorDeNosDaMatriz[i - 1];
-
-            if (i + LinhasEColunas < nNos)
-            {
-                VetorDeNosDaMatriz[i]->pNoEsquerdaInferior = VetorDeNosDaMatriz[i + LinhasEColunas - 1];
-                VetorDeNosDaMatriz[i]->pNoBaixo = VetorDeNosDaMatriz[i + LinhasEColunas];
-            }
-            if (i - LinhasEColunas > 0)
-            {
-                VetorDeNosDaMatriz[i]->pNoEsquerdaSuperior = VetorDeNosDaMatriz[i - LinhasEColunas - 1];
-                VetorDeNosDaMatriz[i]->pNoCima = VetorDeNosDaMatriz[i - LinhasEColunas];
-            }
-        }
-
-        if (i % LinhasEColunas != (LinhasEColunas - 1))
-        { /* Checa se o nó não está "encostado" no canto direito da matriz */
-            VetorDeNosDaMatriz[i]->pNoDireita = VetorDeNosDaMatriz[i + 1];
-
-            if (i + LinhasEColunas < nNos)
-            {
-                VetorDeNosDaMatriz[i]->pNoDireitaInferior = VetorDeNosDaMatriz[i + LinhasEColunas + 1];
-                VetorDeNosDaMatriz[i]->pNoBaixo = VetorDeNosDaMatriz[i + LinhasEColunas];
-            }
-            if (i - LinhasEColunas > 0)
-            {
-                VetorDeNosDaMatriz[i]->pNoDireitaSuperior = VetorDeNosDaMatriz[i - LinhasEColunas + 1];
-                VetorDeNosDaMatriz[i]->pNoCima = VetorDeNosDaMatriz[i - LinhasEColunas];
-            }
-        }
-    }
     (*MatrizCriada) = (MAT_tppMatriz)malloc(sizeof(tpMatriz));
 
-    if ((*MatrizCriada) == NULL)
-        return MAT_CondRetFaltouMemoria;
+    (*MatrizCriada)->pNoPrimeiro = PrimeiroNo;
 
-    (*MatrizCriada)->pNoPrimeiro = VetorDeNosDaMatriz[0];    /* Primeiro nó da matriz é o nó mais encima e mais à esquerda possível */
-    (*MatrizCriada)->pNoCorr = (*MatrizCriada)->pNoPrimeiro; /* Nó corrente é inicialmente o mesmo que o primeiro nó */
-    (*MatrizCriada)->destruirElemento = destruirElemento;
+    (*MatrizCriada)->pNoCorr = PrimeiroNo;
 
-    free(VetorDeNosDaMatriz);
+    while (--Linhas)
+        MAT_adicionaLinha(MatrizCriada);
+
+    while (--Colunas)
+        MAT_adicionaColuna(MatrizCriada);
 
     return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
