@@ -33,7 +33,7 @@ Será possível construir manualmente um labirinto através de funções especí
 % $<$Describe the environment in which the software will operate, including the
 % hardware platform, operating system and versions, and any other software
 % components or applications with which it must peacefully coexist.$>$
-A aplicação deve operar em computadores 64-bit com OS Windows 7, 8 e 10.
+A aplicação deve operar em computadores 64-bit com OS Windows 7 ou superior.
 
 \section{Restrições de Design e Implementação}
 % $<$Describe any items or issues that will limit the options available to the
@@ -44,8 +44,7 @@ A aplicação deve operar em computadores 64-bit com OS Windows 7, 8 e 10.
 % considerations; design conventions or programming standards (for example, if the
 % customer’s organization will be responsible for maintaining the delivered
 % software).$>$
-A aplicação Labirinto deve ser desenvolvida por completo utilizando a linguagem de programação C. Será obrigatório que a arquitetura da aplicação tenha pelo menos dois tipos abstratos de dados (um pode utilizar o outro) além de um módulo centralizador principal. É proibida a utilização de LISTAS
-ENCADEADAS e QUALQUER ESTRUTURA ESTÁTICA (por exemplo: VETORES ESTÁTICOS). O algorítmo de resolução do labirinto é... Todos os programas devem estar em conformidade com os padrões dos apêndices de 1 a 10 do livro-texto da disciplina. Em particular, os módulos e funções devem estar devidamente especificados.
+A aplicação Labirinto deve ser desenvolvida por completo utilizando a linguagem de programação C. Será obrigatório que a arquitetura da aplicação tenha pelo menos dois tipos abstratos de dados, o módulo de Labirinto e o módulo de Matriz, além de um módulo centralizador principal. O módulo de Labirinto deve chamar o módulo Matriz. É proibida a utilização de LISTAS ENCADEADAS e QUALQUER ESTRUTURA ESTÁTICA (por exemplo: VETORES ESTÁTICOS). O algorítmo de resolução do labirinto é... Todos os programas devem estar em conformidade com os padrões dos apêndices de 1 a 10 do livro Programação Modular escrito por Arnt von Staa. Em particular, os módulos e funções devem estar devidamente especificados.
 
 \section{User Documentation}
 $<$List the user documentation components (such as user manuals, on-line help,
