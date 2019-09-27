@@ -24,6 +24,7 @@
 *		5.00	pc		07/09/2019	Correção de erros e adptação à mudanças no módulo de definição.
 *       6.00    pc      08/09/2019  Correção da destrução
 *       7.00    jpp     22/09/2019  AE e AS
+*       8.00    jpp     24/09/2019  Matriz_cria nova
 *
 ***************************************************************************/
 
