@@ -107,9 +107,9 @@ typedef struct tgMatriz
 
 static tpNoMatriz *MAT_criaNo(void);
 
-static void MAT_criaColuna(tpNoMatriz *PrimeiroNo);
+static MAT_tpCondRet MAT_adicionaColuna(MAT_tppMatriz *Matriz);
 
-static void MAT_criaLinha(tpNoMatriz *PrimeiroNo);
+static MAT_tpCondRet MAT_adicionaLinha(MAT_tppMatriz *Matriz);
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -166,7 +166,7 @@ tpNoMatriz *MAT_criaNo(void)
 *       com cabeça.
 *
 ****************************************************/
-void MAT_adicionaColuna(MAT_tppMatriz *Matriz)
+MAT_tpCondRet MAT_adicionaColuna(MAT_tppMatriz *Matriz)
 {
     tpNoMatriz *Caminha = (*Matriz)->pNoPrimeiro;
 
@@ -179,6 +179,7 @@ void MAT_adicionaColuna(MAT_tppMatriz *Matriz)
     do
     {
         Caminha->pNoDireita = MAT_criaNo(); /* Cria nó da coluna nova à direita do Caminha atual */
+        if (Caminha->pNoDireita == NULL) return MAT_CondRetFaltouMemoria;
         Caminha->pNoDireita->pNoEsquerda = Caminha; /* Conecta nó da coluna nova ao Caminha atual */
         if (Caminha->pNoCima) /* Se existir nó acima do Caminha atual (não é o primeiro nó da coluna) */
         {
@@ -187,6 +188,8 @@ void MAT_adicionaColuna(MAT_tppMatriz *Matriz)
         }
         Caminha = Caminha->pNoBaixo; /* Caminha desce a coluna */
     } while (Caminha); /* Quando caminha estiver no último nó da coluna e descer, ele se tornará NULL (equivalente a zero) */
+    
+    return MAT_CondRetOK;
 }
 
 /***************************************************
@@ -207,7 +210,7 @@ void MAT_adicionaColuna(MAT_tppMatriz *Matriz)
 *       com cabeça.
 *
 ****************************************************/
-void MAT_adicionaLinha(MAT_tppMatriz *Matriz)
+MAT_tpCondRet MAT_adicionaLinha(MAT_tppMatriz *Matriz)
 {
     tpNoMatriz *Caminha = (*Matriz)->pNoPrimeiro;
 
@@ -220,6 +223,9 @@ void MAT_adicionaLinha(MAT_tppMatriz *Matriz)
     do
     {
         Caminha->pNoBaixo = MAT_criaNo(); /* Cria nó da linha nova abaixo do Caminha atual */
+        
+        if (Caminha->pNoBaixo == NULL) return MAT_CondRetFaltouMemoria;
+
         Caminha->pNoBaixo->pNoCima = Caminha; /* Conecta nó da linha nova ao Caminha atual */
 
         if (Caminha->pNoEsquerda) /* Se existir nó à esquerda do Caminha atual (não é o primeiro nó da linha) */
@@ -229,6 +235,8 @@ void MAT_adicionaLinha(MAT_tppMatriz *Matriz)
         }
         Caminha = Caminha->pNoDireita; /* Caminha anda para a direita na linha */
     } while (Caminha); /* Quando caminha estiver no último nó da linha e for para a direita, ele se tornará NULL (equivalente a zero) */
+
+    return MAT_CondRetOK;
 }
 
 /***************************************************
@@ -259,22 +267,25 @@ void MAT_adicionaLinha(MAT_tppMatriz *Matriz)
 MAT_tpCondRet MAT_cria(char Linhas, char Colunas, void (*destruirElemento)(void *elemento), MAT_tppMatriz *MatrizCriada)
 {
 
-    tpNoMatriz *PrimeiroNo; 
+    tpNoMatriz *PrimeiroNo;
 
     PrimeiroNo = MAT_criaNo(); /* Cria primeiro nó da Matriz */
 
     (*MatrizCriada) = (MAT_tppMatriz)malloc(sizeof(tpMatriz)); /* Malloca cabeça da matriz */
+    if (MatrizCriada==NULL) return MAT_CondRetFaltouMemoria;
 
     (*MatrizCriada)->pNoPrimeiro = PrimeiroNo;
 
     (*MatrizCriada)->pNoCorr = PrimeiroNo; /* Primeiro nó e nó corrente são o mesmo */
 
     while (--Linhas) /* Cria primeira linha da matriz a partir do primeiro nó */
-        MAT_adicionaLinha(MatrizCriada); /* Cada chamada cria uma linha nova na matriz.
-        Já que só há um nó na matriz, cada chamada da função só cria novos nós à direita do primeiro */
+        if (MAT_adicionaLinha(MatrizCriada)==MAT_CondRetFaltouMemoria) return MAT_CondRetFaltouMemoria;
+        /* Cada chamada cria uma linha nova na matriz. Já que só há um nó na matriz, 
+        cada chamada da função só cria novos nós à direita do primeiro */
 
     while (--Colunas) /* Cria as colunas da matriz extendendo a primeira linha */
-        MAT_adicionaColuna(MatrizCriada); /* Cada chamada cria uma coluna nova na matriz. */
+        if (MAT_adicionaColuna(MatrizCriada)==MAT_CondRetFaltouMemoria) return MAT_CondRetFaltouMemoria;
+        /* Cada chamada cria uma coluna nova na matriz. */
 
     return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
