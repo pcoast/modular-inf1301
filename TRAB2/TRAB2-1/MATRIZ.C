@@ -142,11 +142,7 @@ tpNoMatriz *MAT_criaNo(void)
     NoMatrizCriado->pNoBaixo = NULL;
     NoMatrizCriado->pNoCima = NULL;
     NoMatrizCriado->pNoDireita = NULL;
-    NoMatrizCriado->pNoDireitaInferior = NULL;
-    NoMatrizCriado->pNoDireitaSuperior = NULL;
     NoMatrizCriado->pNoEsquerda = NULL;
-    NoMatrizCriado->pNoEsquerdaInferior = NULL;
-    NoMatrizCriado->pNoEsquerdaSuperior = NULL;
 
     return NoMatrizCriado;
 }
@@ -173,19 +169,23 @@ void MAT_adicionaColuna(MAT_tppMatriz *Matriz)
 {
     tpNoMatriz *Caminha = (*Matriz)->pNoPrimeiro;
 
-    while (Caminha->pNoDireita != NULL)
-        Caminha = Caminha->pNoDireita;
+    while (Caminha->pNoDireita != NULL) /* Loop para chegar no primeiro nó da última coluna da matriz */
+        Caminha = Caminha->pNoDireita; 
+        
+        /* Caminha percorrerá a última coluna da matriz criando nós à
+        direita para gerar uma nova coluna */
 
     do
     {
-        Caminha->pNoDireita = MAT_criaNo();
-        if (Caminha->pNoCima)
+        Caminha->pNoDireita = MAT_criaNo(); /* Cria nó da coluna nova à direita do Caminha atual */
+        Caminha->pNoDireita->pNoEsquerda = Caminha; /* Conecta nó da coluna nova ao Caminha atual */
+        if (Caminha->pNoCima) /* Se existir nó acima do Caminha atual (não é o primeiro nó da coluna) */
         {
-            Caminha->pNoDireita->pNoCima = Caminha->pNoCima->pNoDireita;
-            Caminha->pNoCima->pNoDireita->pNoBaixo = Caminha->pNoDireita;
+            Caminha->pNoDireita->pNoCima = Caminha->pNoCima->pNoDireita; /* Conecta o nó da coluna nova ao acima dele */
+            Caminha->pNoCima->pNoDireita->pNoBaixo = Caminha->pNoDireita; /* Conecta o de cima do novo ao novo */
         }
-        Caminha = Caminha->pNoBaixo;
-    } while (Caminha);
+        Caminha = Caminha->pNoBaixo; /* Caminha desce a coluna */
+    } while (Caminha); /* Quando caminha estiver no último nó da coluna e descer, ele se tornará NULL (equivalente a zero) */
 }
 
 /***************************************************
@@ -210,19 +210,24 @@ void MAT_adicionaLinha(MAT_tppMatriz *Matriz)
 {
     tpNoMatriz *Caminha = (*Matriz)->pNoPrimeiro;
 
-    while (Caminha->pNoBaixo != NULL)
+    while (Caminha->pNoBaixo != NULL) /* Loop para chegar no primeiro nó da última linha da matriz */
         Caminha = Caminha->pNoBaixo;
+
+        /* Caminha percorrerá a última linha da matriz criando nós
+        abaixo para gerar uma nova linha */
 
     do
     {
-        Caminha->pNoBaixo = MAT_criaNo();
-        if (Caminha->pNoEsquerda)
+        Caminha->pNoBaixo = MAT_criaNo(); /* Cria nó da linha nova abaixo do Caminha atual */
+        Caminha->pNoBaixo->pNoCima = Caminha; /* Conecta nó da linha nova ao Caminha atual */
+
+        if (Caminha->pNoEsquerda) /* Se existir nó à esquerda do Caminha atual (não é o primeiro nó da linha) */
         {
-            Caminha->pNoBaixo->pNoEsquerda = Caminha->pNoEsquerda->pNoBaixo;
-            Caminha->pNoEsquerda->pNoBaixo->pNoDireita = Caminha->pNoBaixo;
+            Caminha->pNoBaixo->pNoEsquerda = Caminha->pNoEsquerda->pNoBaixo; /* Conecta o nó da linha nova ao à esquerda dele */
+            Caminha->pNoEsquerda->pNoBaixo->pNoDireita = Caminha->pNoBaixo; /* Conecta o de à esquerda do novo ao novo */
         }
-        Caminha = Caminha->pNoDireita;
-    } while (Caminha);
+        Caminha = Caminha->pNoDireita; /* Caminha anda para a direita na linha */
+    } while (Caminha); /* Quando caminha estiver no último nó da linha e for para a direita, ele se tornará NULL (equivalente a zero) */
 }
 
 /***************************************************
@@ -245,7 +250,7 @@ void MAT_adicionaLinha(MAT_tppMatriz *Matriz)
 *	$AS Assertivas de saída esperadas:
 *       Matriz foi criada com as dimensões desejadas.
 *       Primeiro nó e nó corrente apontam para o nó
-*       mais à esquerda e mais em cima possível.
+*       mais à esquerda e mais acima possível.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
@@ -253,21 +258,22 @@ void MAT_adicionaLinha(MAT_tppMatriz *Matriz)
 MAT_tpCondRet MAT_cria(char Linhas, char Colunas, void (*destruirElemento)(void *elemento), MAT_tppMatriz *MatrizCriada)
 {
 
-    tpNoMatriz *PrimeiroNo;
+    tpNoMatriz *PrimeiroNo; 
 
-    PrimeiroNo = MAT_criaNo();
+    PrimeiroNo = MAT_criaNo(); /* Cria primeiro nó da Matriz */
 
-    (*MatrizCriada) = (MAT_tppMatriz)malloc(sizeof(tpMatriz));
+    (*MatrizCriada) = (MAT_tppMatriz)malloc(sizeof(tpMatriz)); /* Malloca cabeça da matriz */
 
     (*MatrizCriada)->pNoPrimeiro = PrimeiroNo;
 
-    (*MatrizCriada)->pNoCorr = PrimeiroNo;
+    (*MatrizCriada)->pNoCorr = PrimeiroNo; /* Primeiro nó e nó corrente são o mesmo */
 
-    while (--Linhas)
-        MAT_adicionaLinha(MatrizCriada);
+    while (--Linhas) /* Cria primeira linha da matriz a partir do primeiro nó */
+        MAT_adicionaLinha(MatrizCriada); /* Cada chamada cria uma linha nova na matriz.
+        Já que só há um nó na matriz, cada chamada da função só cria novos nós à direita do primeiro */
 
-    while (--Colunas)
-        MAT_adicionaColuna(MatrizCriada);
+    while (--Colunas) /* Cria as colunas da matriz extendendo a primeira linha */
+        MAT_adicionaColuna(MatrizCriada); /* Cada chamada cria uma coluna nova na matriz. */
 
     return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
