@@ -39,7 +39,7 @@ typedef enum
     LAB_CondRetOK = 0,
     /* Executou corretamente */
 
-    LAB_CondRetNoNaoExiste = 1,
+    LAB_CondRetArquivoTextoNulo = 1,
     /* Tentou mudar o nó corrente para um nó inexistente (NULL) */
 
     LAB_CondRetFaltouMemoria = 2,
@@ -55,22 +55,19 @@ typedef enum
 
 /***************************************************
 *
-*   $FC Função: LAB Criar a estrutura da labirinto,
-*       criando os nós com a LAB_criaNo() e os
-*       interconectando.
+*   $FC Função: LAB Criar uma matriz com as dimensões necessárias e armazenar o labirinto nela.
 *
 *   $EP Parâmetros
 *       $P LinhasEColunas - O parâmetro que que passará o número de linhas e colunas da labirinto.
 *           Este parâmetro é passado por valor.
-*       $P LabirintoCriada - O parâmetro que receberá o ponteiro para a cabeça da labirinto.
-*           Este parâmetro é passado por referência.
 *
 *   $FV Valor retornado
 *       LAB_CondRetOK
+*       LAB_CondRetArquivoTextoNulo
 *       LAB_CondRetFaltouMemoria
 *
 ****************************************************/
-LAB_tpCondRet LAB_cria(FILE *fp, MAT_tppMatriz* mariz);
+LAB_tpCondRet LAB_criaLabirinto(void (*destruirElemento)(void *elemento));
 
 /*******************************************************
 *
@@ -85,7 +82,7 @@ LAB_tpCondRet LAB_cria(FILE *fp, MAT_tppMatriz* mariz);
 *       LAB_CondRetOK
 *
 ********************************************************/
-LAB_tpCondRet LAB_resolve(LAB_tppLabirinto CabecaDaLabirinto);
+LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDaLabirinto);
 
 /*******************************************************
 *
@@ -101,4 +98,4 @@ LAB_tpCondRet LAB_resolve(LAB_tppLabirinto CabecaDaLabirinto);
 *       LAB_CondRetNoNaoExiste
 *
 ********************************************************/
-LAB_tpCondRet LAB_imprime(LAB_tppLabirinto CabecaDaLabirinto);
+LAB_tpCondRet LAB_imprimeLabirinto(LAB_tppLabirinto CabecaDaLabirinto);

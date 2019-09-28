@@ -69,7 +69,9 @@ typedef enum
 *       interconectando.
 *
 *  $EP Par�metros
-*       $P LinhasEColunas - O parâmetro que que passará o número de linhas e colunas da matriz.
+*       $P Linhas - O parâmetro que que passará o número de linhas da matriz.
+*           Este parâmetro é passado por valor.
+*       $P Colunas - O parâmetro que que passará o número de colunas da matriz.
 *           Este parâmetro é passado por valor.
 *       $P MatrizCriada - O parâmetro que receberá o ponteiro para a cabeça da matriz.
 *           Este parâmetro é passado por referência.
@@ -79,22 +81,7 @@ typedef enum
 *       MAT_CondRetFaltouMemoria
 *
 ****************************************************/
-MAT_tpCondRet MAT_cria(char LinhasEColunas,void (*destroiElemento) (void *elemento) ,MAT_tppMatriz *MatrizCriada);
-
-/*******************************************************
-*
-*   $FC Função: MAT Nó corrente da Matriz se torna o nó
-*       à Esquerda Superior do nó corrente atual.
-*
-*   $EP Parâmetros
-*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a matriz.
-*           Este parâmetro é passado por referência.
-*
-*   $FV Valor retornado
-*       MAT_CondRetOK
-*
-********************************************************/
-MAT_tpCondRet MAT_vaiParaEsquerdaSuperior(MAT_tppMatriz CabecaDaMatriz);
+MAT_tpCondRet MAT_criaMatriz(char Linhas, char Colunas, void (*destruirElemento)(void *elemento), MAT_tppMatriz MatrizASerCriada);
 
 /*******************************************************
 *
@@ -111,22 +98,6 @@ MAT_tpCondRet MAT_vaiParaEsquerdaSuperior(MAT_tppMatriz CabecaDaMatriz);
 *
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaCima(MAT_tppMatriz CabecaDaMatriz);
-
-/*******************************************************
-*
-*	$FC Função: MAT Nó corrente da Matriz se torna o nó
-*       à Direita Superior do nó corrente atual.
-*
-*   $EP Parâmetros
-*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a matriz.
-*           Este parâmetro é passado por referência.
-*
-*   $FV Valor retornado
-*       MAT_CondRetOK
-*       MAT_CondRetNoNaoExiste
-*
-********************************************************/
-MAT_tpCondRet MAT_vaiParaDireitaSuperior(MAT_tppMatriz CabecaDaMatriz);
 
 /*******************************************************
 *
@@ -163,22 +134,6 @@ MAT_tpCondRet MAT_vaiParaDireita(MAT_tppMatriz CabecaDaMatriz);
 /*******************************************************
 *
 *	$FC Função: MAT Nó corrente da Matriz se torna o nó
-*       à Esquerda Inferior do nó corrente atual.
-*
-*   $EP Parâmetros
-*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a matriz.
-*           Este parâmetro é passado por referência.
-*
-*   $FV Valor retornado
-*       MAT_CondRetOK
-*       MAT_CondRetNoNaoExiste
-*
-********************************************************/
-MAT_tpCondRet MAT_vaiParaEsquerdaInferior(MAT_tppMatriz CabecaDaMatriz);
-
-/*******************************************************
-*
-*	$FC Função: MAT Nó corrente da Matriz se torna o nó
 *       Abaixo do nó corrente atual.
 *
 *   $EP Parâmetros
@@ -191,22 +146,6 @@ MAT_tpCondRet MAT_vaiParaEsquerdaInferior(MAT_tppMatriz CabecaDaMatriz);
 *
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaBaixo(MAT_tppMatriz CabecaDaMatriz);
-
-/*******************************************************
-*
-*	$FC Função: MAT Nó corrente da Matriz se torna o nó
-*       à Direita Inferior do nó corrente atual.
-*
-*   $EP Parâmetros
-*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a matriz.
-*           Este parâmetro é passado por referência.
-*
-*   $FV Valor retornado
-*       MAT_CondRetOK
-*       MAT_CondRetNoNaoExiste
-*
-********************************************************/
-MAT_tpCondRet MAT_vaiParaDireitaInferior(MAT_tppMatriz CabecaDaMatriz);
 
 /***************************************************
 *
@@ -221,7 +160,7 @@ MAT_tpCondRet MAT_vaiParaDireitaInferior(MAT_tppMatriz CabecaDaMatriz);
 *       MAT_CondRetNoNaoExiste
 *
 ****************************************************/
-void MAT_destroi(MAT_tppMatriz CabecaDaMatriz);
+void MAT_destroiMatriz(MAT_tppMatriz CabecaDaMatriz);
 
 /*******************************************************
 *
@@ -239,7 +178,7 @@ void MAT_destroi(MAT_tppMatriz CabecaDaMatriz);
 *       MAT_CondRetNoOcupado
 *
 ********************************************************/
-MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void *elemento);
+MAT_tpCondRet MAT_inserirElemento(MAT_tppMatriz CabecaDaMatriz, char *elemento);
 
 /*******************************************************
 *
@@ -257,3 +196,18 @@ MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void *elemento);
 *
 ********************************************************/
 MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento);
+
+/*******************************************************
+*
+*	$FC Função: MAT Ponteiro à esquerda do corrente se torna NULL
+*
+*   $EP Parâmetros
+*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a cabeça da matriz.
+*           Este parâmetro é passado por referência.
+*
+*   $FV Valor retornado
+*       MAT_CondRetOK
+*
+********************************************************/
+MAT_tpCondRet MAT_anulaConexaoAEsquerda(MAT_tppMatriz CabecaDaMatriz)
+
