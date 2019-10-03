@@ -1,0 +1,1 @@
+extern int vetor[7];

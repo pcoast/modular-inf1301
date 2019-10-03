@@ -10,6 +10,35 @@
 \usepackage{tikz}
 \usepackage[plain]{algorithm}
 \usepackage{algpseudocode}
+\usepackage{listings}
+
+\usepackage{xcolor}
+\usepackage{listings}
+
+\definecolor{mGreen}{rgb}{0,0.6,0}
+\definecolor{mGray}{rgb}{0.5,0.5,0.5}
+\definecolor{mPurple}{rgb}{0.58,0,0.82}
+\definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{CStyle}{
+    backgroundcolor=\color{backgroundColour},   
+    commentstyle=\color{mGreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{mGray},
+    stringstyle=\color{mPurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2,
+    language=C
+}
 
 \usetikzlibrary{automata,positioning}
 
@@ -313,6 +342,7 @@
     \vspace{\baselineskip}
     \textbf{Solução}
 
+    Requisitos inversos são incluídos, geralmente, para eliminar ambiguidades. No requisito apresentado, não etá claro qual Média Final deve ser calculada. Pode ser a Média Final de cada aluno ou de todos os alunos juntos. Também não está claro como a média deve ser claculada. Um requisito que poderia ser adicionado para esclarecer é: "esta aplicação não clacula a média de todos os alunos juntos, a média de cada aluno será calculada por (G1 + G2 + 2*T1)/4".
 
 \end{homeworkProblem}
 
@@ -357,15 +387,29 @@
     \vspace{\baselineskip}
     \textbf{Solução}
 
+    Requisito não funcional. Pois descreve algo que deve ser feito, mas não está relacionado a uma funcionalidade específica.
 
 \end{homeworkProblem}
 
 \begin{homeworkProblem}
 
-    Mostre através de um exemplo como é possível com um único módulo de definição gerar insterfaces personalizadas para cada módulo cliente.
+    Mostre através de um exemplo como é possível com um único módulo de definição gerar interfaces personalizadas para cada módulo cliente.
     
     \vspace{\baselineskip}
     \textbf{Solução}
+
+    O seguinte módulo de definição:
+
+    \lstinputlisting[style=CStyle]{M1.h}
+
+    gera \lstinputlisting[style=CStyle]{resultado1.c} com o seguinte módulo cliente:
+
+    \lstinputlisting[style=CStyle]{MS.c}
+
+    e gera \lstinputlisting[style=CStyle]{resultado2.c} com o seguinte módulo cliente:
+
+
+    \lstinputlisting[style=CStyle]{MC.c}
 
 
 \end{homeworkProblem}
@@ -397,6 +441,7 @@
     \vspace{\baselineskip}
     \textbf{Solução}
 
+    Errado. Por mais que o encapsulamento tenha sido perfeito, ainda pode-se acessar o espaço de memória de algum dado e mexer nele, já que C é uma linguagem de baixo nível.
 
 \end{homeworkProblem}
 
