@@ -58,7 +58,7 @@ typedef struct tgNoMatriz
                *    */
 
     void *Elemento;
-    /* Lista contida no nó */
+    /* Elemento contido no nó */
 
     struct tgNoMatriz *pNoDireita;
     /* Ponteiro para nó da direita
@@ -101,6 +101,7 @@ typedef struct tgMatriz
 
     void (*destruirElemento)(void *elemento);
     /* Ponteiro para a função de destrução de um elemento */
+    
 } tpMatriz;
 
 /***** Protótipos das funções encapsuladas no módulo *****/
@@ -168,26 +169,27 @@ tpNoMatriz *MAT_criaNo(void)
 ****************************************************/
 MAT_tpCondRet MAT_adicionaColuna(MAT_tppMatriz CabecaDaMatriz)
 {
-    tpNoMatriz *Caminha = CabecaDaMatriz->pNoPrimeiro;
 
-    while (Caminha->pNoDireita != NULL) /* Loop para chegar no primeiro nó da última coluna da matriz */
-        Caminha = Caminha->pNoDireita; 
-        
-        /* Caminha percorrerá a última coluna da matriz criando nós à
+    MAT_tpCondRet CondRetDeMatriz;
+
+    while (CabecaDaMatriz->pNoCorr->pNoDireita) /* Loop para chegar no primeiro nó da última coluna da matriz */        
+        /* No bloco de código abaixo o nó corrente percorrerá a última coluna da matriz criando nós à
         direita para gerar uma nova coluna */
 
     do
     {
-        Caminha->pNoDireita = MAT_criaNo(); /* Cria nó da coluna nova à direita do Caminha atual */
-        if (Caminha->pNoDireita == NULL) return MAT_CondRetFaltouMemoria;
-        Caminha->pNoDireita->pNoEsquerda = Caminha; /* Conecta nó da coluna nova ao Caminha atual */
-        if (Caminha->pNoCima) /* Se existir nó acima do Caminha atual (não é o primeiro nó da coluna) */
+        CabecaDaMatriz->pNoCorr->pNoDireita = MAT_criaNo(); /* Cria nó da coluna nova à direita do nó corrente */
+        if (!CabecaDaMatriz->pNoCorr->pNoDireita) return MAT_CondRetFaltouMemoria;  /* Nó criado == NULL. Retorna condição de insufuciência de memória */
+
+        CabecaDaMatriz->pNoCorr->pNoDireita->pNoEsquerda = CabecaDaMatriz->pNoCorr; /* Conecta nó da coluna nova ao nó corrente */
+        if (CabecaDaMatriz->pNoCorr->pNoCima) /* Se existir nó acima do nó corrente (não é o primeiro nó da coluna) */
         {
-            Caminha->pNoDireita->pNoCima = Caminha->pNoCima->pNoDireita; /* Conecta o nó da coluna nova ao acima dele */
-            Caminha->pNoCima->pNoDireita->pNoBaixo = Caminha->pNoDireita; /* Conecta o de cima do novo ao novo */
+            CabecaDaMatriz->pNoCorr->pNoDireita->pNoCima = CabecaDaMatriz->pNoCorr->pNoCima->pNoDireita; /* Conecta o nó da coluna nova ao acima dele */
+            CabecaDaMatriz->pNoCorr->pNoCima->pNoDireita->pNoBaixo = CabecaDaMatriz->pNoCorr->pNoDireita; /* Conecta o de cima do novo ao novo */
         }
-        Caminha = Caminha->pNoBaixo; /* Caminha desce a coluna */
-    } while (Caminha); /* Quando caminha estiver no último nó da coluna e descer, ele se tornará NULL (equivalente a zero) */
+    } while (MAT_vaiParaBaixo(CabecaDaMatriz)!=MAT_CondRetNoNaoExiste); /* Nó corrente desce a coluna. Para somente quando caminhar para o NULL */
+    
+    MAT_resetNoCorrente(CabecaDaMatriz); /* Coloca o nó corrente na mesma posição do primeiro nó */
     
     return MAT_CondRetOK;
 }
@@ -212,29 +214,28 @@ MAT_tpCondRet MAT_adicionaColuna(MAT_tppMatriz CabecaDaMatriz)
 ****************************************************/
 MAT_tpCondRet MAT_adicionaLinha(MAT_tppMatriz CabecaDaMatriz)
 {
-    tpNoMatriz *Caminha = CabecaDaMatriz->pNoPrimeiro;
+    while (CabecaDaMatriz->pNoCorr->pNoBaixo) /* Loop para chegar no primeiro nó da última linha da matriz */
+        MAT_vaiParaBaixo(CabecaDaMatriz);
 
-    while (Caminha->pNoBaixo != NULL) /* Loop para chegar no primeiro nó da última linha da matriz */
-        Caminha = Caminha->pNoBaixo;
-
-        /* Caminha percorrerá a última linha da matriz criando nós
+        /* No bloco de código abaixo o nó corrente percorrerá a última linha da matriz criando nós
         abaixo para gerar uma nova linha */
 
     do
     {
-        Caminha->pNoBaixo = MAT_criaNo(); /* Cria nó da linha nova abaixo do Caminha atual */
+        CabecaDaMatriz->pNoCorr->pNoBaixo = MAT_criaNo(); /* Cria nó da linha nova abaixo do nó corrente atual */
         
-        if (Caminha->pNoBaixo == NULL) return MAT_CondRetFaltouMemoria;
+        if (!CabecaDaMatriz->pNoCorr->pNoBaixo) return MAT_CondRetFaltouMemoria; /* Nó criado == NULL. Retorna condição de insufuciência de memória */
 
-        Caminha->pNoBaixo->pNoCima = Caminha; /* Conecta nó da linha nova ao Caminha atual */
+        CabecaDaMatriz->pNoCorr->pNoBaixo->pNoCima = CabecaDaMatriz->pNoCorr; /* Conecta nó da linha nova ao nó corrente atual */
 
-        if (Caminha->pNoEsquerda) /* Se existir nó à esquerda do Caminha atual (não é o primeiro nó da linha) */
+        if (CabecaDaMatriz->pNoCorr->pNoEsquerda) /* Se existir nó à esquerda do nó corrente atual (não é o primeiro nó da linha) */
         {
-            Caminha->pNoBaixo->pNoEsquerda = Caminha->pNoEsquerda->pNoBaixo; /* Conecta o nó da linha nova ao à esquerda dele */
-            Caminha->pNoEsquerda->pNoBaixo->pNoDireita = Caminha->pNoBaixo; /* Conecta o de à esquerda do novo ao novo */
+            CabecaDaMatriz->pNoCorr->pNoBaixo->pNoEsquerda = CabecaDaMatriz->pNoCorr->pNoEsquerda->pNoBaixo; /* Conecta o nó da linha nova ao à esquerda dele */
+            CabecaDaMatriz->pNoCorr->pNoEsquerda->pNoBaixo->pNoDireita = CabecaDaMatriz->pNoCorr->pNoBaixo; /* Conecta o de à esquerda do novo ao novo */
         }
-        Caminha = Caminha->pNoDireita; /* Caminha anda para a direita na linha */
-    } while (Caminha); /* Quando caminha estiver no último nó da linha e for para a direita, ele se tornará NULL (equivalente a zero) */
+    } while (MAT_vaiParaDireita(CabecaDaMatriz)!=MAT_CondRetNoNaoExiste); /* Nó corrente anda para a direita na linha. Para somente quando caminhar para o NULL */
+
+    MAT_resetNoCorrente(CabecaDaMatriz); /* Coloca o nó corrente na mesma posição do primeiro nó */
 
     return MAT_CondRetOK;
 }
@@ -251,7 +252,7 @@ MAT_tpCondRet MAT_adicionaLinha(MAT_tppMatriz CabecaDaMatriz)
 *
 *   $AE Assertivas de entrada esperadas:
 *       Dimensões da matriz desejada estão entre
-*       2x1 ou 1x2 e 10x10.
+*       (2x1 ou 1x2) e 10x10.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
@@ -270,11 +271,11 @@ MAT_tpCondRet MAT_criaMatriz(char Linhas, char Colunas, void (*destruirElemento)
     tpNoMatriz *PrimeiroNo;
 
     PrimeiroNo = MAT_criaNo(); /* Cria primeiro nó da Matriz */
-        if (PrimeiroNo==NULL) return MAT_CondRetFaltouMemoria;
+    if (!PrimeiroNo) return MAT_CondRetFaltouMemoria; /* Primeiro Nó == NULL */
 
 
     MatrizASerCriada = (MAT_tppMatriz)malloc(sizeof(tpMatriz)); /* Malloca cabeça da matriz */
-    if (MatrizASerCriada==NULL) return MAT_CondRetFaltouMemoria;
+    if (!MatrizASerCriada) return MAT_CondRetFaltouMemoria; /* Cabeça da Matriz == NULL, Retorna condição de insufuciência de memória */
 
     MatrizASerCriada->pNoPrimeiro = PrimeiroNo;
 
@@ -294,6 +295,8 @@ MAT_tpCondRet MAT_criaMatriz(char Linhas, char Colunas, void (*destruirElemento)
         if (MAT_adicionaLinha(MatrizASerCriada)==MAT_CondRetFaltouMemoria) return MAT_CondRetFaltouMemoria;
         /* Cada chamada cria uma linha nova na matriz. */
 
+    MatrizASerCriada->destruirElemento=destruirElemento;
+
     return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
@@ -305,6 +308,7 @@ MAT_tpCondRet MAT_criaMatriz(char Linhas, char Colunas, void (*destruirElemento)
 *
 *
 *	$AE Assertivas de entrada esperadas:
+*		Cabeça da matriz != NULL.
 *       Nó corrente aponta para o nó abaixo do nó
 *       para onde se deseja ir.
 *		Valem as assertivas estruturais da matriz
@@ -319,8 +323,8 @@ MAT_tpCondRet MAT_criaMatriz(char Linhas, char Colunas, void (*destruirElemento)
 *
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaCima(MAT_tppMatriz CabecaDaMatriz)
-{
-    if (CabecaDaMatriz->pNoCorr->pNoCima == NULL) /* Não existe nó nesta direção */
+{    
+    if (!CabecaDaMatriz->pNoCorr->pNoCima) /* Não existe nó nesta direção */
         return MAT_CondRetNoNaoExiste;            /* Retorna condição de falha na movimentação do nó corrente */
 
     CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoCima; /* Movimenta nó corrente na direção indicada */
@@ -335,6 +339,7 @@ MAT_tpCondRet MAT_vaiParaCima(MAT_tppMatriz CabecaDaMatriz)
 *
 *
 *	$AE Assertivas de entrada esperadas:
+*		Cabeça da matriz != NULL.
 *       Nó corrente aponta para o nó à direita do
 *       nó para onde se deseja ir.
 *		Valem as assertivas estruturais da matriz
@@ -350,7 +355,7 @@ MAT_tpCondRet MAT_vaiParaCima(MAT_tppMatriz CabecaDaMatriz)
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaEsquerda(MAT_tppMatriz CabecaDaMatriz)
 {
-    if (CabecaDaMatriz->pNoCorr->pNoEsquerda == NULL) /* Não existe nó nesta direção */
+    if (!CabecaDaMatriz->pNoCorr->pNoEsquerda) /* Não existe nó nesta direção */
         return MAT_CondRetNoNaoExiste;                /* Retorna condição de falha na movimentação do nó corrente */
 
     CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoEsquerda; /* Movimenta nó corrente na direção indicada */
@@ -365,6 +370,7 @@ MAT_tpCondRet MAT_vaiParaEsquerda(MAT_tppMatriz CabecaDaMatriz)
 *
 *
 *	$AE Assertivas de entrada esperadas:
+*		Cabeça da matriz != NULL.
 *       Nó corrente aponta para o nó à esquerda do
 *       nó para onde se deseja ir.
 *		Valem as assertivas estruturais da matriz
@@ -380,7 +386,7 @@ MAT_tpCondRet MAT_vaiParaEsquerda(MAT_tppMatriz CabecaDaMatriz)
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaDireita(MAT_tppMatriz CabecaDaMatriz)
 {
-    if (CabecaDaMatriz->pNoCorr->pNoDireita == NULL) /* Não existe nó nesta direção */
+    if (!CabecaDaMatriz->pNoCorr->pNoDireita) /* Não existe nó nesta direção */
         return MAT_CondRetNoNaoExiste;               /* Retorna condição de falha na movimentação do nó corrente */
 
     CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoDireita; /* Movimenta nó corrente na direção indicada */
@@ -395,6 +401,7 @@ MAT_tpCondRet MAT_vaiParaDireita(MAT_tppMatriz CabecaDaMatriz)
 *
 *
 *	$AE Assertivas de entrada esperadas:
+*		Cabeça da matriz != NULL.
 *       Nó corrente aponta para o nó acima do nó
 *       para onde se deseja ir.
 *		Valem as assertivas estruturais da matriz
@@ -410,7 +417,7 @@ MAT_tpCondRet MAT_vaiParaDireita(MAT_tppMatriz CabecaDaMatriz)
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaBaixo(MAT_tppMatriz CabecaDaMatriz)
 {
-    if (CabecaDaMatriz->pNoCorr->pNoBaixo == NULL) /* Não existe nó nesta direção */
+    if (!CabecaDaMatriz->pNoCorr->pNoBaixo) /* Não existe nó nesta direção */
         return MAT_CondRetNoNaoExiste;             /* Retorna condição de falha na movimentação do nó corrente */
 
     CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoBaixo; /* Movimenta nó corrente na direção indicada */
@@ -424,7 +431,7 @@ MAT_tpCondRet MAT_vaiParaBaixo(MAT_tppMatriz CabecaDaMatriz)
 *
 *
 *	$AE Assertivas de entrada esperadas:
-*       Primeiro nó != NULL
+*       Cabeça da matriz != NULL.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
@@ -437,6 +444,7 @@ MAT_tpCondRet MAT_vaiParaBaixo(MAT_tppMatriz CabecaDaMatriz)
 ****************************************************/
 void MAT_destroiMatriz(MAT_tppMatriz CabecaDaMatriz)
 {
+    
     tpNoMatriz *PrimeiroNoDaLinhaDeBaixo;
 
     do
@@ -447,14 +455,14 @@ void MAT_destroiMatriz(MAT_tppMatriz CabecaDaMatriz)
         {
             CabecaDaMatriz->destruirElemento(CabecaDaMatriz->pNoPrimeiro->Elemento); /* Libera o ponteiro do elemento */
             free(CabecaDaMatriz->pNoPrimeiro);                                       /* Libera primeiro nó da matriz */
-            if (CabecaDaMatriz->pNoCorr == NULL)                                     /* Liberou o último nó desta linha da matriz */
+            if (!CabecaDaMatriz->pNoCorr)                                     /* Liberou o último nó desta linha da matriz */
                 break;                                                               /* Segue para próxima linha da matriz */
             CabecaDaMatriz->pNoPrimeiro = CabecaDaMatriz->pNoCorr;                   /* Primeiro nó da matriz é o mesmo que o corrente */
-            CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoDireita;           /* Nó corrente é o nó à direita do primeiro nó da matriz */
+            MAT_vaiParaDireita(CabecaDaMatriz);           /* Nó corrente é o nó à direita do primeiro nó da matriz */
         } while (1);                                                                 /* Para sempre */
 
         CabecaDaMatriz->pNoPrimeiro = PrimeiroNoDaLinhaDeBaixo; /* Primeiro nó da matriz se torna o primeiro nó da linha de baixo */
-    } while (PrimeiroNoDaLinhaDeBaixo != NULL);                 /* Se a condição for quebrada, então liberou a última linha da matriz */
+    } while (PrimeiroNoDaLinhaDeBaixo);                 /* Se a condição for quebrada, então liberou a última linha da matriz */
 
     free(CabecaDaMatriz); /* Libera cabeça da matriz */
 }
@@ -467,6 +475,7 @@ void MAT_destroiMatriz(MAT_tppMatriz CabecaDaMatriz)
 *
 *
 *	$AE Assertivas de entrada esperadas:
+*		Cabeça da matriz != NULL.
 *       Nó corrente aponta para o nó
 *       onde deseja-se inserir o elemento.
 *		elemento != NULL.
@@ -483,7 +492,7 @@ void MAT_destroiMatriz(MAT_tppMatriz CabecaDaMatriz)
 ********************************************************/
 MAT_tpCondRet MAT_inserirElemento(MAT_tppMatriz CabecaDaMatriz, char *elemento)
 {
-    if (CabecaDaMatriz->pNoCorr->Elemento != NULL) /* Nó corrente já possui lista */
+    if (CabecaDaMatriz->pNoCorr->Elemento) /* Nó corrente já possui lista (Elemento != NULL) */
         return MAT_CondRetNoOcupado;               /* Retorna condição de falha na incorporação da lista no nó corrente */
 
     CabecaDaMatriz->pNoCorr->Elemento = elemento; /* Incopora ponteiro da lista passado por referência no nó corrente */
@@ -500,23 +509,23 @@ MAT_tpCondRet MAT_inserirElemento(MAT_tppMatriz CabecaDaMatriz, char *elemento)
 *	$AE Assertivas de entrada esperadas:
 *       Ponteiro corrente aponta para o nó
 *       de onde deseja-se obter o conteúdo.
-*		CabecaDaMatriz != NULL.
+*		Cabeça da matriz != NULL.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
 *
 *	$AS Assertivas de saída esperadas:
-*       Elemento != NULL.
+*       elemento foi obtido do nó corrente da matriz.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
 ********************************************************/
-MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento)
+MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void *elemento)
 {
-    if (CabecaDaMatriz->pNoCorr->Elemento == NULL) /* Nó corrente não possui lista */
+    if (!CabecaDaMatriz->pNoCorr->Elemento) /* Nó corrente não possui Elemento (Elemento == NULL) */
         return MAT_CondRetNoVazio;                 /* Retorna condição de falha na obtenção da lista incorporada no nó corrente */
 
-    *elemento = CabecaDaMatriz->pNoCorr->Elemento; /* Passa, por referência, o ponteiro da lista incorporado no nó corrente */
+    elemento = CabecaDaMatriz->pNoCorr->Elemento; /* Passa, por referência, o ponteiro da lista incorporado no nó corrente */
 
     return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
@@ -524,29 +533,24 @@ MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento)
 /*******************************************************
 *
 *	$FC Função:
-*       MAT Ponteiro à esquerda do corrente se torna NULL.
+*       MAT Coloca nó corrente na mesma posição do primeiro nó.
 *
 *
 *	$AE Assertivas de entrada esperadas:
-*       Ponteiro corrente aponta para o nó
-*       cuja conexão à esquerda desejamos anular.
-*       Pode ser que o ponteiro à esquerda do
-*       corrente já seja NULL.
-*		CabecaDaMatriz != NULL.
+*		Cabeça da matriz != NULL.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
 *
 *	$AS Assertivas de saída esperadas:
-*       Ponteiro para o nó à esquerda do corrente
-*       é NULL.
+*       Nó corrente está na mesma posição que o primeiro nó.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
 ********************************************************/
-MAT_tpCondRet MAT_anulaConexaoAEsquerda(MAT_tppMatriz CabecaDaMatriz)
+MAT_tpCondRet MAT_resetNoCorrente(MAT_tppMatriz CabecaDaMatriz)
 {
-    CabecaDaMatriz->pNoCorr->pNoEsquerda = NULL;
+    CabecaDaMatriz->pNoCorr=CabecaDaMatriz->pNoPrimeiro;
 
     return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
 }

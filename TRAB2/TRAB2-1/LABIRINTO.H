@@ -13,19 +13,13 @@
 *   $HA Histórico de evolução:
 *       Versão  Autor   Data        Observações
 *       1.00    jpp     22/09/2019  Início do desenvolvimento (LAB_cria)
+*       2.00    jpp     02/10/2019  Acertar retornos e comentários
 *
 *   $ED Descrição do módulo
 *       Este módulo implementa um conjunto de funções para criar e
 *       explorar labirinto.
 *
 ***************************************************************************/
-
-
-/***** Declarações exportadas pelo módulo *****/
-
-/* Tipo referência para uma labirinto */
-
-typedef struct tgLabirinto * LAB_tppLabirinto;
 
 /***********************************************************************
 *
@@ -39,17 +33,24 @@ typedef enum
     LAB_CondRetOK = 0,
     /* Executou corretamente */
 
-    LAB_CondRetArquivoTextoNulo = 1,
-    /* Tentou mudar o nó corrente para um nó inexistente (NULL) */
+    LAB_CondRetNoNaoExiste = 1,
+    /* Condição de retorno da Matriz convertida para Labirinto. Tentou mudar o nó corrente para um nó inexistente (NULL) */
 
-    LAB_CondRetFaltouMemoria = 2,
-    /* Não houve memória para mallocar um dos nós da labirinto */
+    LAB_CondRetFaltouMemoriaNaMatriz = 2,
+    /* Condição de retorno da Matriz convertida para Labirinto. Não houve memória para mallocar um dos nós da matriz ou a cabeça da matriz */
 
     LAB_CondRetNoOcupado = 3,
-    /* Tentou adicionar uma lista a um nó que já possuía lista */
+    /* Condição de retorno da Matriz convertida para Labirinto. Tentou adicionar um elemento a um nó que já possuía elemento */
 
     LAB_CondRetNoVazio = 4,
-    /* Tentou obter a lista de um nó que não possuía lista nenhuma */
+    /* Condição de retorno da Matriz convertida para Labirinto. Tentou obter o elemento de um nó que não possuía elemento algum */
+
+    LAB_CondRetArquivoTextoNulo = 5,
+    /* Não foi possível abrir arquivo de texto */
+
+    LAB_CondRetFaltouMemoriaNoLabirinto = 6,
+    /* Não houve memória para mallocar um elemento do labirinto */
+
 
 } LAB_tpCondRet;
 
@@ -58,8 +59,10 @@ typedef enum
 *   $FC Função: LAB Criar uma matriz com as dimensões necessárias e armazenar o labirinto nela.
 *
 *   $EP Parâmetros
-*       $P LinhasEColunas - O parâmetro que que passará o número de linhas e colunas da labirinto.
-*           Este parâmetro é passado por valor.
+*       $P destruirElemento - O parâmetro que que passará a função de destruição do elemento dentro do labirinto.
+*           Este parâmetro é passado por referência.
+*       $P LabirintoASerCriado - O parâmetro que receberá o ponteiro para o labirinto.
+*           Este parâmetro é passado por referência.
 *
 *   $FV Valor retornado
 *       LAB_CondRetOK
@@ -67,35 +70,32 @@ typedef enum
 *       LAB_CondRetFaltouMemoria
 *
 ****************************************************/
-LAB_tpCondRet LAB_criaLabirinto(void (*destruirElemento)(void *elemento));
+LAB_tpCondRet LAB_criaLabirinto(void (*destruirElemento)(void *elemento), MAT_tppMatriz LabirintoASerCriado);
 
 /*******************************************************
 *
-*   $FC Função: LAB Nó corrente da Labirinto se torna o nó
-*       à Esquerda Superior do nó corrente atual.
+*	$FC Função: LAB Imprime o labirinto.
 *
 *   $EP Parâmetros
-*       $P CabecaDaLabirinto - O parâmetro que receberá o ponteiro para a labirinto.
+*       $P CabecaDoLabirinto - O parâmetro que receberá o ponteiro para o labirinto.
 *           Este parâmetro é passado por referência.
 *
 *   $FV Valor retornado
 *       LAB_CondRetOK
 *
 ********************************************************/
-LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDaLabirinto);
+LAB_tpCondRet LAB_imprimeLabirinto(MAT_tppMatriz CabecaDaLabirinto);
 
 /*******************************************************
 *
-*	$FC Função: LAB Nó corrente da Labirinto se torna o nó
-*       Acima do nó corrente atual.
+*	$FC Função: LAB Destroi o labirinto.
 *
 *   $EP Parâmetros
-*       $P CabecaDaLabirinto - O parâmetro que receberá o ponteiro para a labirinto.
+*       $P CabecaDoLabirinto - O parâmetro que receberá o ponteiro para o labirinto.
 *           Este parâmetro é passado por referência.
 *
 *   $FV Valor retornado
 *       LAB_CondRetOK
-*       LAB_CondRetNoNaoExiste
 *
 ********************************************************/
-LAB_tpCondRet LAB_imprimeLabirinto(LAB_tppLabirinto CabecaDaLabirinto);
+void LAB_destroiLabirinto(MAT_tppMatriz CabecaDaLabirinto);

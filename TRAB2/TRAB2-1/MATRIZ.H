@@ -52,13 +52,17 @@ typedef enum
     /* Tentou mudar o nó corrente para um nó inexistente (NULL) */
 
     MAT_CondRetFaltouMemoria = 2,
-    /* Não houve memória para mallocar um dos nós da matriz */
+    /* Não houve memória para mallocar um dos nós da matriz ou a cabeça da matriz */
 
     MAT_CondRetNoOcupado = 3,
-    /* Tentou adicionar uma lista a um nó que já possuía lista */
+    /* Tentou adicionar um elemento a um nó que já possuía elemento */
 
     MAT_CondRetNoVazio = 4,
-    /* Tentou obter a lista de um nó que não possuía lista nenhuma */
+    /* Tentou obter o elemento de um nó que não possuía elemento algum */
+
+    MAT_CondRetMatrizNaoExiste = 5,
+    /* Matriz não foi criada (Cabeça == NULL) */
+
 
 } MAT_tpCondRet;
 
@@ -90,6 +94,8 @@ MAT_tpCondRet MAT_criaMatriz(char Linhas, char Colunas, void (*destruirElemento)
 *
 *   $EP Parâmetros
 *       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a matriz.
+*           Este parâmetro é passado por referência.
+*       $P destruirElemento - O parâmetro que que passará a função de destruição do elemento dentro da matriz.
 *           Este parâmetro é passado por referência.
 *
 *   $FV Valor retornado
@@ -178,7 +184,7 @@ void MAT_destroiMatriz(MAT_tppMatriz CabecaDaMatriz);
 *       MAT_CondRetNoOcupado
 *
 ********************************************************/
-MAT_tpCondRet MAT_inserirElemento(MAT_tppMatriz CabecaDaMatriz, char *elemento);
+MAT_tpCondRet MAT_inserirElemento(MAT_tppMatriz CabecaDaMatriz, void *elemento);
 
 /*******************************************************
 *
@@ -195,11 +201,11 @@ MAT_tpCondRet MAT_inserirElemento(MAT_tppMatriz CabecaDaMatriz, char *elemento);
 *       MAT_CondRetNoVazio
 *
 ********************************************************/
-MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento);
+MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void *elemento);
 
 /*******************************************************
 *
-*	$FC Função: MAT Ponteiro à esquerda do corrente se torna NULL
+*	$FC Função: MAT Leva nó corrente para a posição do prieiro nó
 *
 *   $EP Parâmetros
 *       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a cabeça da matriz.
@@ -209,5 +215,5 @@ MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento);
 *       MAT_CondRetOK
 *
 ********************************************************/
-MAT_tpCondRet MAT_anulaConexaoAEsquerda(MAT_tppMatriz CabecaDaMatriz)
+MAT_tpCondRet MAT_resetNoCorrente(MAT_tppMatriz CabecaDaMatriz)
 
