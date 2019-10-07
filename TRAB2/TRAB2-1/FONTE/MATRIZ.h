@@ -129,7 +129,6 @@ MAT_tpCondRet MAT_vaiParaEsquerda(MAT_tppMatriz CabecaDaMatriz);
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaDireita(MAT_tppMatriz CabecaDaMatriz);
 
-
 /*******************************************************
 *
 *	$FC Função: MAT Nó corrente da Matriz se torna o nó
@@ -195,3 +194,24 @@ MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void *elemento);
 *
 ********************************************************/
 MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento);
+
+/*******************************************************
+*
+*	$FC Função:
+*       MAT Coloca nó corrente na mesma posição do primeiro nó.
+*
+*
+*	$AE Assertivas de entrada esperadas:
+*		Cabeça da matriz != NULL.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
+*
+*
+*	$AS Assertivas de saída esperadas:
+*       Nó corrente está na mesma posição que o primeiro nó.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
+*
+********************************************************/
+MAT_tpCondRet MAT_resetNoCorrente(MAT_tppMatriz CabecaDaMatriz);
+//teste

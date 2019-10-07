@@ -140,8 +140,13 @@ tpNoMatriz *MAT_criaNo(void)
 *	$FC Função: MAT Nó corrente da Matriz se torna o nó
 *       Acima do nó corrente atual.
 *
-*	$EAE Assertivas de entrada esperadas
-*		CabecaDaMatriz != NULL
+*   $EP Parâmetros
+*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a matriz.
+*           Este parâmetro é passado por referência.
+*
+*   $FV Valor retornado
+*       MAT_CondRetOK
+*       MAT_CondRetNoNaoExiste
 *
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaCima(MAT_tppMatriz CabecaDaMatriz)
@@ -159,8 +164,13 @@ MAT_tpCondRet MAT_vaiParaCima(MAT_tppMatriz CabecaDaMatriz)
 *	$FC Função: MAT Nó corrente da Matriz se torna o nó
 *       à Esquerda do nó corrente atual.
 *
-*	$EAE Assertivas de entrada esperadas
-*		CabecaDaMatriz != NULL
+*   $EP Parâmetros
+*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a matriz.
+*           Este parâmetro é passado por referência.
+*
+*   $FV Valor retornado
+*       MAT_CondRetOK
+*       MAT_CondRetNoNaoExiste
 *
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaEsquerda(MAT_tppMatriz CabecaDaMatriz)
@@ -178,8 +188,13 @@ MAT_tpCondRet MAT_vaiParaEsquerda(MAT_tppMatriz CabecaDaMatriz)
 *	$FC Função: MAT Nó corrente da Matriz se torna o nó
 *       à Direita do nó corrente atual.
 *
-*	$EAE Assertivas de entrada esperadas
-*		CabecaDaMatriz != NULL
+*   $EP Parâmetros
+*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a matriz.
+*           Este parâmetro é passado por referência.
+*
+*   $FV Valor retornado
+*       MAT_CondRetOK
+*       MAT_CondRetNoNaoExiste
 *
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaDireita(MAT_tppMatriz CabecaDaMatriz)
@@ -197,8 +212,13 @@ MAT_tpCondRet MAT_vaiParaDireita(MAT_tppMatriz CabecaDaMatriz)
 *	$FC Função: MAT Nó corrente da Matriz se torna o nó
 *       Abaixo do nó corrente atual.
 *
-*	$EAE Assertivas de entrada esperadas
-*		CabecaDaMatriz != NULL
+*   $EP Parâmetros
+*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a matriz.
+*           Este parâmetro é passado por referência.
+*
+*   $FV Valor retornado
+*       MAT_CondRetOK
+*       MAT_CondRetNoNaoExiste
 *
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaBaixo(MAT_tppMatriz CabecaDaMatriz)
@@ -328,9 +348,19 @@ MAT_tpCondRet MAT_adicionaLinha(MAT_tppMatriz CabecaDaMatriz)
 
 /***************************************************
 *
-*	$FC Função: MAT Criar a estrutura da matriz,
+*   $FC Função: MAT Criar a estrutura da matriz,
 *       criando os nós com a MAT_criaNo() e os
 *       interconectando.
+*
+*  $EP Par�metros
+*       $P LinhasEColunas - O parâmetro que que passará o número de linhas e colunas da matriz.
+*           Este parâmetro é passado por valor.
+*       $P MatrizCriada - O parâmetro que receberá o ponteiro para a cabeça da matriz.
+*           Este parâmetro é passado por referência.
+*
+*   $FV Valor retornado
+*       MAT_CondRetOK
+*       MAT_CondRetFaltouMemoria
 *
 ****************************************************/
 MAT_tpCondRet MAT_cria(char Linhas, char Colunas, void (*destruirElemento)(void *elemento), MAT_tppMatriz *MatrizCriada)
@@ -371,8 +401,13 @@ MAT_tpCondRet MAT_cria(char Linhas, char Colunas, void (*destruirElemento)(void 
 *
 *	$FC Função: MAT Destruir matriz linha por linha.
 *
-*	$EAE Assertivas de entrada esperadas
-*		CabecaDaMatriz != NULL
+*   $EP Parâmetros
+*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a matriz.
+*           Este parâmetro é passado por referência.
+*
+*   $FV Valor retornado
+*       MAT_CondRetOK
+*       MAT_CondRetNoNaoExiste
 *
 ****************************************************/
 void MAT_destroi(MAT_tppMatriz CabecaDaMatriz)
@@ -401,11 +436,18 @@ void MAT_destroi(MAT_tppMatriz CabecaDaMatriz)
 
 /*******************************************************
 *
-*	$FC Função: MAT Inserir elemento no nó corrente da 
+*	$FC Função: MAT Inserir elemento no nó corrente da
 *       matriz
 *
-*	$EAE Assertivas de entrada esperadas:
-*		Lista não nula
+*   $EP Parâmetros
+*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a matriz.
+*           Este parâmetro é passado por referência.
+*       $P elemento - O parâmetro que passará o ponteiro para o elemento a ser incoporado no nó corrente.
+*           Este parâmetro é passado por valor.
+*
+*   $FV Valor retornado
+*       MAT_CondRetOK
+*       MAT_CondRetNoOcupado
 *
 ********************************************************/
 MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void *elemento)
@@ -421,10 +463,17 @@ MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void *elemento)
 
 /*******************************************************
 *
-*	$FC Função: MAT Obtém elemento do nó corrente da matriz
+*	$FC Função: MAT Obtém o elemento do nó corrente da matriz
 *
-*	$EAE Assertivas de entrada esperadas:
-*		Lista não nula
+*   $EP Parâmetros
+*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a cabeça da matriz.
+*           Este parâmetro é passado por referência.
+*       $P elem - O parâmetro que receberá o ponteiro para o elemento a ser obtida.
+*           Este parâmetro é passado por referência.
+*
+*   $FV Valor retornado
+*       MAT_CondRetOK
+*       MAT_CondRetNoVazio
 *
 ********************************************************/
 MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento)

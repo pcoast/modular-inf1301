@@ -11,9 +11,9 @@
 *
 *   $HA Histórico de evolução:
 *       Versão  Autor   Data        Observações
-*       1.00    avc     25/08/2019  Início do desenvolvimento (primeiros
+*       1.00    avc     25/08/2019  Início do desenvolvimento (primeiros 
 *                                   protótipos de funções)
-*       2.00    jpp     03/09/2019  Continuação do desenvolvimento
+*       2.00    jpp     03/09/2019  Continuação do desenvolvimento 
 *                                   (Modificação e adição de protótipos)
 *       3.00    jpp     04/09/2019  Uniformização da interface das funções e
 *                                   das condições de retorno.
@@ -21,10 +21,10 @@
 *   $ED Descrição do módulo
 *       Este módulo implementa um conjunto de funções para criar e
 *       explorar matrizes.
-*       A matriz possui uma cabeça que contém uma referência para o primeiro
+*       A matriz possui uma cabeça que contém uma referência para o primeiro 
 *       nó da matriz e outra referência para um nó corrente da matriz.
 *       O módulo permite a existência de múltiplas matrizes simultâneamente.
-*       Ao iniciar a execução do programa não existe matriz. A matriz nunca
+*       Ao iniciar a execução do programa não existe matriz. A matriz nunca 
 *       está vazia.
 *
 ***************************************************************************/
@@ -34,7 +34,7 @@
 
 /* Tipo referência para uma matriz */
 
-typedef struct tgMatriz* MAT_tppMatriz;
+typedef struct tgMatriz * MAT_tppMatriz;
 
 /***********************************************************************
 *
@@ -45,24 +45,20 @@ typedef struct tgMatriz* MAT_tppMatriz;
 typedef enum
 {
 
-	MAT_CondRetOK = 0,
-	/* Executou corretamente */
+    MAT_CondRetOK = 0,
+    /* Executou corretamente */
 
-	MAT_CondRetNoNaoExiste = 1,
-	/* Tentou mudar o nó corrente para um nó inexistente (NULL) */
+    MAT_CondRetNoNaoExiste = 1,
+    /* Tentou mudar o nó corrente para um nó inexistente (NULL) */
 
-	MAT_CondRetFaltouMemoria = 2,
-	/* Não houve memória para mallocar um dos nós da matriz ou a cabeça da matriz */
+    MAT_CondRetFaltouMemoria = 2,
+    /* Não houve memória para mallocar um dos nós da matriz */
 
-	MAT_CondRetNoOcupado = 3,
-	/* Tentou adicionar um elemento a um nó que já possuía elemento */
+    MAT_CondRetNoOcupado = 3,
+    /* Tentou adicionar uma lista a um nó que já possuía lista */
 
-	MAT_CondRetNoVazio = 4,
-	/* Tentou obter o elemento de um nó que não possuía elemento algum */
-
-	MAT_CondRetMatrizNaoExiste = 5,
-	/* Matriz não foi criada (Cabeça == NULL) */
-
+    MAT_CondRetNoVazio = 4,
+    /* Tentou obter a lista de um nó que não possuía lista nenhuma */
 
 } MAT_tpCondRet;
 
@@ -73,9 +69,7 @@ typedef enum
 *       interconectando.
 *
 *  $EP Par�metros
-*       $P Linhas - O parâmetro que que passará o número de linhas da matriz.
-*           Este parâmetro é passado por valor.
-*       $P Colunas - O parâmetro que que passará o número de colunas da matriz.
+*       $P LinhasEColunas - O parâmetro que que passará o número de linhas e colunas da matriz.
 *           Este parâmetro é passado por valor.
 *       $P MatrizCriada - O parâmetro que receberá o ponteiro para a cabeça da matriz.
 *           Este parâmetro é passado por referência.
@@ -94,8 +88,6 @@ MAT_tpCondRet MAT_cria(char Linhas, char Colunas, void (*destruirElemento)(void*
 *
 *   $EP Parâmetros
 *       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a matriz.
-*           Este parâmetro é passado por referência.
-*       $P destruirElemento - O parâmetro que que passará a função de destruição do elemento dentro da matriz.
 *           Este parâmetro é passado por referência.
 *
 *   $FV Valor retornado
@@ -170,7 +162,7 @@ void MAT_destroi(MAT_tppMatriz CabecaDaMatriz);
 
 /*******************************************************
 *
-*	$FC Função: MAT Inserir elemento no nó corrente da
+*	$FC Função: MAT Inserir elemento no nó corrente da 
 *       matriz
 *
 *   $EP Parâmetros
@@ -184,7 +176,7 @@ void MAT_destroi(MAT_tppMatriz CabecaDaMatriz);
 *       MAT_CondRetNoOcupado
 *
 ********************************************************/
-MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void* elemento);
+MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void *elemento);
 
 /*******************************************************
 *
@@ -201,18 +193,25 @@ MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void* elemento);
 *       MAT_CondRetNoVazio
 *
 ********************************************************/
-MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void** elemento);
+MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento);
 
 /*******************************************************
 *
-*	$FC Função: MAT Leva nó corrente para a posição do prieiro nó
+*	$FC Função:
+*       MAT Coloca nó corrente na mesma posição do primeiro nó.
 *
-*   $EP Parâmetros
-*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a cabeça da matriz.
-*           Este parâmetro é passado por referência.
 *
-*   $FV Valor retornado
-*       MAT_CondRetOK
+*	$AE Assertivas de entrada esperadas:
+*		Cabeça da matriz != NULL.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
+*
+*
+*	$AS Assertivas de saída esperadas:
+*       Nó corrente está na mesma posição que o primeiro nó.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
 *
 ********************************************************/
-MAT_tpCondRet MAT_resetNoCorrente(MAT_tppMatriz CabecaDaMatriz)
+MAT_tpCondRet MAT_resetNoCorrente(MAT_tppMatriz CabecaDaMatriz);
+//teste
