@@ -59,20 +59,20 @@ LAB_tpCondRet LAB_converteCondRet(MAT_tpCondRet CondicaoDeRetornoMatriz)
 
 	switch (CondicaoDeRetornoMatriz)
 	{
-	case MAT_CondRetNoNaoExiste:
-		return LAB_CondRetNoNaoExiste;
+		case MAT_CondRetNoNaoExiste:
+			return LAB_CondRetNoNaoExiste;
 
-	case MAT_CondRetFaltouMemoria:
-		return LAB_CondRetFaltouMemoriaNaMatriz;
+		case MAT_CondRetFaltouMemoria:
+			return LAB_CondRetFaltouMemoriaNaMatriz;
 
-	case MAT_CondRetNoOcupado:
-		return LAB_CondRetNoOcupado;
+		case MAT_CondRetNoOcupado:
+			return LAB_CondRetNoOcupado;
 
-	case MAT_CondRetNoVazio:
-		return LAB_CondRetNoVazio;
+		case MAT_CondRetNoVazio:
+			return LAB_CondRetNoVazio;
 
-	default:
-		break;
+		default:
+			break;
 	}
 }
 
@@ -209,13 +209,14 @@ LAB_tpCondRet LAB_criaLabirinto(void(*destruirElemento)(void *elemento), MAT_tpp
 ****************************************************/
 LAB_tpCondRet LAB_imprimeLabirinto(MAT_tppMatriz CabecaDoLabirinto)
 {
+	int l, c, i;
 	char **elementoLabirinto = malloc(sizeof(char*));
 	MAT_tpCondRet CondRetDeMatriz;
 
-	for (int l = 0; l<linhas; l++)
+	for (l = 0; l<linhas; l++)
 	{
 
-		for (int c = 0; c<colunas; c++)
+		for (c = 0; c<colunas; c++)
 		{
 			CondRetDeMatriz = MAT_obterElemento(CabecaDoLabirinto, elementoLabirinto);
 			if (CondRetDeMatriz != MAT_CondRetOK) return LAB_converteCondRet(CondRetDeMatriz);
@@ -228,7 +229,7 @@ LAB_tpCondRet LAB_imprimeLabirinto(MAT_tppMatriz CabecaDoLabirinto)
 		if (CondRetDeMatriz != MAT_CondRetOK) return LAB_converteCondRet(CondRetDeMatriz); /* Retorna condição de retorno de matriz se algo estiver incorreto */
 
 
-		for (int i = 0; i<colunas; i++)
+		for (i = 0; i<colunas; i++)
 		{
 			CondRetDeMatriz = MAT_vaiParaEsquerda(CabecaDoLabirinto);
 			if (CondRetDeMatriz != MAT_CondRetOK) return LAB_converteCondRet(CondRetDeMatriz); /* Retorna condição de retorno de matriz se algo estiver incorreto */
