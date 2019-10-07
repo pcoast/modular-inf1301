@@ -30,26 +30,26 @@
 typedef enum
 {
 
-    LAB_CondRetOK = 0,
-    /* Executou corretamente */
+	LAB_CondRetOK = 0,
+	/* Executou corretamente */
 
-    LAB_CondRetNoNaoExiste = 1,
-    /* Condição de retorno da Matriz convertida para Labirinto. Tentou mudar o nó corrente para um nó inexistente (NULL) */
+	LAB_CondRetNoNaoExiste = 1,
+	/* Condição de retorno da Matriz convertida para Labirinto. Tentou mudar o nó corrente para um nó inexistente (NULL) */
 
-    LAB_CondRetFaltouMemoriaNaMatriz = 2,
-    /* Condição de retorno da Matriz convertida para Labirinto. Não houve memória para mallocar um dos nós da matriz ou a cabeça da matriz */
+	LAB_CondRetFaltouMemoriaNaMatriz = 2,
+	/* Condição de retorno da Matriz convertida para Labirinto. Não houve memória para mallocar um dos nós da matriz ou a cabeça da matriz */
 
-    LAB_CondRetNoOcupado = 3,
-    /* Condição de retorno da Matriz convertida para Labirinto. Tentou adicionar um elemento a um nó que já possuía elemento */
+	LAB_CondRetNoOcupado = 3,
+	/* Condição de retorno da Matriz convertida para Labirinto. Tentou adicionar um elemento a um nó que já possuía elemento */
 
-    LAB_CondRetNoVazio = 4,
-    /* Condição de retorno da Matriz convertida para Labirinto. Tentou obter o elemento de um nó que não possuía elemento algum */
+	LAB_CondRetNoVazio = 4,
+	/* Condição de retorno da Matriz convertida para Labirinto. Tentou obter o elemento de um nó que não possuía elemento algum */
 
-    LAB_CondRetArquivoTextoNulo = 5,
-    /* Não foi possível abrir arquivo de texto */
+	LAB_CondRetArquivoTextoNulo = 5,
+	/* Não foi possível abrir arquivo de texto */
 
-    LAB_CondRetFaltouMemoriaNoLabirinto = 6,
-    /* Não houve memória para mallocar um elemento do labirinto */
+	LAB_CondRetFaltouMemoriaNoLabirinto = 6,
+	/* Não houve memória para mallocar um elemento do labirinto */
 
 
 } LAB_tpCondRet;
@@ -70,7 +70,7 @@ typedef enum
 *       LAB_CondRetFaltouMemoria
 *
 ****************************************************/
-LAB_tpCondRet LAB_criaLabirinto(void (*destruirElemento)(void *elemento), MAT_tppMatriz LabirintoASerCriado);
+//LAB_tpCondRet LAB_criaLabirinto(void (*destruirElemento)(void *elemento), MAT_tppMatriz LabirintoASerCriado);
 
 /*******************************************************
 *
@@ -84,7 +84,7 @@ LAB_tpCondRet LAB_criaLabirinto(void (*destruirElemento)(void *elemento), MAT_tp
 *       LAB_CondRetOK
 *
 ********************************************************/
-LAB_tpCondRet LAB_imprimeLabirinto(MAT_tppMatriz CabecaDaLabirinto);
+//LAB_tpCondRet LAB_imprimeLabirinto(MAT_tppMatriz CabecaDaLabirinto);
 
 /*******************************************************
 *

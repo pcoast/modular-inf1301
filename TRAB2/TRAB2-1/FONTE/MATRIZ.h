@@ -214,4 +214,3 @@ MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento);
 *
 ********************************************************/
 MAT_tpCondRet MAT_resetNoCorrente(MAT_tppMatriz CabecaDaMatriz);
-//teste
