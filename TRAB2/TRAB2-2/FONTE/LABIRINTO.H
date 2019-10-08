@@ -14,6 +14,7 @@
 *       Versão  Autor   Data        Observações
 *       1.00    jpp     22/09/2019  Início do desenvolvimento (LAB_cria)
 *       2.00    jpp     02/10/2019  Acertar retornos e comentários
+*		3.00	pc		08/10/2019	Adiciona estutura do labirinto e adequa as assinaturas das funções
 *
 *   $ED Descrição do módulo
 *       Este módulo implementa um conjunto de funções para criar e
@@ -51,8 +52,21 @@ typedef enum
 	LAB_CondRetFaltouMemoriaNoLabirinto = 6,
 	/* Não houve memória para mallocar um elemento do labirinto */
 
+	LAB_CondRetLinhasColsExcedidos = 7,
+	/* Execedeu-se o número de linhas ou colunas */
+
+	LAB_CondRetCaractereInvalido = 8,
+	/* Utilizou-se um caractere inválido na criação do labirinto */
+
 
 } LAB_tpCondRet;
+
+
+/***** Declarações exportadas pelo módulo *****/
+
+/* Tipo referência para um labirinto */
+
+typedef struct tgLabirinto* LAB_tppLabirinto;
 
 /***************************************************
 *
@@ -70,7 +84,7 @@ typedef enum
 *       LAB_CondRetFaltouMemoria
 *
 ****************************************************/
-//LAB_tpCondRet LAB_criaLabirinto(void (*destruirElemento)(void *elemento), MAT_tppMatriz LabirintoASerCriado);
+LAB_tpCondRet LAB_criaLabirinto(char *arquivo, LAB_tppLabirinto *LabirintoASerCriado);
 
 /*******************************************************
 *
@@ -84,7 +98,7 @@ typedef enum
 *       LAB_CondRetOK
 *
 ********************************************************/
-//LAB_tpCondRet LAB_imprimeLabirinto(MAT_tppMatriz CabecaDaLabirinto);
+LAB_tpCondRet LAB_imprimeLabirinto(LAB_tppLabirinto CabecaDaLabirinto);
 
 /*******************************************************
 *
@@ -98,4 +112,4 @@ typedef enum
 *       LAB_CondRetOK
 *
 ********************************************************/
-void LAB_destroiLabirinto(MAT_tppMatriz CabecaDaLabirinto);
+void LAB_destroiLabirinto(LAB_tppLabirinto CabecaDaLabirinto);

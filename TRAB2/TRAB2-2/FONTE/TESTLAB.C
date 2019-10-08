@@ -24,13 +24,13 @@
 #include "GENERICO.H"
 #include "LERPARM.H"
 
-#include "MATRIZ.h"
 #include "LABIRINTO.H"
 
-static const char RESET_MATRIZ_CMD[] = "=resetteste";
+LAB_tppLabirinto labirinto;
+
+static const char RESET_LAB_CMD[] = "=resetteste";
 static const char CRIAR_LAB_CMD[] = "=criarlab";
 static const char IMPRIMIR_LAB_CMD[] = "=imprimirlab";
-static const char DESTRUIR_LAB_CMD[] = "=destruirmatriz";
 
 /*
 	Interface de Testes do Módulo de Matrizes com Listas.
@@ -48,9 +48,11 @@ TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 {
 	int i;
 
-	MAT_tpCondRet condRetObtida = MAT_CondRetOK;
-	MAT_tpCondRet condRetEsperada = MAT_CondRetFaltouMemoria;
+	LAB_tpCondRet condRetObtida = LAB_CondRetOK;
+	LAB_tpCondRet condRetEsperada = LAB_CondRetFaltouMemoriaNaMatriz;
 
+
+	char* string = (char*)malloc(sizeof(char) * 12);
 	char valorEsperado = '?';
 	char valorObtido = '!';
 	char valorDado = '\0';
@@ -60,6 +62,34 @@ TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 	int  numLidos = -1;
 
 	TST_tpCondRet ret;
+
+	if (strcmp(ComandoTeste, RESET_LAB_CMD) == 0) {
+
+		LAB_destroiLabirinto(labirinto);
+		labirinto = NULL;
+		return TST_CondRetOK;
+	}
+	else if (strcmp(ComandoTeste, CRIAR_LAB_CMD) == 0) {
+		numLidos = LER_LerParametros("si", string, &condRetEsperada);
+
+		if (numLidos != 2)
+			return TST_CondRetParm;
+
+		condRetObtida = LAB_criaLabirinto(string, &labirinto);
+
+		return TST_CompararInt(condRetEsperada, condRetObtida, "Condicao de retorno errada ao criar labirinto.");
+	}
+	else if (strcmp(ComandoTeste, IMPRIMIR_LAB_CMD) == 0)
+	{
+		numLidos = LER_LerParametros("i", &condRetEsperada);
+
+		if (numLidos != 1)
+			return TST_CondRetParm;
+
+		condRetObtida = LAB_imprimeLabirinto(labirinto);
+
+		return TST_CompararInt(condRetEsperada, condRetObtida, "Condicao de retorno errada ao imprimir labirinto.");
+	}
 
 	return TST_CondRetNaoConhec;
 }
