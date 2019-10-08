@@ -1,4 +1,4 @@
 Data	    Horas Trabalhadas	    Tipo Tarefa	                  Descrição da Tarefa Realizada
-05/10     3 horas               Revisar Projetos              Revisar as estruturas usadas para a constrção da matriz 
-06/10     4 horas               Revisar Código do Módulo      Revisão dos códigos do matriz.c, matriz.h, labirinto.c e labirinto.h
-07/10     4 horas               Projetar                      Projetar os modelos físico, exemplo e arquitetura
+05/10         3 horas               Revisar Projetos              Revisar as estruturas usadas para a constrção da matriz 
+06/10         4 horas               Revisar Código do Módulo      Revisão dos códigos do matriz.c, matriz.h, labirinto.c e labirinto.h
+07/10         4 horas               Projetar                      Projetar os modelos físico, exemplo e arquitetura
