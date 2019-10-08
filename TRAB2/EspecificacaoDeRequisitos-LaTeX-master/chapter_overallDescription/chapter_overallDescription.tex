@@ -18,7 +18,7 @@ A aplicação Labirinto é completamente autocontida, não é um componente de o
 % understandable to any reader of the SRS. A picture of the major groups of
 % related requirements and how they relate, such as a top level data flow diagram
 % or object class diagram, is often effective.$>$
-Será possível construir manualmente um labirinto através de funções específicas (com apenas quatro direções a serem tomadas a cada decisão: norte, sul, leste, oeste) e uma função adicional deverá imprimir o caminho da entrada até a saída.
+Será possível construir manualmente um labirinto, desenhando com caracteres em um arquivo txt, e uma função deverá imprimir o caminho da entrada até a saída.
 
 % \section{User Classes and Characteristics}
 % $<$Identify the various user classes that you anticipate will use this product.
@@ -44,12 +44,12 @@ A aplicação deve operar em computadores 64-bit com OS Windows 7 ou superior.
 % considerations; design conventions or programming standards (for example, if the
 % customer’s organization will be responsible for maintaining the delivered
 % software).$>$
-A aplicação Labirinto deve ser desenvolvida por completo utilizando a linguagem de programação C. Será obrigatório que a arquitetura da aplicação tenha pelo menos dois tipos abstratos de dados, o módulo de Labirinto e o módulo de Matriz, além de um módulo centralizador principal. O módulo de Labirinto deve chamar o módulo Matriz. É proibida a utilização de LISTAS ENCADEADAS e QUALQUER ESTRUTURA ESTÁTICA (por exemplo: VETORES ESTÁTICOS). O algorítmo de resolução do labirinto é... Todos os programas devem estar em conformidade com os padrões dos apêndices de 1 a 10 do livro Programação Modular escrito por Arnt von Staa. Em particular, os módulos e funções devem estar devidamente especificados.
+A aplicação Labirinto deve ser desenvolvida por completo utilizando a linguagem de programação C. Será obrigatório que a arquitetura da aplicação tenha pelo menos dois tipos abstratos de dados, o módulo de Labirinto e o módulo de Matriz, além de um módulo centralizador principal. O módulo de Labirinto deve chamar o módulo Matriz. É proibida a utilização de listas encadeadas e qualquer estrutura estática (por exemplo: vetores estáticos), ou que aloca um espaço de memória contíguo para armazenar a estrutura do labirinto. Todos os programas devem estar em conformidade com os padrões dos apêndices de 1 a 10 do livro Programação Modular escrito por Arnt von Staa. Em particular, os módulos e funções devem estar devidamente especificados.
 
-\section{User Documentation}
-$<$List the user documentation components (such as user manuals, on-line help,
-and tutorials) that will be delivered along with the software. Identify any
-known user documentation delivery formats or standards.$>$
+% \section{User Documentation}
+% $<$List the user documentation components (such as user manuals, on-line help,
+% and tutorials) that will be delivered along with the software. Identify any
+% known user documentation delivery formats or standards.$>$
 
 \section{Suposições e Dependências}
 % $<$List any assumed factors (as opposed to known facts) that could affect the
