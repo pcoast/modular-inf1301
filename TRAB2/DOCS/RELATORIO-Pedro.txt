@@ -1,2 +1,5 @@
 Data	Horas Trabalhadas	Tipo Tarefa	Descrição da Tarefa Realizada
-
+06/10		6		revisar		Revisar código dos módulos e realizar pequenas correções
+07/10		3		codificar	Codificação dos módulos de teste.
+08/10		4		redigir		Redigir os testes para os módulos matriz e labirinto
+08/10		1		realizar 	Relizar os testes e corrigir os erros restantes
