@@ -21,7 +21,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "MATRIZ.H"
+#include "MATRIZ.h"
 #include "LABIRINTO.H"
 
 /***** Variáveis encapsuladas no módulo *****/
