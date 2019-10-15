@@ -11,9 +11,9 @@
 \usepackage[plain]{algorithm}
 \usepackage{algpseudocode}
 \usepackage{listings}
-
 \usepackage{xcolor}
 \usepackage{listings}
+\usepackage{amssymb}
 
 \definecolor{mGreen}{rgb}{0,0.6,0}
 \definecolor{mGray}{rgb}{0.5,0.5,0.5}
@@ -21,23 +21,17 @@
 \definecolor{backgroundColour}{rgb}{0.95,0.95,0.92}
 
 \lstdefinestyle{CStyle}{
-    backgroundcolor=\color{backgroundColour},   
-    commentstyle=\color{mGreen},
-    keywordstyle=\color{magenta},
-    numberstyle=\tiny\color{mGray},
-    stringstyle=\color{mPurple},
-    basicstyle=\footnotesize,
-    breakatwhitespace=false,         
-    breaklines=true,                 
-    captionpos=b,                    
-    keepspaces=true,                 
-    numbers=left,                    
-    numbersep=5pt,                  
-    showspaces=false,                
+    belowcaptionskip=1\baselineskip,
+    breaklines=true,
+    frame=L,
+    xleftmargin=\parindent,
+    language=C,
     showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2,
-    language=C
+    basicstyle=\footnotesize\ttfamily,
+    keywordstyle=\bfseries\color{green!40!black},
+    commentstyle=\itshape\color{purple!40!black},
+    identifierstyle=\color{blue},
+    stringstyle=\color{orange},
 }
 
 \usetikzlibrary{automata,positioning}
@@ -72,12 +66,12 @@
 %
 
 \newcommand{\enterProblemHeader}[1]{
-    \nobreak\extramarks{}{Questão \arabic{#1} continued on next page\ldots}\nobreak{}
-    \nobreak\extramarks{Questão \arabic{#1} (continued)}{Questão \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{}{Questão \arabic{#1} continua na próxima página\ldots}\nobreak{}
+    \nobreak\extramarks{Questão \arabic{#1} (cont.)}{Questão \arabic{#1} continua na próxima página\ldots}\nobreak{}
 }
 
 \newcommand{\exitProblemHeader}[1]{
-    \nobreak\extramarks{Questão \arabic{#1} (continued)}{Questão \arabic{#1} continued on next page\ldots}\nobreak{}
+    \nobreak\extramarks{Questão \arabic{#1} (cont.)}{Questão \arabic{#1} continua na próxima página\ldots}\nobreak{}
     \stepcounter{#1}
     \nobreak\extramarks{Questão \arabic{#1}}{}\nobreak{}
 }
@@ -254,6 +248,39 @@
     \vspace{\baselineskip}
     \textbf{Solução}
 
+    \begin{figure}[h]
+        \centering
+        \caption{Modelo físico da matriz dinâmica tridimensional que armazena árvores binárias que referenciam listas de matrizes genéricas bidimensionais.}
+        \includegraphics[width=0.479\textwidth]{modelo.png}
+    \end{figure}
+
+    \begin{figure}[h]
+        \centering
+        \caption{Exemplo físico da matriz dinâmica tridimensional que armazena árvores binárias que referenciam listas de matrizes genéricas bidimensionais.}
+        \includegraphics[width=\textwidth]{exemplo.png}
+    \end{figure}
+
+    \begin{itemize}
+
+        \item \sloppy$\forall \textrm{ nó } pNo \in \textrm{matriz dinâmica tridimensional : } pNo \rightarrow pNoDireita \ != \ NULL \implies pNo \rightarrow pNoDireita \rightarrow pNoEsquerda == pNo$
+        \item \sloppy$\forall \textrm{ nó } pNo \in \textrm{matriz dinâmica tridimensional : } pNo \rightarrow pNoEsquerda \ != \ NULL \implies pNo \rightarrow pNoEsquerda \rightarrow pNoDireita == pNo$
+        \item \sloppy$\forall \textrm{ nó } pNo \in \textrm{matriz dinâmica tridimensional : } pNo \rightarrow pNoCima \ != \ NULL \implies pNo \rightarrow pNoCima \rightarrow pNoBaixo == pNo$
+        \item \sloppy$\forall \textrm{ nó } pNo \in \textrm{matriz dinâmica tridimensional : } pNo \rightarrow pNoBaixo \ != \ NULL \implies pNo \rightarrow pNoBaixo \rightarrow pNoCima == pNo$
+        \item \sloppy$\forall \textrm{ nó } pNo \in \textrm{matriz dinâmica tridimensional : } pNo \rightarrow pNoFrente \ != \ NULL \implies pNo \rightarrow pNoFrente \rightarrow pNoTras == pNo$
+        \item \sloppy$\forall \textrm{ nó } pNo \in \textrm{matriz dinâmica tridimensional : } pNo \rightarrow pNoTras \ != \ NULL \implies pNo \rightarrow pNoTras \rightarrow pNoFrente == pNo$
+        \item $\forall \textrm{ nó } pNo \in $ árvore binária : a referência para filho à esquerda de um nó tem como destino a raiz da sub-árvore à esquerda
+        \item $\forall \textrm{ nó } pNo \in $ árvore binária : a referência para filho à direita de um nó tem como destino a raiz da sub-árvore à direita
+        \item $\forall \textrm{ nó } pNo \in $ árvore binária : o conjunto de nós alcançáveis a partir da raiz da sub-árvore à esquerda é disjunto do conjunto de nós alcançáveis a partir da raiz da sub-árvore à direita
+        \item $\forall \textrm{ nó } pNo \in $ árvore binária : não existe caminho na árvore que leve de $pNo \rightarrow pNoEsquerda$ ou $pNo \rightarrow pNoDireita$ a $pNo$
+        \item \sloppy$\forall \textrm{ nó } pNo \in \textrm{lista : } pNo \rightarrow pNoDireita \ != \ NULL \implies pNo \rightarrow pNoDireita \rightarrow pNoEsquerda == pNo$
+        \item \sloppy$\forall \textrm{ nó } pNo \in \textrm{lista : } pNo \rightarrow pNoEsquerda \ != \ NULL \implies pNo \rightarrow pNoEsquerda \rightarrow pNoDireita == pNo$
+        \item \sloppy$\forall \textrm{ nó } pNo \in \textrm{matriz genérica bidimensional : } pNo \rightarrow pNoDireita \ != \ NULL \implies pNo \rightarrow pNoDireita \rightarrow pNoEsquerda == pNo$
+        \item \sloppy$\forall \textrm{ nó } pNo \in \textrm{matriz genérica bidimensional : } pNo \rightarrow pNoEsquerda \ != \ NULL \implies pNo \rightarrow pNoEsquerda \rightarrow pNoDireita == pNo$
+        \item \sloppy$\forall \textrm{ nó } pNo \in \textrm{matriz genérica bidimensional : } pNo \rightarrow pNoCima \ != \ NULL \implies pNo \rightarrow pNoCima \rightarrow pNoBaixo == pNo$
+        \item \sloppy$\forall \textrm{ nó } pNo \in \textrm{matriz genérica bidimensional : } pNo \rightarrow pNoBaixo \ != \ NULL \implies pNo \rightarrow pNoBaixo \rightarrow pNoCima == pNo$        
+
+    \end{itemize}
+
 \end{homeworkProblem}
 
 \vspace{\baselineskip}
@@ -278,6 +305,8 @@
 
     \vspace{\baselineskip}
     \textbf{Solução}
+
+    A validação de CPFs será feita no front-end da aplicação. Por esta hipótese sabe-se que não será necessário validar CPFs no back-end pois o mesmo foi feito no front-end.
 
 
 \end{homeworkProblem}
@@ -316,6 +345,12 @@
     \vspace{\baselineskip}
     \textbf{Solução}
 
+    \begin{figure}[h]
+        \centering
+        \caption{Arquitetura modularizada do programa que lê um documento de texto e cria um índice remissivo para cada substantivo encontrado.}
+        \includegraphics[width=0.193\textwidth]{arquiteturalistacomcabeca.png}
+    \end{figure}
+
 \end{homeworkProblem}
 
 \vspace{\baselineskip}
@@ -326,6 +361,8 @@
 
     \vspace{\baselineskip}
     \textbf{Solução}
+
+    Um arco de chamadas não pode ser simultaneamente recursivo direto e indireto, mas pode ser recursivo indireto com trechos de recursão direta. Dependência circular possui mais relação com os módulos dos quais funções são chamadas no arco de chamadas do que as próprias funções chamadas. Um arco recursivo indireto pode gerar dependência circular, quando pelo menos uma função de outro módulo é chamada entre chamadas de uma mesma função. Mas um arco recursivo direto não pode gerar dependência circular.
 
 
 \end{homeworkProblem}
@@ -351,14 +388,14 @@
     \vspace{\baselineskip}
     \textbf{Solução}
 
-    Requisitos inversos são incluídos, geralmente, para eliminar ambiguidades. No requisito apresentado, não etá claro qual Média Final deve ser calculada. Pode ser a Média Final de cada aluno ou de todos os alunos juntos. Também não está claro como a média deve ser claculada. Um requisito que poderia ser adicionado para esclarecer é: "esta aplicação não clacula a média de todos os alunos juntos, a média de cada aluno será calculada por (G1 + G2 + 2*T1)/4".
+    Requisitos inversos são incluídos, geralmente, para eliminar ambiguidades. No requisito apresentado, não está claro qual Média Final deve ser calculada. Pode ser a Média Final de cada aluno ou de todos os alunos juntos. Também não está claro como a média deve ser calculada. Um requisito que poderia ser adicionado para esclarecer é: "esta aplicação não calcula a média de todos os alunos juntos, a média de cada aluno será calculada por (G1 + G2 + 2*T1)/4".
 
 \end{homeworkProblem}
 
 \begin{homeworkProblem}
 
     Especifique as asssertivas de entrada e saída de uma função que é armazenada no cabeça de uma lista para ser utilizada na exclusão do conteúdo apontado por um nó.
-    
+
     \vspace{\baselineskip}
     \textbf{Solução}
 
@@ -368,7 +405,7 @@
 \begin{homeworkProblem}
 
     A validação de requisitos é feita pela equipe técnica junto com o cliente. Certo/Errado. Justifique.
-    
+
     \vspace{\baselineskip}
     \textbf{Solução}
 
@@ -380,10 +417,10 @@
 \begin{homeworkProblem}
 
     Explique o que um gerente de configuração de software faz em um processo de desenvolvimento.
-    
+
     \vspace{\baselineskip}
     \textbf{Solução}
-    
+
     O gerente de configuração de software maneja baselines e ambientes de configuração.
 
 
@@ -392,7 +429,7 @@
 \begin{homeworkProblem}
 
     "O relatório deve ter no máximo dez linhas por página". Requisito funcional, não funcional, restrição ou hipótese? Justifique.
-    
+
     \vspace{\baselineskip}
     \textbf{Solução}
 
@@ -403,20 +440,19 @@
 \begin{homeworkProblem}
 
     Mostre através de um exemplo como é possível com um único módulo de definição gerar interfaces personalizadas para cada módulo cliente.
-    
+
     \vspace{\baselineskip}
     \textbf{Solução}
 
-    O seguinte módulo de definição:
+    O seguinte código de um módulo de definição:
 
     \lstinputlisting[style=CStyle]{M1.h}
 
-    gera \lstinputlisting[style=CStyle]{resultado1.c} com o seguinte módulo cliente:
+    gera \lstinputlisting[style=CStyle]{resultado1.c} com este trecho presente no módulo cliente:
 
     \lstinputlisting[style=CStyle]{MS.c}
 
-    e gera \lstinputlisting[style=CStyle]{resultado2.c} com o seguinte módulo cliente:
-
+    e gera \lstinputlisting[style=CStyle]{resultado2.c} com o seguinte trecho presente em outro módulo cliente:
 
     \lstinputlisting[style=CStyle]{MC.c}
 
@@ -426,7 +462,7 @@
 \begin{homeworkProblem}
 
     Um valor somente declarado pode estar também definido? Certo/errado. Justifique.
-    
+
     \vspace{\baselineskip}
     \textbf{Solução}
 
@@ -437,7 +473,7 @@
 \begin{homeworkProblem}
 
     É possível declarar sem definir? Porque alguém faria isso?
-    
+
     \vspace{\baselineskip}
     \textbf{Solução}
 
@@ -448,7 +484,7 @@
 \begin{homeworkProblem}
 
     O encapsulamento sempre protege os dados. Certo/errado. Justifique.
-    
+
     \vspace{\baselineskip}
     \textbf{Solução}
 
