@@ -38,7 +38,8 @@
 \usepackage{listings} % Required for insertion of code
 
 \usepackage{enumerate} % To modify the enumerate environment
-
+\usepackage{caption}
+\usepackage{parskip}% http://ctan.org/pkg/parskip
 %----------------------------------------------------------------------------------------
 %	ASSIGNMENT INFORMATION
 %----------------------------------------------------------------------------------------
@@ -65,69 +66,93 @@
 %	ASSIGNMENT CONTENT
 %----------------------------------------------------------------------------------------
 \begin{doublespace}
-As vantagens do modelo modular incluem: particionar problemas (subdividí-los, divide and conquer) e permitir que diversos indivíduos contribuam para a solução de um mesmo problema.
+    As vantagens do modelo modular incluem: particionar problemas (subdividí-los, divide and conquer) e permitir que diversos indivíduos contribuam para a solução de um mesmo problema. Tudo que é computável pode ser desenvolvido.
+    
+    \noindent Módulo genérico -> void*
+    
+    \noindent Vantagens da modularidade:
 
-Tudo que é computável pode ser desenvolvido.
+    \begin{itemize}
 
-Módulo genérico -> void*
+        \item Permite vencer barreiras de complexidade.
 
-Vantagens da modularidade:
+        \item Facilita o trabalho em grupo atravéz da paralelização de tarefas.
 
-\begin{itemize}
+        \item Permite reuso do código.
 
-\item Permite vencer barreiras de complexidade.
+        \item Permite a criação de acervos de módulos que fazem parte de determinados assuntos.
 
-\item Facilita o trabalho em grupo atravéz da paralelização de tarefas.
+        \item Facilita a administração de baselines com módulos já testados.
 
-\item Permite reuso do código.
+        \item Facilita o desenvolvimento incremental: agrega, testa, agrega testa, agrega, testa, etc.
 
-\item Permite a criação de acervos de módulos que fazem parte de determinados assuntos.
+        \item Facilita  aprimoramento individual, no sentido de que um aspecto pode ser modificado sem que o resto do projeto seja afetado ou tenha que ser modificado.
 
-\item Facilita a administração de baselines com módulos já testados.
+        \item Reduz o tempo de compilação. Isso porque somente os módulos que foram modificados devem ser recompilados.
 
-\item Facilita o desenvolvimento incremental: agrega, testa, agrega testa, agrega, testa, etc.
+    \end{itemize}
 
-\item Facilita  aprimoramento individual, no sentido de que um aspecto pode ser modificado sem que o resto do projeto seja afetado ou tenha que ser modificado.
+    Teste unitário é o teste individual de cada módulo feito pelo desenvolvedor. Teste de integração é o teste do executável, o conjunto dos módulos.
 
-\item Reduz o tempo de compilação. Isso porque somente os módulos que foram modificados devem ser recompilados.
+    Baseline é o estado testado e estável do executável, depois que todos os testes unitários eo teste de integração obtiveram sucesso.
 
-\end{itemize}
+    Se algo é atualizado/modificado novos testes devem ser executados. Ao final dos testes, se tudo estiver correto, uma nova baseline é estabelecida.
 
-Teste unitário é o teste individual de cada módulo feito pelo desenvolvedor. Teste de integração é o teste do executável, o conjunto dos módulos.
+    \textbf{Princícpios da Modulardiade}
 
-Baseline é o estado testado e estável do executável, depois que todos os testes unitários eo teste de integração obtiveram sucesso.
+    \begin{enumerate}
 
-Se algo é atualizado/modificado novos testes devem ser executados. Ao final dos testes, se tudo estiver correto, uma nova baseline é estabelecida.
+        \item Módulo
 
+              Definição física: unidade independente de compilação.
+
+              Definição lógica: um único conceito.
+
+        \item Elementos de uma aplicação
+
+              Hierarquia: Sistemas -> Programas -> Módulos -> Classes (smente se for orientado a objeto) -> Funções -> Blocos de código -> Linha de comando
+
+              Artefato é qualquer elemento versionado criado ao longo de um processo de desenvolvimento. Por exemplo: programa, documento, ata, relatório.
+
+              Construto (build) é uma versão, mesmo que incompleta, da aplicação. Algo que é funcional e apresentável. Todo construto é um artefato, mas nem todo artefato é um construto.
+
+        \item Interface
+
+              Definição: mecanismo de troca de dados, estados e comandos entre elementos de uma aplicação.
+
+              OBS: a interface somente ocorre no mesmo nível da hierarquia dos elementos deuma aplicação. Portanto, interfaces ocorrem entre sistemas, entre programas, entre módulos entre funções, etc.
+
+              Formas de interface: Sistemas se comunicam por APIs e arquivos. Módulos se comunicam por funções de acesso. Blocos de código se comunicam por variáveis globais.
+
+              Relacionamento Cliente-Servidor
+
+              \begin{figure}[h]
+                  \centering
+                  \includegraphics[width=0.75\textwidth]{clienteservidor.png}
+                  \caption*{M2 pode ser cliente do servidor M1.}
+              \end{figure}
+
+              Caso especial: callback
+
+              \begin{figure}[h!]
+                  \centering
+                  \includegraphics[width=0.55\textwidth]{callback1.png}
+                  \includegraphics[width=0.55\textwidth]{callback2.png}
+              \end{figure}
+
+              \pagebreak
+
+              Interface fornecida por terceiros:
+
+              \begin{figure}[h]
+                  \centering
+                  \includegraphics[width=0.62\textwidth]{interfacefornecida.png}
+                  \caption*{Caso em que dois módulos usam a mesma struct. Em vez de duplicar o código, devemos criar um módulo de definição (.h) e dar include deste módulo em ambos os módulos de implementação (.c).}
+              \end{figure}
+
+    \end{enumerate}
 \end{doublespace}
 
-\textbf{Princícpios da Modulardiade}
-
-\begin{enumerate}
-
-    \item Módulo
-
-    Definição física: unidade independente de compilação.
-
-    Definição lógica: um único conceito.
-
-    \item Elementos de uma aplicação
-    
-    Hierarquia: Sistemas -> Programas -> Módulos -> Classes (smente se for orientado a objeto) -> Funções -> Blocos de código -> Linha de comando
-
-    Artefato é qualquer elemento versionado criado ao longo de um processo de desenvolvimento. Por exemplo: programa, documento, ata, relatório.
-
-    Construto (build) é uma versão, mesmo que incompleta, da aplicação. Algo que é funcional e apresentável. Todo construto é um artefato, mas nem todo artefato é um construto.
-
-    \item Interface
-    
-    Definição: mecanismo de troca de dados, estados e comandos entre elementos de uma aplicação.
-    
-    OBS: a interface somente ocorre no mesmo nível da hierarquia dos elementos deuma aplicação. Portanto, interfaces ocorrem entre sistemas, entre programas, entre módulos entre funções, etc.
-
-    Formas de interface: Sistemas se comunicam por APIs e arquivos. Módulos se comunicam por funções de acesso. Blocos de código se comunicam por variáveis globais.
-    
-\end{enumerate}
 
 % \section*{Question 1}
 
