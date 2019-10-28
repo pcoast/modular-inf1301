@@ -301,26 +301,33 @@ MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento);
 /*******************************************************
 *
 *	$FC Função:
-*       MAT Coloca nó corrente na mesma posição do primeiro nó.
-*
+*       MAT Leva nó corrente da matriz para posição
+*       específica
 *
 *	$AE Assertivas de entrada esperadas:
+*       A posição desejada pertence à matriz. 
+*       Nó corrente da matriz não aponta necessariamente
+*       para a posição inicial (mesma posição que o
+*       primeiro nó).
 *		Cabeça da matriz != NULL.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
-*
 *	$AS Assertivas de saída esperadas:
-*       Nó corrente está na mesma posição que o primeiro nó.
+*       Nó corrente da matriz está na posição desejada.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
 *   $EP Parâmetros
 *       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a cabeça da matriz.
 *           Este parâmetro é passado por referência.
+*       $P Coluna - O parâmetro que recebe a posição horizontal do nó que o nó corrente deve apontar.
+*           Este parâmetro é passado por valor.
+*       $P Linha - O parâmetro que recebe a posição vertical do nó que o nó corrente deve apontar.
+*           Este parâmetro é passado por valor.
 *
 *   $FV Valor retornado
 *       MAT_CondRetOK
 *
 ********************************************************/
-MAT_tpCondRet MAT_resetNoCorrente(MAT_tppMatriz CabecaDaMatriz);
+MAT_tpCondRet MAT_vaiParaPos(MAT_tppMatriz CabecaDaMatriz, char Coluna, char Linha);

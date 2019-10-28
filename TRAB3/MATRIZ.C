@@ -46,35 +46,34 @@
 typedef struct tgNoMatriz
 {
 
-	struct tgNoMatriz* pNoCima;
-	/* Ponteiro para nó de cima
+    struct tgNoMatriz *pNoCima;
+    /* Ponteiro para nó de cima
 		*
 		*$EED Assertivas estruturais
 		*    */
 
-	struct tgNoMatriz* pNoEsquerda;
-	/* Ponteiro para nó da esquerda
+    struct tgNoMatriz *pNoEsquerda;
+    /* Ponteiro para nó da esquerda
 			   *
 			   *$EED Assertivas estruturais
 			   *    */
 
-	void* Elemento;
-	/* Elemento contido no nó */
+    void *Elemento;
+    /* Elemento contido no nó */
 
-	struct tgNoMatriz* pNoDireita;
-	/* Ponteiro para nó da direita
+    struct tgNoMatriz *pNoDireita;
+    /* Ponteiro para nó da direita
 			   *
 			   *$EED Assertivas estruturais
 			   *    */
 
-	struct tgNoMatriz* pNoBaixo;
-	/* Ponteiro para nó de baixo
+    struct tgNoMatriz *pNoBaixo;
+    /* Ponteiro para nó de baixo
 			   *
 			   *$EED Assertivas estruturais
 			   *    */
 
 } tpNoMatriz;
-
 
 /***********************************************************************
 *
@@ -103,12 +102,12 @@ typedef struct tgMatriz
 
     void (*destruirElemento)(void *elemento);
     /* Ponteiro para a função de destrução de um elemento */
-    
+
 } tpMatriz;
 
 /***** Protótipos das funções encapsuladas no módulo *****/
 
-   static tpNoMatriz *MAT_criaNo(void);
+static tpNoMatriz *MAT_criaNo(void);
 
 /*****  C�digo das fun��es exportadas pelo m�dulo  *****/
 
@@ -133,7 +132,7 @@ tpNoMatriz *MAT_criaNo(void)
 {
     tpNoMatriz *NoMatrizCriado;
 
-    NoMatrizCriado = (tpNoMatriz*) malloc(sizeof(tpNoMatriz));
+    NoMatrizCriado = (tpNoMatriz *)malloc(sizeof(tpNoMatriz));
 
     if (NoMatrizCriado == NULL)
         return NULL;
@@ -171,12 +170,11 @@ tpNoMatriz *MAT_criaNo(void)
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaCima(MAT_tppMatriz CabecaDaMatriz)
 {
-	if (CabecaDaMatriz->pNoCorr->pNoCima == NULL) /* Não existe nó nesta direção */
-		return MAT_CondRetNoNaoExiste; /* Retorna condição de falha na movimentação do nó corrente */
+    if (CabecaDaMatriz->pNoCorr->pNoCima == NULL) /* Não existe nó nesta direção */
+        return MAT_CondRetNoNaoExiste;            /* Retorna condição de falha na movimentação do nó corrente */
 
-	CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoCima; /* Movimenta nó corrente na direção indicada */
-	return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
-
+    CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoCima; /* Movimenta nó corrente na direção indicada */
+    return MAT_CondRetOK;                                       /* Retorna condição de teste bem sucedido */
 }
 
 /*******************************************************
@@ -203,12 +201,11 @@ MAT_tpCondRet MAT_vaiParaCima(MAT_tppMatriz CabecaDaMatriz)
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaEsquerda(MAT_tppMatriz CabecaDaMatriz)
 {
-	if (CabecaDaMatriz->pNoCorr->pNoEsquerda == NULL) /* Não existe nó nesta direção */
-		return MAT_CondRetNoNaoExiste; /* Retorna condição de falha na movimentação do nó corrente */
+    if (CabecaDaMatriz->pNoCorr->pNoEsquerda == NULL) /* Não existe nó nesta direção */
+        return MAT_CondRetNoNaoExiste;                /* Retorna condição de falha na movimentação do nó corrente */
 
-	CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoEsquerda; /* Movimenta nó corrente na direção indicada */
-	return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
-
+    CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoEsquerda; /* Movimenta nó corrente na direção indicada */
+    return MAT_CondRetOK;                                           /* Retorna condição de teste bem sucedido */
 }
 
 /*******************************************************
@@ -235,12 +232,11 @@ MAT_tpCondRet MAT_vaiParaEsquerda(MAT_tppMatriz CabecaDaMatriz)
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaDireita(MAT_tppMatriz CabecaDaMatriz)
 {
-	if (CabecaDaMatriz->pNoCorr->pNoDireita == NULL) /* Não existe nó nesta direção */
-		return MAT_CondRetNoNaoExiste; /* Retorna condição de falha na movimentação do nó corrente */
+    if (CabecaDaMatriz->pNoCorr->pNoDireita == NULL) /* Não existe nó nesta direção */
+        return MAT_CondRetNoNaoExiste;               /* Retorna condição de falha na movimentação do nó corrente */
 
-	CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoDireita; /* Movimenta nó corrente na direção indicada */
-	return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
-
+    CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoDireita; /* Movimenta nó corrente na direção indicada */
+    return MAT_CondRetOK;                                          /* Retorna condição de teste bem sucedido */
 }
 
 /*******************************************************
@@ -267,127 +263,132 @@ MAT_tpCondRet MAT_vaiParaDireita(MAT_tppMatriz CabecaDaMatriz)
 ********************************************************/
 MAT_tpCondRet MAT_vaiParaBaixo(MAT_tppMatriz CabecaDaMatriz)
 {
-	if (CabecaDaMatriz->pNoCorr->pNoBaixo == NULL) /* Não existe nó nesta direção */
-		return MAT_CondRetNoNaoExiste; /* Retorna condição de falha na movimentação do nó corrente */
+    if (CabecaDaMatriz->pNoCorr->pNoBaixo == NULL) /* Não existe nó nesta direção */
+        return MAT_CondRetNoNaoExiste;             /* Retorna condição de falha na movimentação do nó corrente */
 
-	CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoBaixo; /* Movimenta nó corrente na direção indicada */
-	return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
-
-}
-
-/*******************************************************
-*
-*	$FC Função:
-*       MAT Coloca nó corrente na mesma posição do primeiro nó.
-*
-*
-*	$AE Assertivas de entrada esperadas:
-*		Cabeça da matriz != NULL.
-*		Valem as assertivas estruturais da matriz
-*       com cabeça.
-*
-*
-*	$AS Assertivas de saída esperadas:
-*       Nó corrente está na mesma posição que o primeiro nó.
-*		Valem as assertivas estruturais da matriz
-*       com cabeça.
-*
-********************************************************/
-MAT_tpCondRet MAT_resetNoCorrente(MAT_tppMatriz CabecaDaMatriz)
-{
-	CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoPrimeiro;
-
-	return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
+    CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoBaixo; /* Movimenta nó corrente na direção indicada */
+    return MAT_CondRetOK;                                        /* Retorna condição de teste bem sucedido */
 }
 
 /***************************************************
 *
 *   $FC Função:
-*       MAT Adiciona uma coluna à matriz.
+*       MAT Adiciona um certo número de colunas
+*       à matriz.
 *
 *
 *	$AE Assertivas de entrada esperadas:
+*       Nó corrente aponta para algum nó da
+*       primeira linha.
 *       Cabeça da Matriz != NULL.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
 *
 *	$AS Assertivas de saída esperadas:
-*       Coluna foi adicionada à matriz.
+*       O número desejado de colunas foram
+*       adicionadas à matriz.
+*       Primeiro nó e nó corrente apontam para o nó
+*       mais à esquerda e mais acima possível.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
 ****************************************************/
-MAT_tpCondRet MAT_adicionaColuna(MAT_tppMatriz CabecaDaMatriz)
+MAT_tpCondRet MAT_adicionaColuna(MAT_tppMatriz CabecaDaMatriz, char numColunasAAdicionar)
 {
-	while (CabecaDaMatriz->pNoCorr->pNoDireita) /* Loop para chegar no primeiro nó da última coluna da matriz */
-		MAT_vaiParaDireita(CabecaDaMatriz);
-	
-	/* No bloco de código abaixo o nó corrente percorrerá a última coluna da matriz criando nós à
+    while (CabecaDaMatriz->pNoCorr->pNoDireita) /* Loop para chegar no primeiro nó da última coluna da matriz */
+        MAT_vaiParaDireita(CabecaDaMatriz);
+
+    /* No bloco de código abaixo o nó corrente percorrerá a última coluna da matriz criando nós à
 	direita para gerar uma nova coluna */
-	do
-	{
-		CabecaDaMatriz->pNoCorr->pNoDireita = MAT_criaNo(); /* Cria nó da coluna nova à direita do nó corrente */
-		if (!CabecaDaMatriz->pNoCorr->pNoDireita) return MAT_CondRetFaltouMemoria;  /* Nó criado == NULL. Retorna condição de insufuciência de memória */
 
-		CabecaDaMatriz->pNoCorr->pNoDireita->pNoEsquerda = CabecaDaMatriz->pNoCorr; /* Conecta nó da coluna nova ao nó corrente */
-		if (CabecaDaMatriz->pNoCorr->pNoCima) /* Se existir nó acima do nó corrente (não é o primeiro nó da coluna) */
-		{
-			CabecaDaMatriz->pNoCorr->pNoDireita->pNoCima = CabecaDaMatriz->pNoCorr->pNoCima->pNoDireita; /* Conecta o nó da coluna nova ao acima dele */
-			CabecaDaMatriz->pNoCorr->pNoCima->pNoDireita->pNoBaixo = CabecaDaMatriz->pNoCorr->pNoDireita; /* Conecta o de cima do novo ao novo */
-		}
+    while (numColunasAAdicionar--)
+    {
+        do
+        {
+            CabecaDaMatriz->pNoCorr->pNoDireita = MAT_criaNo(); /* Cria nó da coluna nova à direita do nó corrente */
+            if (!CabecaDaMatriz->pNoCorr->pNoDireita)
+                return MAT_CondRetFaltouMemoria; /* Nó criado == NULL. Retorna condição de insufuciência de memória */
 
-	} while (MAT_vaiParaBaixo(CabecaDaMatriz) != MAT_CondRetNoNaoExiste); /* Nó corrente desce a coluna. Para somente quando caminhar para o NULL */
+            CabecaDaMatriz->pNoCorr->pNoDireita->pNoEsquerda = CabecaDaMatriz->pNoCorr; /* Conecta nó da coluna nova ao nó corrente */
+            if (CabecaDaMatriz->pNoCorr->pNoCima)                                       /* Se existir nó acima do nó corrente (não é o primeiro nó da coluna) */
+            {
+                CabecaDaMatriz->pNoCorr->pNoDireita->pNoCima = CabecaDaMatriz->pNoCorr->pNoCima->pNoDireita;  /* Conecta o nó da coluna nova ao acima dele */
+                CabecaDaMatriz->pNoCorr->pNoCima->pNoDireita->pNoBaixo = CabecaDaMatriz->pNoCorr->pNoDireita; /* Conecta o de cima do novo ao novo */
+            }
 
-	MAT_resetNoCorrente(CabecaDaMatriz); /* Coloca o nó corrente na mesma posição do primeiro nó */
+        } while (MAT_vaiParaBaixo(CabecaDaMatriz) != MAT_CondRetNoNaoExiste); /* Nó corrente desce a coluna. Para somente quando caminhar para o NULL */
 
-	return MAT_CondRetOK;
+        MAT_vaiParaDireita(CabecaDaMatriz); /* Vai para nó mais em baixo da coluna nova da matriz */
+
+        while (CabecaDaMatriz->pNoCorr->pNoCima) /* Loop para chegar no nó mais acima da nova coluna da matriz */
+            MAT_vaiParaCima(CabecaDaMatriz);
+    }
+
+    MAT_vaiParaPos(CabecaDaMatriz,0,0); /* Coloca nó corrente na mesma posição que o primeiro nó */
+
+    return MAT_CondRetOK;
 }
 
 /***************************************************
 *
 *   $FC Função:
-*       MAT Adiciona uma linha à matriz.
+*       MAT Adiciona um certo número de linhas
+*       à matriz.
 *
 *
 *	$AE Assertivas de entrada esperadas:
+*       Nó corrente aponta para algum nó da
+*       primeira coluna.
 *       Cabeça da Matriz != NULL.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
 *
 *	$AS Assertivas de saída esperadas:
-*       Linha foi adicionada à matriz.
+*       O número desejado de linhas foram
+*       adicionadas à matriz.
+*       Primeiro nó e nó corrente apontam para o nó
+*       mais à esquerda e mais acima possível.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
 ****************************************************/
-MAT_tpCondRet MAT_adicionaLinha(MAT_tppMatriz CabecaDaMatriz)
+MAT_tpCondRet MAT_adicionaLinha(MAT_tppMatriz CabecaDaMatriz, char numLinhasAAdicionar)
 {
-	while (CabecaDaMatriz->pNoCorr->pNoBaixo) /* Loop para chegar no primeiro nó da última linha da matriz */
-		MAT_vaiParaBaixo(CabecaDaMatriz);
+    while (CabecaDaMatriz->pNoCorr->pNoBaixo) /* Loop para chegar no primeiro nó da última linha da matriz */
+        MAT_vaiParaBaixo(CabecaDaMatriz);
 
-	/* No bloco de código abaixo o nó corrente percorrerá a última linha da matriz criando nós
+    /* No bloco de código abaixo o nó corrente percorrerá a última linha da matriz criando nós
 	abaixo para gerar uma nova linha */
 
-	do
-	{
-		CabecaDaMatriz->pNoCorr->pNoBaixo = MAT_criaNo(); /* Cria nó da linha nova abaixo do nó corrente atual */
+    while (numLinhasAAdicionar--)
+    {
+        do
+        {
+            CabecaDaMatriz->pNoCorr->pNoBaixo = MAT_criaNo(); /* Cria nó da linha nova abaixo do nó corrente atual */
 
-		if (!CabecaDaMatriz->pNoCorr->pNoBaixo) return MAT_CondRetFaltouMemoria; /* Nó criado == NULL. Retorna condição de insufuciência de memória */
+            if (!CabecaDaMatriz->pNoCorr->pNoBaixo)
+                return MAT_CondRetFaltouMemoria; /* Nó criado == NULL. Retorna condição de insufuciência de memória */
 
-		CabecaDaMatriz->pNoCorr->pNoBaixo->pNoCima = CabecaDaMatriz->pNoCorr; /* Conecta nó da linha nova ao nó corrente atual */
+            CabecaDaMatriz->pNoCorr->pNoBaixo->pNoCima = CabecaDaMatriz->pNoCorr; /* Conecta nó da linha nova ao nó corrente atual */
 
-		if (CabecaDaMatriz->pNoCorr->pNoEsquerda) /* Se existir nó à esquerda do nó corrente atual (não é o primeiro nó da linha) */
-		{
-			CabecaDaMatriz->pNoCorr->pNoBaixo->pNoEsquerda = CabecaDaMatriz->pNoCorr->pNoEsquerda->pNoBaixo; /* Conecta o nó da linha nova ao à esquerda dele */
-			CabecaDaMatriz->pNoCorr->pNoEsquerda->pNoBaixo->pNoDireita = CabecaDaMatriz->pNoCorr->pNoBaixo; /* Conecta o de à esquerda do novo ao novo */
-		}
-	} while (MAT_vaiParaDireita(CabecaDaMatriz) != MAT_CondRetNoNaoExiste); /* Nó corrente anda para a direita na linha. Para somente quando caminhar para o NULL */
+            if (CabecaDaMatriz->pNoCorr->pNoEsquerda) /* Se existir nó à esquerda do nó corrente atual (não é o primeiro nó da linha) */
+            {
+                CabecaDaMatriz->pNoCorr->pNoBaixo->pNoEsquerda = CabecaDaMatriz->pNoCorr->pNoEsquerda->pNoBaixo; /* Conecta o nó da linha nova ao à esquerda dele */
+                CabecaDaMatriz->pNoCorr->pNoEsquerda->pNoBaixo->pNoDireita = CabecaDaMatriz->pNoCorr->pNoBaixo;  /* Conecta o de à esquerda do novo ao novo */
+            }
+        } while (MAT_vaiParaDireita(CabecaDaMatriz) != MAT_CondRetNoNaoExiste); /* Nó corrente anda para a direita na linha. Para somente quando caminhar para o NULL */
 
-	MAT_resetNoCorrente(CabecaDaMatriz); /* Coloca o nó corrente na mesma posição do primeiro nó */
+        MAT_vaiParaBaixo(CabecaDaMatriz); /* Vai para nó mais a direita da linha nova da matriz */
 
-	return MAT_CondRetOK;
+        while (CabecaDaMatriz->pNoCorr->pNoCima) /* Loop para chegar no nó mais à esquerda da nova linha da matriz */
+            MAT_vaiParaEsquerda(CabecaDaMatriz);
+    }
+
+    MAT_vaiParaPos(CabecaDaMatriz,0,0); /* Coloca nó corrente na mesma posição que o primeiro nó */
+
+    return MAT_CondRetOK;
 }
 
 /***************************************************
@@ -417,36 +418,39 @@ MAT_tpCondRet MAT_adicionaLinha(MAT_tppMatriz CabecaDaMatriz)
 ****************************************************/
 MAT_tpCondRet MAT_cria(char Linhas, char Colunas, void (*destruirElemento)(void *elemento), MAT_tppMatriz *MatrizCriada)
 {
-	tpNoMatriz* PrimeiroNo;
+    tpNoMatriz *PrimeiroNo;
 
-	PrimeiroNo = MAT_criaNo(); /* Cria primeiro nó da Matriz */
-	if (!PrimeiroNo) return MAT_CondRetFaltouMemoria; /* Primeiro Nó == NULL */
+    PrimeiroNo = MAT_criaNo(); /* Cria primeiro nó da Matriz */
+    if (!PrimeiroNo)
+        return MAT_CondRetFaltouMemoria; /* Primeiro Nó == NULL */
 
+    (*MatrizCriada) = (MAT_tppMatriz)malloc(sizeof(tpMatriz)); /* Malloca cabeça da matriz */
+    if (!(*MatrizCriada))
+        return MAT_CondRetFaltouMemoria; /* Cabeça da Matriz == NULL, Retorna condição de insufuciência de memória */
 
-	(*MatrizCriada) = (MAT_tppMatriz)malloc(sizeof(tpMatriz)); /* Malloca cabeça da matriz */
-	if (!(*MatrizCriada)) return MAT_CondRetFaltouMemoria; /* Cabeça da Matriz == NULL, Retorna condição de insufuciência de memória */
+    (*MatrizCriada)->pNoPrimeiro = PrimeiroNo;
 
-	(*MatrizCriada)->pNoPrimeiro = PrimeiroNo;
+    (*MatrizCriada)->pNoCorr = PrimeiroNo; /* Primeiro nó e nó corrente são o mesmo nó */
 
-	(*MatrizCriada)->pNoCorr = PrimeiroNo; /* Primeiro nó e nó corrente são o mesmo nó */
+    (*MatrizCriada)->destruirElemento = destruirElemento;
 
-	(*MatrizCriada)->destruirElemento = destruirElemento;
-
-	while (--Colunas) /* Cria primeira linha da matriz a partir do primeiro nó.
+    /* Cria primeira linha da matriz a partir do primeiro nó.
 	Subtrai primeiro porque um nó (o primeiro) está feito */
-		if (MAT_adicionaColuna((*MatrizCriada)) == MAT_CondRetFaltouMemoria) return MAT_CondRetFaltouMemoria;
-	/* Cada chamada cria uma coluna nova na matriz. Já que só há um nó na matriz,
+    if (MAT_adicionaColuna((*MatrizCriada), Colunas) == MAT_CondRetFaltouMemoria)
+        return MAT_CondRetFaltouMemoria;
+    /* Cada chamada cria uma coluna nova na matriz. Já que só há um nó na matriz,
 	cada chamada da função só cria novos nós à direita do primeiro, formando a primeira linha */
 
-	while (--Linhas) /* Cria as linhas da matriz extendendo a primeira linha.
+    /* Cria as linhas da matriz extendendo a primeira linha.
 	Subtrai primeiro porque uma linha (a primeira) está feita */
 
-		if (MAT_adicionaLinha((*MatrizCriada)) == MAT_CondRetFaltouMemoria) return MAT_CondRetFaltouMemoria;
-	/* Cada chamada cria uma linha nova na matriz. */
+    if (MAT_adicionaLinha((*MatrizCriada), Linhas) == MAT_CondRetFaltouMemoria)
+        return MAT_CondRetFaltouMemoria;
+    /* Cada chamada cria uma linha nova na matriz. */
 
-	(*MatrizCriada)->destruirElemento = destruirElemento;
+    (*MatrizCriada)->destruirElemento = destruirElemento;
 
-	return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
+    return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
 /***************************************************
@@ -456,6 +460,9 @@ MAT_tpCondRet MAT_cria(char Linhas, char Colunas, void (*destruirElemento)(void 
 *
 *
 *	$AE Assertivas de entrada esperadas:
+*       Nó corrente da matriz não aponta necessariamente
+*       para a posição inicial (mesma posição que o
+*       primeiro nó).
 *       Cabeça da matriz != NULL.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
@@ -471,22 +478,24 @@ void MAT_destroi(MAT_tppMatriz CabecaDaMatriz)
 {
     tpNoMatriz *PrimeiroNoDaLinhaDeBaixo;
 
+    MAT_vaiParaPos(CabecaDaMatriz,0,0); /* Coloca nó corrente na mesma posição que o primeiro nó */
+
     do
     {
-        PrimeiroNoDaLinhaDeBaixo = CabecaDaMatriz->pNoPrimeiro->pNoBaixo; /* Guarda primeiro nó da linha de baixo para deletar a linha seguinte */
+        PrimeiroNoDaLinhaDeBaixo = CabecaDaMatriz->pNoPrimeiro->pNoBaixo;  /* Guarda primeiro nó da linha de baixo para deletar a linha seguinte */
         CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoPrimeiro->pNoDireita; /* Nó corrente é o nó à direita do primeiro nó da matriz */
         do
         {
             CabecaDaMatriz->destruirElemento(CabecaDaMatriz->pNoPrimeiro->Elemento); /* Libera o ponteiro do elemento */
-            free(CabecaDaMatriz->pNoPrimeiro); /* Libera primeiro nó da matriz */
-            if (CabecaDaMatriz->pNoCorr == NULL) /* Liberou o último nó desta linha da matriz */
-                break; /* Segue para próxima linha da matriz */
-            CabecaDaMatriz->pNoPrimeiro = CabecaDaMatriz->pNoCorr; /* Primeiro nó da matriz é o mesmo que o corrente */
-            CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoDireita; /* Nó corrente é o nó à direita do primeiro nó da matriz */
-        } while (1); /* Para sempre */
+            free(CabecaDaMatriz->pNoPrimeiro);                                       /* Libera primeiro nó da matriz */
+            if (CabecaDaMatriz->pNoCorr == NULL)                                     /* Liberou o último nó desta linha da matriz */
+                break;                                                               /* Segue para próxima linha da matriz */
+            CabecaDaMatriz->pNoPrimeiro = CabecaDaMatriz->pNoCorr;                   /* Primeiro nó da matriz é o mesmo que o corrente */
+            CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoDireita;           /* Nó corrente é o nó à direita do primeiro nó da matriz */
+        } while (1);                                                                 /* Para sempre */
 
         CabecaDaMatriz->pNoPrimeiro = PrimeiroNoDaLinhaDeBaixo; /* Primeiro nó da matriz se torna o primeiro nó da linha de baixo */
-    } while (PrimeiroNoDaLinhaDeBaixo != NULL); /* Se a condição for quebrada, então liberou a última linha da matriz */
+    } while (PrimeiroNoDaLinhaDeBaixo != NULL);                 /* Se a condição for quebrada, então liberou a última linha da matriz */
 
     free(CabecaDaMatriz); /* Libera cabeça da matriz */
 }
@@ -517,12 +526,11 @@ void MAT_destroi(MAT_tppMatriz CabecaDaMatriz)
 MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void *elemento)
 {
     if (CabecaDaMatriz->pNoCorr->Elemento != NULL) /* Nó corrente já possui lista */
-        return MAT_CondRetNoOcupado; /* Retorna condição de falha na incorporação da lista no nó corrente */
+        return MAT_CondRetNoOcupado;               /* Retorna condição de falha na incorporação da lista no nó corrente */
 
     CabecaDaMatriz->pNoCorr->Elemento = elemento; /* Incopora ponteiro da lista passado por referência no nó corrente */
 
     return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
-
 }
 
 /*******************************************************
@@ -540,7 +548,7 @@ MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void *elemento)
 *
 *
 *	$AS Assertivas de saída esperadas:
-*       elemento foi obtido do nó corrente da matriz.
+*       Elemento foi obtido do nó corrente da matriz.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
@@ -548,9 +556,44 @@ MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void *elemento)
 MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento)
 {
     if (CabecaDaMatriz->pNoCorr->Elemento == NULL) /* Nó corrente não possui lista */
-        return MAT_CondRetNoVazio; /* Retorna condição de falha na obtenção da lista incorporada no nó corrente */
+        return MAT_CondRetNoVazio;                 /* Retorna condição de falha na obtenção da lista incorporada no nó corrente */
 
     *elemento = CabecaDaMatriz->pNoCorr->Elemento; /* Passa, por referência, o ponteiro da lista incorporado no nó corrente */
 
     return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
+}
+
+/*******************************************************
+*
+*	$FC Função:
+*       MAT Leva nó corrente da matriz para posição
+*       específica
+*
+*
+*	$AE Assertivas de entrada esperadas:
+*       A posição desejada pertence à matriz. 
+*       Nó corrente da matriz não aponta necessariamente
+*       para a posição inicial (mesma posição que o
+*       primeiro nó).
+*		Cabeça da matriz != NULL.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
+*
+*
+*	$AS Assertivas de saída esperadas:
+*       Nó corrente da matriz está na posição desejada.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
+*
+********************************************************/
+MAT_tpCondRet MAT_vaiParaPos(MAT_tppMatriz CabecaDaMatriz, char Coluna, char Linha)
+{
+    CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoPrimeiro; /* Coloca nó corrente na mesma posição que o primeiro nó */
+
+    while (Coluna--) MAT_vaiParaDireita(CabecaDaMatriz);
+
+    while(Linha--) MAT_vaiParaBaixo(CabecaDaMatriz);
+
+    return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
+
 }

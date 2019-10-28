@@ -41,19 +41,29 @@
 *
 ***********************************************************************/
 
+/***** Tipos encapsulados no módulo *****/
+
 typedef struct tgLabirinto
 {
-	MAT_tppMatriz matriz;
+    MAT_tppMatriz matriz;
 } tpLabirinto;
+
+typedef struct tgElementoLabirinto
+{
+    char paredeCaminhoEntradaOuSaida;
+    char numPassadas;
+
+} tpElementoLabirinto;
 
 /***** Variáveis encapsuladas no módulo *****/
 
-static char colunas,linhas;
-
+static char colunas, linhas, colunaInicio, linhaInicio;
 
 /***** Protótipos das funções encapsuladas no módulo *****/
 
 static LAB_tpCondRet LAB_converteCondRet(MAT_tpCondRet CondicaoDeRetornoMatriz);
+static LAB_tpCondRet LAB_percorreLabirinto(LAB_tppLabirinto CabecaDoLabirinto, char *resposta);
+
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -77,9 +87,9 @@ static LAB_tpCondRet LAB_converteCondRet(MAT_tpCondRet CondicaoDeRetornoMatriz);
 ****************************************************/
 LAB_tpCondRet LAB_converteCondRet(MAT_tpCondRet CondicaoDeRetornoMatriz)
 {
-	if (CondicaoDeRetornoMatriz == MAT_CondRetFaltouMemoria)
-		return LAB_CondRetFaltouMemoria;
-	return LAB_CondRetProblemaMatriz;
+    if (CondicaoDeRetornoMatriz == MAT_CondRetFaltouMemoria)
+        return LAB_CondRetFaltouMemoria;
+    return LAB_CondRetProblemaMatriz;
 }
 
 /***************************************************
@@ -109,109 +119,191 @@ LAB_tpCondRet LAB_converteCondRet(MAT_tpCondRet CondicaoDeRetornoMatriz)
 *       Dimensões corretas do labirinto foram
 *       armazenadas nas variáveis globais
 *       "linhas" e "colunas".
+*       Posição de inicio do labirinto foi
+*       armazenada nas variáveis "colunaInicio"
+*       e "linhaInicio".
+*       Nó corrente da matriz aponta para a posição
+*       de inicio do labirinto.
 *		Valem as assertivas estruturais do
 *       labirinto.
 *
 ****************************************************/
 LAB_tpCondRet LAB_criaLabirinto(char *arquivo, LAB_tppLabirinto *LabirintoASerCriado)
 {
-	
-	int i, colCount = 0, lineCount = 0;
-	FILE *fp;
-	char CaractereTexto, *CaractereLabirinto;
-	MAT_tpCondRet CondRetDeMatriz;
-	LAB_tpCondRet CondRetConvertidoParaLabirinto;
-	
-	MAT_tppMatriz matriz = NULL;
 
-	fp = fopen(arquivo, "r"); /* Abre arquivo de texto no modo leitura */
+    int i, colCount = 0, lineCount = 0;
+    FILE *fp;
+    char CaractereTexto, CaractereLabirinto;
+    MAT_tpCondRet CondRetDeMatriz;
+    LAB_tpCondRet CondRetConvertidoParaLabirinto;
+    tpElementoLabirinto *elementoLabirinto;
 
-	if (!fp) return LAB_CondRetArquivoTextoNulo; /* fp == NULL retorna condição de arquivo de texto nulo */
+    MAT_tppMatriz matriz = NULL;
 
-	colunas = 0;
-	linhas = 0; /* Inicia contadores de coluna e de linha */
+    fp = fopen(arquivo, "r"); /* Abre arquivo de texto no modo leitura */
 
-	while ((CaractereTexto = fgetc(fp)) != EOF) /* Loop para saber as dimensões do labirinto contando caractéres */
-	{
+    if (!fp)
+        return LAB_CondRetArquivoTextoNulo; /* fp == NULL retorna condição de arquivo de texto nulo */
 
-		if (CaractereTexto == '\n')
-		{
-			linhas++; /* Conta número de linhas pelo caractere de linebreak (\n) no final de cada linha do texto */
-			if (colCount != colunas) return LAB_CondRetTamanhoInvalido;
-			colCount = 0;
-		}
-		else
-			colCount++;
-		if (!linhas) colunas++; /* Conta número de colunas pelo número de carácteres da primeira linha do texto */
-	}
+    colunas = 0;
+    linhas = 0; /* Inicia contadores de coluna e de linha */
 
-	if (++linhas > 10 || colunas > 10) return LAB_CondRetTamanhoInvalido; /* Soma 1 ao número de linhas porque o contador não conta com a última */
+    while ((CaractereTexto = fgetc(fp)) != EOF) /* Loop para saber as dimensões do labirinto contando caracteres */
+    {
 
-	CondRetDeMatriz = MAT_cria(linhas, colunas, free, &matriz); /* Cria matriz para armazenar o labirinto */
+        if (CaractereTexto == '\n')
+        {
+            linhas++; /* Conta número de linhas pelo caractere de linebreak (\n) no final de cada linha do texto */
+            if (colCount != colunas)
+                return LAB_CondRetTamanhoInvalido;
+            colCount = 0;
+        }
+        else
+            colCount++;
+        if (!linhas)
+            colunas++; /* Conta número de colunas pelo número de carácteres da primeira linha do texto */
+    }
 
-	if (CondRetDeMatriz != MAT_CondRetOK) return LAB_converteCondRet(CondRetDeMatriz); /* Retorna condição de retorno de matriz se algo estiver incorreto */
+    if (++linhas > 10 || colunas > 10)
+        return LAB_CondRetTamanhoInvalido; /* Soma 1 ao número de linhas porque o contador não conta com a última */
 
-	(*LabirintoASerCriado) = (LAB_tppLabirinto)malloc(sizeof(tpLabirinto));
-	if (!(*LabirintoASerCriado)) return LAB_CondRetFaltouMemoria;
+    CondRetDeMatriz = MAT_cria(linhas, colunas, free, &matriz); /* Cria matriz para armazenar o labirinto */
 
-	(*LabirintoASerCriado)->matriz = matriz;
+    if (CondRetDeMatriz != MAT_CondRetOK)
+        return LAB_converteCondRet(CondRetDeMatriz); /* Retorna condição de retorno de matriz se algo estiver incorreto */
 
-	rewind(fp);
+    (*LabirintoASerCriado) = (LAB_tppLabirinto)malloc(sizeof(tpLabirinto));
+    if (!(*LabirintoASerCriado))
+        return LAB_CondRetFaltouMemoria;
 
-	colCount = 0;
-	while ((CaractereTexto = fgetc(fp)) != EOF) /* Loop de preencher labirinto */
-	{
+    (*LabirintoASerCriado)->matriz = matriz;
 
-		if (CaractereTexto == '\n') /* Loop coloca nó corrente no primeiro nó da linha de baixo quando chegar no
+    rewind(fp);
+
+    colCount = 0;
+    while ((CaractereTexto = fgetc(fp)) != EOF) /* Loop de preencher labirinto */
+    {
+
+        if (CaractereTexto == '\n') /* Loop coloca nó corrente no primeiro nó da linha de baixo quando chegar no
 									final da linha atual (caractere de linebreak) */
-		{
-			if (++lineCount < linhas) {
-				CondRetDeMatriz = MAT_vaiParaBaixo((*LabirintoASerCriado)->matriz);
-				if (CondRetDeMatriz != MAT_CondRetOK) return LAB_converteCondRet(CondRetDeMatriz); /* Retorna condição de retorno de matriz se algo estiver incorreto */
+        {
+            if (++lineCount < linhas)
+            {
+                MAT_vaiParaBaixo((*LabirintoASerCriado)->matriz);
 
-				for (i = 1; i < colunas; i++)
-				{
-					CondRetDeMatriz = MAT_vaiParaEsquerda((*LabirintoASerCriado)->matriz);
-					if (CondRetDeMatriz != MAT_CondRetOK) return LAB_converteCondRet(CondRetDeMatriz); /* Retorna condição de retorno de matriz se algo estiver incorreto */
-				}
+                for (i = 1; i < colunas; i++)
+                    MAT_vaiParaEsquerda((*LabirintoASerCriado)->matriz);
 
-				colCount = 0;
-			}	
-		}
-		else if (colCount < colunas)
-		{
+                colCount = 0;
+            }
+        }
+        else if (colCount < colunas)
+        {
 
-			CaractereLabirinto = (char*)malloc(sizeof(char)); /* Malloc do Elemento da matriz */
+            if (CaractereTexto == '|' || CaractereTexto == '-')
+                CaractereLabirinto = 'p'; /* Parede */
 
-			if (!CaractereLabirinto) return LAB_CondRetFaltouMemoria; /* Se CaractereLabirinto == NULL, retorna condição de insufuciência de memória */
+            else if (CaractereTexto == 'I')
+            {
+                CaractereLabirinto = 'i'; /* Início do labirinto */
+                colunaInicio = colCount;
+                linhaInicio = lineCount;
+            }
 
-			else if (CaractereTexto == '|' || CaractereTexto == '-') *CaractereLabirinto = 'p'; /* Parede */
+            else if (CaractereTexto == 'F')
+                CaractereLabirinto = 'f'; /* Fim do labirinto */
 
-			else if (CaractereTexto == 'I') *CaractereLabirinto = 'i'; /* Início do labirinto */
+            else if (CaractereTexto == ' ')
+                CaractereLabirinto = 'c'; /* Caminho */
 
-			else if (CaractereTexto == 'F') *CaractereLabirinto = 'f'; /* Fim do labirinto */
+            else
+                return LAB_CondRetCaractereInvalido;
 
-			else if (CaractereTexto == ' ') *CaractereLabirinto = 'c'; /* Caminho */
+            elementoLabirinto = (tpElementoLabirinto *)malloc(sizeof(tpElementoLabirinto)); /* Malloc do Elemento do Labirinto */
 
-			else return LAB_CondRetCaractereInvalido;
+            if (!elementoLabirinto)
+                return LAB_CondRetFaltouMemoria; /* Se elementoLabirinto == NULL, retorna condição de insufuciência de memória */
 
-			CondRetDeMatriz = MAT_inserir((*LabirintoASerCriado)->matriz, CaractereLabirinto);
-			if (CondRetDeMatriz != MAT_CondRetOK) return LAB_converteCondRet(CondRetDeMatriz); /* Retorna condição de retorno de matriz se algo estiver incorreto */
+            elementoLabirinto->numPassadas = 0;
 
-			if (++colCount < colunas)
-			{
-				CondRetDeMatriz = MAT_vaiParaDireita((*LabirintoASerCriado)->matriz);
-				if (CondRetDeMatriz != MAT_CondRetOK) return LAB_converteCondRet(CondRetDeMatriz); /* Retorna condição de retorno de matriz se algo estiver incorreto */
-			}
+            elementoLabirinto->paredeCaminhoEntradaOuSaida = CaractereLabirinto;
 
-		}
-	}
+            MAT_inserir((*LabirintoASerCriado)->matriz, elementoLabirinto);
 
-	fclose(fp); /* Fecha arquivo de texto */
+            if (++colCount < colunas)
+                MAT_vaiParaDireita((*LabirintoASerCriado)->matriz);
+        }
+    }
 
-	MAT_resetNoCorrente((*LabirintoASerCriado)->matriz); /* Coloca nó corrente na mesma posição que o primeiro nó */
+    fclose(fp); /* Fecha arquivo de texto */
 
-	return LAB_CondRetOK;
+    MAT_vaiParaPos((*LabirintoASerCriado)->matriz,colunaInicio,linhaInicio); /* Coloca nó corrente na mesma posição que o primeiro nó */
+
+    return LAB_CondRetOK;
+}
+
+/***************************************************
+*
+*	$FC Função:
+*       LAB Determina se todos os nós do labirinto
+*           foram percorridos.
+*
+*
+*   $AE Assertivas de entrada esperadas:
+*       Cabeça do labirinto != NULL.
+*		Valem as assertivas estruturais do
+*       labirinto.
+*
+*
+*	$AS Assertivas de saída esperadas:
+*       Determinou-se se o labirinto foi
+*       completamente percorrido ou não.
+*       Nó corrente da matriz aponta para a posição
+*       de inicio do labirinto.
+*		Valem as assertivas estruturais do
+*       labirinto.
+*
+****************************************************/
+LAB_tpCondRet LAB_percorreLabirinto(LAB_tppLabirinto CabecaDoLabirinto, char *resposta)
+{
+    int l, c, i;
+
+    tpElementoLabirinto **ptElementoLabirinto = (tpElementoLabirinto **)malloc(sizeof(tpElementoLabirinto *)); /* Malloc do Elemento do Labirinto */
+
+    if (!ptElementoLabirinto)
+        return LAB_CondRetFaltouMemoria; /* Se ptElementoLabirinto == NULL, retorna condição de insufuciência de memória */
+
+    MAT_vaiParaPos((*CabecaDoLabirinto)->matriz,0,0); /* Coloca nó corrente na mesma posição que o primeiro nó */
+
+    for (l = 0; l < linhas; l++)
+    {
+        for (c = 0; c < colunas; c++)
+        {
+            MAT_obterElemento(CabecaDoLabirinto->matriz, ptElementoLabirinto);
+
+            if (((**ptElementoLabirinto)->paredeCaminhoEntradaOuSaida == 'c' || (**ptElementoLabirinto)->paredeCaminhoEntradaOuSaida == 'f') && (**ptElementoLabirinto)->numPassadas == 0)
+            {
+                *resposta = 1;
+                return LAB_CondRetOK;
+            }
+
+            if (c < (colunas - 1))
+                MAT_vaiParaDireita(CabecaDoLabirinto->matriz);
+        }
+
+        if (l < (linhas - 1))
+        {
+
+            MAT_vaiParaBaixo(CabecaDoLabirinto->matriz);
+
+            for (i = 1; i < colunas; i++)
+                MAT_vaiParaEsquerda(CabecaDoLabirinto->matriz);
+        }
+    }
+
+    *resposta = 0;
+
+    return LAB_CondRetOK;
 }
 
 /***************************************************
@@ -234,43 +326,39 @@ LAB_tpCondRet LAB_criaLabirinto(char *arquivo, LAB_tppLabirinto *LabirintoASerCr
 ****************************************************/
 LAB_tpCondRet LAB_imprimeLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
 {
-	int l, c, i;
-	char **elementoLabirinto = malloc(sizeof(char*));
-	MAT_tpCondRet CondRetDeMatriz;
+    int l, c, i;
 
-	for (l = 0; l < linhas; l++)
-	{
-		for (c = 0; c < colunas; c++)
-		{
-			CondRetDeMatriz = MAT_obterElemento(CabecaDoLabirinto->matriz, elementoLabirinto);
-			if (CondRetDeMatriz != MAT_CondRetOK) return LAB_converteCondRet(CondRetDeMatriz);
-			
-			printf("%c ", **elementoLabirinto);
-			
-			if (c < (colunas - 1))
-			{
-				CondRetDeMatriz = MAT_vaiParaDireita(CabecaDoLabirinto->matriz);
-				if (CondRetDeMatriz != MAT_CondRetOK) return LAB_converteCondRet(CondRetDeMatriz);
-			}
-		}
+    tpElementoLabirinto **ptElementoLabirinto = (tpElementoLabirinto **)malloc(sizeof(tpElementoLabirinto *)); /* Malloc do Elemento do Labirinto */
 
-		if (l < (linhas - 1))
-		{
-			printf("\n");
+    if (!ptElementoLabirinto)
+        return LAB_CondRetFaltouMemoria; /* Se ptElementoLabirinto == NULL, retorna condição de insufuciência de memória */
 
-			CondRetDeMatriz = MAT_vaiParaBaixo(CabecaDoLabirinto->matriz);
-			if (CondRetDeMatriz != MAT_CondRetOK) return LAB_converteCondRet(CondRetDeMatriz); /* Retorna condição de retorno de matriz se algo estiver incorreto */
+    MAT_vaiParaPos((*CabecaDoLabirinto)->matriz,0,0); /* Coloca nó corrente na mesma posição que o primeiro nó */
 
-			for (i = 1; i < colunas; i++)
-			{
-				CondRetDeMatriz = MAT_vaiParaEsquerda(CabecaDoLabirinto->matriz);
-				if (CondRetDeMatriz != MAT_CondRetOK) return LAB_converteCondRet(CondRetDeMatriz); /* Retorna condição de retorno de matriz se algo estiver incorreto */
-			}
-		}
-	}
+    for (l = 0; l < linhas; l++)
+    {
+        for (c = 0; c < colunas; c++)
+        {
+            MAT_obterElemento(CabecaDoLabirinto->matriz, ptElementoLabirinto);
 
-	return LAB_CondRetOK;
+            printf("%c ", (**ptElementoLabirinto)->paredeCaminhoEntradaOuSaida);
 
+            if (c < (colunas - 1))
+                MAT_vaiParaDireita(CabecaDoLabirinto->matriz);
+        }
+
+        if (l < (linhas - 1))
+        {
+            printf("\n");
+
+            MAT_vaiParaBaixo(CabecaDoLabirinto->matriz);
+
+            for (i = 1; i < colunas; i++)
+                MAT_vaiParaEsquerda(CabecaDoLabirinto->matriz);
+        }
+    }
+
+    return LAB_CondRetOK;
 }
 
 /***************************************************
@@ -293,6 +381,6 @@ LAB_tpCondRet LAB_imprimeLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
 ****************************************************/
 void LAB_destroiLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
 {
-	MAT_destroi(CabecaDoLabirinto->matriz);
-	free(CabecaDoLabirinto);
+    MAT_destroi(CabecaDoLabirinto->matriz);
+    free(CabecaDoLabirinto);
 }
