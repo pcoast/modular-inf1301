@@ -174,7 +174,7 @@ MAT_tpCondRet MAT_vaiParaCima(MAT_tppMatriz CabecaDaMatriz)
         return MAT_CondRetNoNaoExiste;            /* Retorna condição de falha na movimentação do nó corrente */
 
     CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoCima; /* Movimenta nó corrente na direção indicada */
-    return MAT_CondRetOK;                                       /* Retorna condição de teste bem sucedido */
+    return MAT_CondRetOK;                                      /* Retorna condição de teste bem sucedido */
 }
 
 /*******************************************************
@@ -561,6 +561,55 @@ MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento)
     *elemento = CabecaDaMatriz->pNoCorr->Elemento; /* Passa, por referência, o ponteiro da lista incorporado no nó corrente */
 
     return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
+}
+
+/*******************************************************
+*
+*	$FC Função:
+*       MAT No corrente da matriz vai para direção
+*       específica.
+*
+*
+*	$AE Assertivas de entrada esperadas:
+*       Nó corrente não vai para uma posição Nula.
+*		Cabeça da matriz != NULL.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
+*
+*
+*	$AS Assertivas de saída esperadas:
+*       Nó corrente da matriz foi para a direção desejada.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
+*
+********************************************************/
+MAT_tpCondRet MAT_vaiParaDir(MAT_tppMatriz CabecaDaMatriz, MAT_tpDir Direcao)
+{
+    switch (Direcao)
+    {
+    case MAT_DirCima:
+        MAT_vaiParaCima(CabecaDaMatriz);
+        break;
+    
+    case MAT_DirDireita:
+        MAT_vaiParaDireita(CabecaDaMatriz);
+        break;
+    
+    case MAT_DirBaixo:
+        MAT_vaiParaBaixo(CabecaDaMatriz);
+        break;
+
+    case MAT_DirEsquerda:
+        MAT_vaiParaEsquerda(CabecaDaMatriz);
+        break;
+
+    default:
+        break;
+
+    }
+    
+    return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
+
 }
 
 /*******************************************************

@@ -95,6 +95,37 @@ typedef struct tgLabirinto* LAB_tppLabirinto;
 ****************************************************/
 LAB_tpCondRet LAB_criaLabirinto(char *arquivo, LAB_tppLabirinto *LabirintoASerCriado);
 
+/***************************************************
+*
+*	$FC Função:
+*       LAB Descobre se o labirinto possui solução
+*       e demarca a solução ou declara que não há
+*       solução.
+*
+*   $AE Assertivas de entrada esperadas:
+*       Nó corrente da matriz aponta para o nó de
+*       inicio do labirinto.
+*       Cabeça do labirinto != NULL.
+*		Valem as assertivas estruturais do
+*       labirinto.
+*
+*	$AS Assertivas de saída esperadas:
+*       A solução do labirinto foi demarcada ou
+*       declarada inexistente.
+*		Valem as assertivas estruturais do
+*       labirinto.
+*
+*   $EP Parâmetros
+*       $P CabecaDoLabirinto - O parâmetro que receberá o ponteiro para o labirinto.
+*           Este parâmetro é passado por referência.
+*
+*   $FV Valor retornado
+*       LAB_CondRetOK
+*       LAB_CondRetFaltouMemoria
+*
+****************************************************/
+LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto);
+
 /*******************************************************
 *
 *	$FC Função: LAB Imprime o labirinto.

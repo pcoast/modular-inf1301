@@ -62,6 +62,34 @@ typedef enum
 
 } MAT_tpCondRet;
 
+typedef enum
+{
+    MAT_DirCima = 0,
+    /* Direção de ir para Cima */
+
+    MAT_DirDireita = 1,
+    /* Direção de ir para Direita */
+
+    MAT_DirBaixo = 2,
+    /* Direção de ir para Baixo */
+
+    MAT_DirEsquerda = 3,
+    /* Direção de ir para Esquerda */
+
+    MAT_DirNenhuma = 4
+    /* Direção de ir para lugar nenhum */
+
+} MAT_tpDir;
+
+typedef union
+{
+    MAT_tpDir tipoDirecao;
+
+    int tipoInteiro;
+    
+} MAT_tpDirOuInt;
+
+
 /***************************************************
 *
 *   $FC Função: MAT Criar a estrutura da matriz,
@@ -297,6 +325,35 @@ MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void *elemento);
 *
 ********************************************************/
 MAT_tpCondRet MAT_obterElemento(MAT_tppMatriz CabecaDaMatriz, void **elemento);
+
+/*******************************************************
+*
+*	$FC Função:
+*       MAT No corrente da matriz vai para direção
+*       específica.
+*
+*	$AE Assertivas de entrada esperadas:
+*       Nó corrente não vai para uma posição Nula.
+*		Cabeça da matriz != NULL.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
+*
+*	$AS Assertivas de saída esperadas:
+*       Nó corrente da matriz foi para a direção desejada.
+*		Valem as assertivas estruturais da matriz
+*       com cabeça.
+*
+*   $EP Parâmetros
+*       $P CabecaDaMatriz - O parâmetro que receberá o ponteiro para a cabeça da matriz.
+*           Este parâmetro é passado por referência.
+*       $P Direcao - O parâmetro que receberá a direção para onde o nó corrente deve ir.
+*           Este parâmetro é passado por valor.
+*
+*   $FV Valor retornado
+*       MAT_CondRetOK
+*
+********************************************************/
+MAT_tpCondRet MAT_vaiParaDir(MAT_tppMatriz CabecaDaMatriz, MAT_tpDir Direcao);
 
 /*******************************************************
 *
