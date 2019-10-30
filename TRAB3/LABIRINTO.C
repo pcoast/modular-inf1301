@@ -290,7 +290,8 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
 
     MAT_obterElemento(CabecaDoLabirinto->matriz, &ElementoDaPosicaoAtual); /* Obtem elemento da posição inicial do labirinto */
 
-    while (1) /* Loop de caminhar pelo Labirinto, primeiro decidimos a direção de menor passadas, depois damos um passo nesta direção */
+    while (labirintoPossuiSolucao--) /* Se completamos um certo número de movimentos e não encomtramos a saída, então ela não existe ou não é alcançâvel */
+    /* Loop de caminhar pelo Labirinto, primeiro decidimos a direção de menor passadas, depois damos um passo nesta direção */
     {
 
         direcaoCandidata.tipoDirecao = MAT_DirCima;           /* Primeira direção a ser analizada é a de cima */
@@ -359,13 +360,7 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
             if (ElementoDaPosicaoAtual->paredeCaminhoEntradaOuSaida == 'f')
             {
                 printf("Chegamos ao final do Labirinto\n");
-                break;
-            }
-
-            if (!labirintoPossuiSolucao--) /* Se completamos um certo número de movimentos e não encomtramos a saída, então ela não existe ou não é alcançâvel */
-            {
-                printf("Labirinto não possui solução\n");
-                break;
+                return LAB_CondRetOK;
             }
 
             Volta.tipoInteiro = (direcaoMenorNumPassadas.tipoInteiro + 2) % 4; /* Define a direção de volta */
@@ -376,69 +371,7 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
         }
     }
 
-    return LAB_CondRetOK;
-}
-
-/***************************************************
-*
-*	$FC Função:
-*       LAB Determina se todos os nós do labirinto
-*           foram percorridos.
-*
-*
-*   $AE Assertivas de entrada esperadas:
-*       Cabeça do labirinto != NULL.
-*		Valem as assertivas estruturais do
-*       labirinto.
-*
-*
-*	$AS Assertivas de saída esperadas:
-*       Determinou-se se o labirinto foi
-*       completamente percorrido ou não.
-*       Nó corrente da matriz aponta para a posição
-*       de inicio do labirinto.
-*		Valem as assertivas estruturais do
-*       labirinto.
-*
-****************************************************/
-LAB_tpCondRet LAB_percorreLabirinto(LAB_tppLabirinto CabecaDoLabirinto, char *labirintoPossuiSolucao)
-{
-    int l, c, i;
-
-    tpElementoLabirinto **ptElementoLabirinto = (tpElementoLabirinto **)malloc(sizeof(tpElementoLabirinto *)); /* Malloc do Elemento do Labirinto */
-
-    if (!ptElementoLabirinto)
-        return LAB_CondRetFaltouMemoria; /* Se ptElementoLabirinto == NULL, retorna condição de insufuciência de memória */
-
-    MAT_vaiParaPos(CabecaDoLabirinto->matriz, 0, 0); /* Coloca nó corrente na mesma posição que o primeiro nó */
-
-    for (l = 0; l < linhas; l++)
-    {
-        for (c = 0; c < colunas; c++)
-        {
-            MAT_obterElemento(CabecaDoLabirinto->matriz, ptElementoLabirinto);
-
-            if ((*ptElementoLabirinto)->paredeCaminhoEntradaOuSaida == 'c' && (*ptElementoLabirinto)->numPassadas == 0)
-            {
-                *labirintoPossuiSolucao = 1;
-                return LAB_CondRetOK;
-            }
-
-            if (c < (colunas - 1))
-                MAT_vaiParaDireita(CabecaDoLabirinto->matriz);
-        }
-
-        if (l < (linhas - 1))
-        {
-
-            MAT_vaiParaBaixo(CabecaDoLabirinto->matriz);
-
-            for (i = 1; i < colunas; i++)
-                MAT_vaiParaEsquerda(CabecaDoLabirinto->matriz);
-        }
-    }
-
-    *labirintoPossuiSolucao = 0;
+    printf("Labirinto não possui solução\n");
 
     return LAB_CondRetOK;
 }
