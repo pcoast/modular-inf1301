@@ -109,6 +109,10 @@ typedef struct tgMatriz
 
 static tpNoMatriz *MAT_criaNo(void);
 
+static MAT_tpCondRet MAT_adicionaColuna(MAT_tppMatriz CabecaDaMatriz, char numColunasAAdicionar);
+
+static MAT_tpCondRet MAT_adicionaLinha(MAT_tppMatriz CabecaDaMatriz, char numLinhasAAdicionar);
+
 /*****  C�digo das fun��es exportadas pelo m�dulo  *****/
 
 /***************************************************
@@ -174,7 +178,7 @@ MAT_tpCondRet MAT_vaiParaCima(MAT_tppMatriz CabecaDaMatriz)
         return MAT_CondRetNoNaoExiste;            /* Retorna condição de falha na movimentação do nó corrente */
 
     CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoCorr->pNoCima; /* Movimenta nó corrente na direção indicada */
-    return MAT_CondRetOK;                                      /* Retorna condição de teste bem sucedido */
+    return MAT_CondRetOK;                                       /* Retorna condição de teste bem sucedido */
 }
 
 /*******************************************************
@@ -325,7 +329,7 @@ MAT_tpCondRet MAT_adicionaColuna(MAT_tppMatriz CabecaDaMatriz, char numColunasAA
             MAT_vaiParaCima(CabecaDaMatriz);
     }
 
-    MAT_vaiParaPos(CabecaDaMatriz,0,0); /* Coloca nó corrente na mesma posição que o primeiro nó */
+    MAT_vaiParaPos(CabecaDaMatriz, 0, 0); /* Coloca nó corrente na mesma posição que o primeiro nó */
 
     return MAT_CondRetOK;
 }
@@ -386,7 +390,7 @@ MAT_tpCondRet MAT_adicionaLinha(MAT_tppMatriz CabecaDaMatriz, char numLinhasAAdi
             MAT_vaiParaEsquerda(CabecaDaMatriz);
     }
 
-    MAT_vaiParaPos(CabecaDaMatriz,0,0); /* Coloca nó corrente na mesma posição que o primeiro nó */
+    MAT_vaiParaPos(CabecaDaMatriz, 0, 0); /* Coloca nó corrente na mesma posição que o primeiro nó */
 
     return MAT_CondRetOK;
 }
@@ -448,8 +452,6 @@ MAT_tpCondRet MAT_cria(char Linhas, char Colunas, void (*destruirElemento)(void 
         return MAT_CondRetFaltouMemoria;
     /* Cada chamada cria uma linha nova na matriz. */
 
-    (*MatrizCriada)->destruirElemento = destruirElemento;
-
     return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
@@ -478,7 +480,7 @@ void MAT_destroi(MAT_tppMatriz CabecaDaMatriz)
 {
     tpNoMatriz *PrimeiroNoDaLinhaDeBaixo;
 
-    MAT_vaiParaPos(CabecaDaMatriz,0,0); /* Coloca nó corrente na mesma posição que o primeiro nó */
+    MAT_vaiParaPos(CabecaDaMatriz, 0, 0); /* Coloca nó corrente na mesma posição que o primeiro nó */
 
     do
     {
@@ -590,11 +592,11 @@ MAT_tpCondRet MAT_vaiParaDir(MAT_tppMatriz CabecaDaMatriz, MAT_tpDir Direcao)
     case MAT_DirCima:
         MAT_vaiParaCima(CabecaDaMatriz);
         break;
-    
+
     case MAT_DirDireita:
         MAT_vaiParaDireita(CabecaDaMatriz);
         break;
-    
+
     case MAT_DirBaixo:
         MAT_vaiParaBaixo(CabecaDaMatriz);
         break;
@@ -605,11 +607,9 @@ MAT_tpCondRet MAT_vaiParaDir(MAT_tppMatriz CabecaDaMatriz, MAT_tpDir Direcao)
 
     default:
         break;
-
     }
-    
-    return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
 
+    return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
 /*******************************************************
@@ -639,10 +639,11 @@ MAT_tpCondRet MAT_vaiParaPos(MAT_tppMatriz CabecaDaMatriz, char Coluna, char Lin
 {
     CabecaDaMatriz->pNoCorr = CabecaDaMatriz->pNoPrimeiro; /* Coloca nó corrente na mesma posição que o primeiro nó */
 
-    while (Coluna--) MAT_vaiParaDireita(CabecaDaMatriz);
+    while (Coluna--)
+        MAT_vaiParaDireita(CabecaDaMatriz);
 
-    while(Linha--) MAT_vaiParaBaixo(CabecaDaMatriz);
+    while (Linha--)
+        MAT_vaiParaBaixo(CabecaDaMatriz);
 
     return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
-
 }

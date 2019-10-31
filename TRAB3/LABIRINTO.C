@@ -65,7 +65,6 @@ static char colunas, linhas, colunaInicio, linhaInicio;
 /***** Protótipos das funções encapsuladas no módulo *****/
 
 static LAB_tpCondRet LAB_converteCondRet(MAT_tpCondRet CondicaoDeRetornoMatriz);
-static LAB_tpCondRet LAB_percorreLabirinto(LAB_tppLabirinto CabecaDoLabirinto, char *resposta);
 
 /*****  Código das funções exportadas pelo módulo  *****/
 
@@ -109,6 +108,13 @@ LAB_tpCondRet LAB_converteCondRet(MAT_tpCondRet CondicaoDeRetornoMatriz)
 *       Arquivo de texto possui no máximo 10 linhas
 *       e 11 colunas (sendo a última coluna composta
 *       por caracteres de linebreak).
+*       Labirinto possui possição de início (demarcada
+*       pelo caractere 'I' no arquivo de texto) mas
+*       não precisa de posição final (demarcada pelo
+*       caractere 'F' no arquivo de texto).
+*       Labirinto possui perímetro de paredes,
+*       (demarcadas pelos caracteres '|' ou '-' no
+*       arquivo de texto). 
 *		Valem as assertivas estruturais do
 *       labirinto.
 *
@@ -295,11 +301,12 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
     {
 
         direcaoCandidata.tipoDirecao = MAT_DirCima;           /* Primeira direção a ser analizada é a de cima */
-        menorNumPassadas = UCHAR_MAX;                         /* Menor número de passadas (mínimo) é, inicialmente, o maior número possível */
+        menorNumPassadas = UCHAR_MAX;                         /* Menor número de passadas (espécie de mínimo) é, inicialmente, o maior número possível */
         direcaoMenorNumPassadas.tipoDirecao = MAT_DirNenhuma; /* Direção de menor número de passadas é, inicialmente, direção nenhuma */
-        /* Se nenhuma direção de menor número de passadas for escolhida, então ela permanece como direção nenhuma e saberemos que estamos numa posição sem saída. Neste caso voltamos */
+        /* Se nenhuma direção de menor número de passadas for escolhida, então ela permanece como direção nenhuma e saberemos que estamos numa posição sem saída.
+        Neste caso, desempilhamos ou voltamos para a posição inicial */
 
-        do /* Loop que compara as passadas das quatro direções e escolhe a direção com o menor número de passadas.  */
+        do /* Loop que compara o número de passadas das quatro direções e escolhe a direção com o menor número de passadas.  */
         {
 
             /* Funciona da seguinte forma: Caminhamos na direção sendo analizada no ciclio atual, indo para a posição candidata. Pegamos o elemento da posição candidata. Voltamos para
@@ -312,7 +319,7 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
             MAT_vaiParaDir(CabecaDoLabirinto->matriz, Volta.tipoDirecao);              /* Volta da posição candidata para a posição atual */
 
             if (ElementoDaPosicaoAtual->volta != direcaoCandidata.tipoDirecao && ElementoDaPosicaoCandidata->paredeCaminhoEntradaOuSaida != 'p') /* Se a direção da posição candidata não é a
-            direção de volta para a posição atual anterior */
+            direção de volta para a posição atual anterior, ou seja, não estamos voltando para o caminho do qual viemos, e se não estamos indo de encontro com uma parede */
             {
                 if (ElementoDaPosicaoCandidata->numPassadas < menorNumPassadas)
                 /* Se o número de passadas da posição candidata for menor do que o menor número de passadas de outras posições candidatas */
@@ -333,41 +340,47 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
                 }
             }
 
-            direcaoCandidata.tipoInteiro++; /* Muda direção candidata */
+            direcaoCandidata.tipoInteiro++; /* Muda direção candidata (Cima -> Direita -> Baixo -> Esquerda -> Direção Nenhuma) */
 
         } while (direcaoCandidata.tipoDirecao != MAT_DirNenhuma); /* Condição é quebrada quando o ciclo das direções candidatas é completo (chegamos na última direção == direção nenhuma) */
 
-        if (direcaoMenorNumPassadas.tipoDirecao == MAT_DirNenhuma)
+        if (direcaoMenorNumPassadas.tipoDirecao == MAT_DirNenhuma) /* Se não trocou a direção de menor número de passadas, ou seja, se a posição atual só pode ir de encontro com uma 
+        parede ou voltar para o caminho de onde viemos, então sesempilhamos ou voltamos para a posição de início do labirinto */
         {
 
-            while (ElementoDaPosicaoAtual->paredeCaminhoEntradaOuSaida != 'i')
+            while (ElementoDaPosicaoAtual->paredeCaminhoEntradaOuSaida != 'i') /* Desempilha ou volta até a posição inicial */
             {
-                ElementoDaPosicaoAtual->paredeCaminhoEntradaOuSaida = 'c';
-                ElementoDaPosicaoAtual->numPassadas++;
-                Volta.tipoDirecao = ElementoDaPosicaoAtual->volta;
-                ElementoDaPosicaoAtual->volta = MAT_DirNenhuma;
-                MAT_vaiParaDir(CabecaDoLabirinto->matriz, Volta.tipoDirecao);
-                MAT_obterElemento(CabecaDoLabirinto->matriz, &ElementoDaPosicaoAtual);
+                ElementoDaPosicaoAtual->paredeCaminhoEntradaOuSaida = 'c';             /* Posição atual é marcada como caminho */
+                ElementoDaPosicaoAtual->numPassadas++;                                 /* Aumenta número de passadas da posição atual */
+                Volta.tipoDirecao = ElementoDaPosicaoAtual->volta;                     /* Guarda direção de volta na variável 'Volta' */
+                ElementoDaPosicaoAtual->volta = MAT_DirNenhuma;                        /* Volta da posição atual é direção nenhuma */
+                MAT_vaiParaDir(CabecaDoLabirinto->matriz, Volta.tipoDirecao);          /* Volta para a posição de onde viemos */
+                MAT_obterElemento(CabecaDoLabirinto->matriz, &ElementoDaPosicaoAtual); /* Obtem elemento da nova posição atual */
             }
         }
 
-        else
+        else /* Existe caminho em alguma direção que não é a de volta */
         {
 
-            MAT_vaiParaDir(CabecaDoLabirinto->matriz, direcaoMenorNumPassadas.tipoDirecao);
-            MAT_obterElemento(CabecaDoLabirinto->matriz, &ElementoDaPosicaoAtual);
+            MAT_vaiParaDir(CabecaDoLabirinto->matriz, direcaoMenorNumPassadas.tipoDirecao); /* Dá um passo na direção de menor número de passadas */
+            MAT_obterElemento(CabecaDoLabirinto->matriz, &ElementoDaPosicaoAtual);          /* Obtem elemento da nova posição atual */
 
-            if (ElementoDaPosicaoAtual->paredeCaminhoEntradaOuSaida == 'f')
+            if (ElementoDaPosicaoAtual->paredeCaminhoEntradaOuSaida == 'f') /* Se posição para a qual andamos é o final do labirinto, então há solução e ela foi demarcada. 
+            Labirinto foi resolvido */
             {
                 printf("Chegamos ao final do Labirinto\n");
                 return LAB_CondRetOK;
             }
 
-            Volta.tipoInteiro = (direcaoMenorNumPassadas.tipoInteiro + 2) % 4; /* Define a direção de volta */
+            /* Se posição para a qual andamos não é o final do labirinto */
+
+            Volta.tipoInteiro = (direcaoMenorNumPassadas.tipoInteiro + 2) % 4; /* Definimos a direção de volta para a posição anterior */
 
             ElementoDaPosicaoAtual->volta = Volta.tipoDirecao; /* Armazaena direção de volta no nó para o qual caminhamos */
 
             ElementoDaPosicaoAtual->paredeCaminhoEntradaOuSaida = '*'; /* Marca trajeto */
+
+            /* Vamos escolher uma nova direção para continuar caminhando */
         }
     }
 
@@ -469,6 +482,8 @@ LAB_tpCondRet LAB_imprimeLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
                 MAT_vaiParaEsquerda(CabecaDoLabirinto->matriz);
         }
     }
+
+    free(ptElementoLabirinto);
 
     return LAB_CondRetOK;
 }

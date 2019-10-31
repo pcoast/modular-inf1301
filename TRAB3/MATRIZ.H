@@ -29,12 +29,11 @@
 *
 ***************************************************************************/
 
-
 /***** Declarações exportadas pelo módulo *****/
 
 /* Tipo referência para uma matriz */
 
-typedef struct tgMatriz * MAT_tppMatriz;
+typedef struct tgMatriz *MAT_tppMatriz;
 
 /***********************************************************************
 *
@@ -81,14 +80,12 @@ typedef enum
 
 } MAT_tpDir;
 
-typedef union
-{
+typedef union {
     MAT_tpDir tipoDirecao;
 
     int tipoInteiro;
-    
-} MAT_tpDirOuInt;
 
+} MAT_tpDirOuInt;
 
 /***************************************************
 *
@@ -122,7 +119,7 @@ typedef union
 *       MAT_CondRetFaltouMemoria
 *
 ****************************************************/
-MAT_tpCondRet MAT_cria(char Linhas, char Colunas, void (*destruirElemento)(void* elemento), MAT_tppMatriz* MatrizCriada);
+MAT_tpCondRet MAT_cria(char Linhas, char Colunas, void (*destruirElemento)(void *elemento), MAT_tppMatriz *MatrizCriada);
 
 /*******************************************************
 *
