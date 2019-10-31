@@ -16,7 +16,12 @@
 *       2.00    jpp     27/09/2019  LAB_criaLabirinto()
 *       3.00    jpp     29/09/2019  LAB_imprimeLabirinto()
 *       4.00    jpp     02/10/2019  Acertar retornos e comentários
-*		5.00	pc		08/10/2019	Adiciona estrutura do labirinto e adequa a implementação das funções
+*		5.00	pc		08/10/2019	Adiciona estrutura do labirinto e
+*                                   adequa a implementação das funções
+*		6.00	jpp		30/10/2019	Struct elemento de labirinto, função
+*                                   resolve labirinto, free na função
+*                                   imprime labirinto e função altera
+*                                   trecho labirinto
 *
 ***************************************************************************/
 

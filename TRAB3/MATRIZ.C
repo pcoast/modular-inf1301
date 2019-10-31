@@ -26,6 +26,7 @@
 *       7.00    jpp     22/09/2019  AE e AS
 *       8.00    jpp     24/09/2019  Matriz_cria nova
 *		8.01	pc		06/10/2019	Correção de erros
+*		9.00	jpp		30/10/2019	Novas formas de navegar pela  matriz
 *
 ***************************************************************************/
 
