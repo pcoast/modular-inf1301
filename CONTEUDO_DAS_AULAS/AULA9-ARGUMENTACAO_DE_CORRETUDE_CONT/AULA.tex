@@ -1,0 +1,264 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% fphw Assignment
+% LaTeX Template
+% Version 1.0 (27/04/2019)
+%
+% This template originates from:
+% https://www.LaTeXTemplates.com
+%
+% Authors:
+% Class by Felipe Portales-Oliva (f.portales.oliva@gmail.com) with template 
+% content and modifications by Vel (vel@LaTeXTemplates.com)
+%
+% Template (this file) License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+	12pt, % Default font size, values between 10pt-12pt are allowed
+	%letterpaper, % Uncomment for US letter paper size
+	%spanish, % Uncomment for Spanish
+]{fphw}
+
+% Template-specific packages
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage{mathpazo} % Use the Palatino font
+\usepackage{setspace}
+
+\usepackage{graphicx} % Required for including images
+
+\usepackage{booktabs} % Required for better horizontal rules in tables
+
+\usepackage{listings} % Required for insertion of code
+
+\usepackage{enumerate} % To modify the enumerate environment
+
+\usepackage{parskip}% http://ctan.org/pkg/parskip
+
+\usepackage{amsmath}
+
+\usepackage{amssymb}
+
+\usepackage{caption}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+\usepackage{enumitem}
+
+\usepackage[ruled,portuguese,onelanguage,longend]{algorithm2e} %for psuedo code}% http://ctan.org/pkg/algorithm2e
+% \makeatletter
+% \renewcommand{\@algocf@capt@plain}{above}% formerly {bottom}
+% \makeatother
+
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{AULA 9 - Argumentação de Corretude Continuação} % Assignment title
+
+\author{AVC, JPP, PC} % Student name
+
+\date{} % Due date
+
+\institute{Pontifícia Universidade Católica do Rio de Janeiro \\ Departamento de Informática} % Institute or school name
+
+\class{Programação Modular (INF1301)} % Course or class name
+
+\professor{Flavio Bevilacqua} % Professor or teacher in charge of the assignment
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Output the assignment title, created automatically using the information in the custom commands above
+
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT CONTENT
+%----------------------------------------------------------------------------------------
+\begin{doublespace}
+
+    \begin{algorithm}[h]
+
+        \caption{Insertion Sort}
+
+        \SetAlgoLined
+        % \KwData{this text}
+        % \KwResult{how to write algorithm with \LaTeX2e }
+        AE $\longrightarrow$
+
+        \Indp\Inicio
+        {
+
+            IND $\longleftarrow$ 1
+
+            \Enqto{IND $\leqslant$ LIMITE-LÓGICO}
+            {
+
+                ATUAL $\longleftarrow$ ELE[IND]
+
+                AUX $\longleftarrow$ IND - 1
+
+                \Enqto{AUX $>$ 0 E ELE[AUX] $>$ ATUAL}
+                {
+                    ELE[AUX + 1] $\longleftarrow$ ELE[AUX]
+
+                    AUX $\longleftarrow$ AUX - 1
+                }
+
+                ELE[AUX + 1] $\longleftarrow$ ATUAL
+
+                IND $\longleftarrow$ IND + 1
+
+            }
+
+        }
+
+        \Indm AS $\longrightarrow$
+
+    \end{algorithm}
+
+    \textbf{Argumentação de Sequência 1}
+
+    AE: Existe um vetor a ser ordenado.
+
+    AS: Vetor está vazio ou foi ordenado.
+
+    AI 1: IND aponta para o primeiro elemento do vetor.
+
+    \textbf{Argumentação de Repetição 1}
+
+    AE: AI 1.
+
+    AS: AS geral.
+
+    AINV:
+
+    \begin{itemize}
+
+        \item Existem dois conjuntos: a ordenar e já ordenados.
+        \item IND aponta para o elemento a ordenar.
+        
+    \end{itemize}
+
+    \begin{enumerate}[label=\protect\circled{\arabic*}]
+        \item AE $\Longrightarrow$ AINV
+        
+        \begin{itemize}
+            \item Pela AE, IND aponta para o primeiro elemento do vetor. Todos os elementos estão no conjunto a ordenar e o conjunto já ordenados está vazio. Logo, vale a AINV.
+        \end{itemize}
+
+        \item AE \&\& (Condição == False) $\Longrightarrow$ AS
+
+        \begin{itemize}
+            \item Pela AE, IND == 1. Para que (Condição == False), LIMITE-LÓGICO = 0, ou seja, vetor está vazio. Neste caso, vale a AS.
+        \end{itemize}
+
+        \item AE \&\& (Condição == True) \circled{+} B $\Longrightarrow$ AINV
+
+        \begin{itemize}
+            \item Pela AE, IND aponta para o primeiro elemento do vetor que não está vazio. Este elemento já se encontra no local ordenado. Com isso, os dois conjuntos existem e um elemento de a ordenar passou para já ordenados. Logo, vale a AINV.
+        \end{itemize}
+
+        \item AINV \&\& (Condição == True) \circled{+} B $\Longrightarrow$ AINV
+
+        \begin{itemize}
+            \item Para que a AINV continue valendo, B deve garantir que um elemento passe do conjunto a ordenar para já ordenado e IND seja reposicionado.
+        \end{itemize}
+
+        \item AINV \&\& (Condição == False) \circled{+} B $\Longrightarrow$ AS
+
+        \begin{itemize}
+            \item Se (Condição == False), IND ultrapassou o LIMITE-LÓGICO, ou seja, todos os elementos passaram para o conjunto já ordenados. Como o vetor está ordenado, vale a AS.
+        \end{itemize}
+
+        \item Término
+        
+        \begin{itemize}
+            \item Como a cada ciclo, um elemento é retirado do conjunto a ordenar, e este conjunto possui um número finito de elementos, a repetição terminará em um número finito de passos.
+        \end{itemize}
+
+    \end{enumerate}
+
+    \pagebreak
+
+    \textbf{Argumentação de Sequência 2}
+
+    AE (seq2) = AS (seq2) = AINV
+
+    AI 2: ATUAL recebe elemento a ser reposicionado.
+
+    AI 3: AUX aponta para o último elemento do conjunto já ordenado (caso não esteja vazio) ou AUX $\longleftarrow$ 0.
+
+    AI 4: Local para onde ATUAL será reposicionado foi definido.
+
+    AI 5: ATUAL foi reposicionado.
+    
+    OBS: o último bloco (IND $\longleftarrow$ IND + 1) garante que IND foi reposionado para o próximo elemento a ordenar ou ultrapassou o LIMITE-LÓGICO. Vale a AINV ou a AS geral se o vetor está ordenado.
+
+    \textbf{Argumentação de Repetição 2}
+
+    AE: AI 3.
+
+    AS: AI 4.
+
+    AINV:
+
+    \begin{itemize}
+
+        \item Existem dois conjuntos: maiores e possíveis menores.
+        \item AUX aponta para elemento de possíveis menores.
+        
+    \end{itemize}
+
+    \begin{enumerate}[label=\protect\circled{\arabic*}]
+        \item AE $\Longrightarrow$ AINV
+        
+        \begin{itemize}
+            \item Pela AE, AUX aponta para o último elemento de possíveis menores e o conjunto de maiores está vazio. Vale a AINV.
+        \end{itemize}
+
+        \item AE \&\& (Condição == False) $\Longrightarrow$ AS
+
+        \begin{itemize}
+            \item Para que (Condição == False) antes do primeiro ciclo da repetição, AUX == 0 e IND == 1. IND aponta para o primeiro elemento a ser reposicionado e ele já se encontra posicionado, valendo a AS.
+        \end{itemize}
+
+        \item AE \&\& (Condição == True) \circled{+} B $\Longrightarrow$ AINV
+
+        \begin{itemize}
+            \item Como o primeiro ciclo executou, o elemento apontado por AUX é maior do que ATUAL. Com isso, ele passou do conjunto de possíveis menores para maiores e AUX foi reposicionado. Vale a AINV.
+        \end{itemize}
+
+        \item AINV \&\& (Condição == True) \circled{+} B $\Longrightarrow$ AINV
+
+        \begin{itemize}
+            \item Para que a AINV continue valendo, B deve garantir que um elemento passe do conjunto a possíveis menores para maiores e AUX seja reposicionado.
+        \end{itemize}
+
+        \item AINV \&\& (Condição == False) \circled{+} B $\Longrightarrow$ AS
+
+        \begin{itemize}
+            \item Se (Condição == False), AUX == 0, ou seja, todos os elementos de possíveis foram reposicionados no conjunto maiores. Isso significa que ATUAL é menor do que todos. Logo, a posição em que ele será reposicionado é AUX == 0 + 1 == 1. Vale a AS.
+            \item Se (Condição == False), ELE[AUX] $\longleftarrow$ ATUAL, se ocorrer este teste, todos os elementos à esquerda de AUX serão menores que ATUAL. Com isso, foi definido o local em que ATUAL será reposicionado, valendo a AS.
+        \end{itemize}
+
+        \item Término
+        
+        \begin{itemize}
+            \item Como o número de elementos do conjunto possíveis menores é finito e cada ciclo retira um elemento deste conjunto, a repetição terminará em um número finito de passos.
+        \end{itemize}
+
+    \end{enumerate}
+
+\end{doublespace}
+%----------------------------------------------------------------------------------------
+
+\end{document}
