@@ -128,7 +128,7 @@
 %
 
 \newcommand{\hmwkTitle}{Lista 2}
-\newcommand{\hmwkDueDate}{16 de outubro de 2019}
+\newcommand{\hmwkDueDate}{xx de novembro de 2019}
 \newcommand{\hmwkClass}{Programação Modular}
 \newcommand{\hmwkClassTime}{}
 \newcommand{\hmwkClassInstructor}{Professor Flavio Bevilacqua}
@@ -284,25 +284,25 @@
         \item AE \&\& (Condição == False) $\Longrightarrow$ AS
 
               \begin{itemize}
-                  \item Pela AE, FINAL == LIMITE-LÓGICO. Para que (Condição == False), LIMITE-LÓGICO == 0, ou seja, vetor está vazio. Neste caso, vale a AS, já que o PARÂMETRO-BUSCADO não está no vetor.
+                  \item Pela AE, FINAL aponta para o LIMITE-LÓGICO do vetor. Para que (Condição == False), FINAL < COMEÇO. Já que COMEÇO == 1, FINAL == 0. Logo, LIMITE-LÓGICO == 0, ou seja, o vetor está vazio. Neste caso, vale a AS, já que o PARÂMETRO-BUSCADO não está no vetor.
               \end{itemize}
 
         \item AE \&\& (Condição == True) \circled{+} B $\Longrightarrow$ AINV
 
               \begin{itemize}
-                  \item Pela AE, FINAL aponta para o último elemento do vetor que não está vazio. Metade dos elementos do conjunto pode conter PARÂMETRO-BUSCADO passarão para o conjunto não contém PARÂMETRO-BUSCADO, e COMEÇO e FINAL serão reposicionados apontando para os limites do novo conjunto pode conter PARÂMETRO-BUSCADO. Com isso, os dois conjuntos existem e COMEÇO e FINAL apontam para os limites do conjunto pode conter PARÂMETRO-BUSCADO. Logo, vale a AINV.
+                  \item Pela AE, FINAL aponta para o LIMITE-LÓGICO do vetor. Para que  (Condição == True), o vetor possui ao menos um elemento. Metade dos elementos do conjunto pode conter PARÂMETRO-BUSCADO passarão para o conjunto não contém PARÂMETRO-BUSCADO, e COMEÇO e FINAL serão reposicionados, apontando para os limites do novo conjunto pode conter PARÂMETRO-BUSCADO. Com isso, os dois conjuntos existem e COMEÇO e FINAL apontam para os limites do conjunto pode conter PARÂMETRO-BUSCADO. Logo, vale a AINV.s
               \end{itemize}
 
         \item AINV \&\& (Condição == True) \circled{+} B $\Longrightarrow$ AINV
 
               \begin{itemize}
-                  \item Para que a AINV continue valendo, B deve garantir que metade dos elementos do conjunto pode conter PARÂMETRO-BUSCADO passem para o conjunto não contém PARÂMETRO-BUSCADO, e COMEÇO e FINAL sejam reposicionados apontando para os limites do novo conjunto pode conter PARÂMETRO-BUSCADO.
+                  \item Para que a AINV continue valendo, B deve garantir que metade dos elementos do conjunto pode conter PARÂMETRO-BUSCADO passem para o conjunto não contém PARÂMETRO-BUSCADO, e COMEÇO e FINAL sejam reposicionados, apontando para os limites do novo conjunto pode conter PARÂMETRO-BUSCADO.
               \end{itemize}
 
         \item AINV \&\& (Condição == False) \circled{+} B $\Longrightarrow$ AS
 
               \begin{itemize}
-                  \item Se (Condição == False), o limite inferior superou o limite superior do conjunto pode conter PARÂMETRO-BUSCADO, ou seja, todos os elementos passaram para o conjunto não contém PARÂMETRO-BUSCADO e o conjunto pode conter PARÂMETRO-BUSCADO não existe mais. Como o PARÂMETRO-BUSCADO não está no vetor, vale a AS.
+                  \item Se (Condição == False), o limite inferior do conjunto pode conter PARÂMETRO-BUSCADO superou o limite superior, ou seja, todos os elementos passaram para o conjunto não contém PARÂMETRO-BUSCADO e o conjunto pode conter PARÂMETRO-BUSCADO está vazio. Como o PARÂMETRO-BUSCADO não está no vetor, vale a AS.
               \end{itemize}
 
         \item Término
