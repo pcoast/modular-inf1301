@@ -293,9 +293,9 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
     int respostaRandom;
 
     unsigned char menorNumPassadas;
-    unsigned char labirintoPossuiSolucao;
+    unsigned short labirintoPossuiSolucao;
 
-    labirintoPossuiSolucao = UCHAR_MAX;
+    labirintoPossuiSolucao = USHRT_MAX;
 
     srandom(time(NULL)); /* Seed da função random */
 
