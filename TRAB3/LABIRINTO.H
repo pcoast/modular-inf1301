@@ -147,7 +147,7 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto);
 *       LAB_CondRetOK
 *
 ********************************************************/
-LAB_tpCondRet LAB_imprimeLabirinto(LAB_tppLabirinto CabecaDaLabirinto);
+LAB_tpCondRet LAB_imprimeLabirinto(LAB_tppLabirinto CabecaDoLabirinto);
 
 /***************************************************
 *
@@ -200,4 +200,4 @@ LAB_tpCondRet LAB_alteraTrechoDoLabirinto(LAB_tppLabirinto CabecaDoLabirinto);
 *       LAB_CondRetOK
 *
 ********************************************************/
-void LAB_destroiLabirinto(LAB_tppLabirinto CabecaDaLabirinto);
+void LAB_destroiLabirinto(LAB_tppLabirinto CabecaDoLabirinto);
