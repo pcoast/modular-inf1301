@@ -1,3 +1,3 @@
 Data	    Horas Trabalhadas	    Tipo Tarefa	                  Descrição da Tarefa Realizada
 06/11         8 horas           Revisar Código do Módulo      Revisão dos códigos do matriz.c, matriz.h, labirinto.c e labirinto.h
-07/11         4 horas           Documentação                      Fazer a Argumentação 
+07/11         4 horas           Estudar                       Fazer a Argumentação 
