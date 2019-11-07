@@ -176,7 +176,7 @@ LAB_tpCondRet LAB_imprimeLabirinto(LAB_tppLabirinto CabecaDaLabirinto);
 *       LAB_CondRetOK
 *
 ****************************************************/
-LAB_tpCondRet LAB_alteraTrechoDoLabirinto(LAB_tppLabirinto CabecaDoLabirinto);
+LAB_tpCondRet LAB_alteraTrechoDoLabirinto(LAB_tppLabirinto CabecaDoLabirinto, char i, char j);
 
 /*******************************************************
 *
