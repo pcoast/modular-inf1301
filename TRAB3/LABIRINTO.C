@@ -145,7 +145,7 @@ LAB_tpCondRet LAB_converteCondRet(MAT_tpCondRet CondicaoDeRetornoMatriz)
 ****************************************************/
 LAB_tpCondRet LAB_criaLabirinto(char *arquivo, LAB_tppLabirinto *LabirintoASerCriado)
 {
-    int i, colCount = 0, lineCount = 0;
+	int i, colCount = 0, lineCount = 0, existeInicio = 0, existeFim = 0;
     FILE *fp;
     char CaractereTexto, CaractereLabirinto;
     MAT_tpCondRet CondRetDeMatriz;
@@ -233,10 +233,14 @@ LAB_tpCondRet LAB_criaLabirinto(char *arquivo, LAB_tppLabirinto *LabirintoASerCr
                 CaractereLabirinto = 'i'; /* Início do labirinto */
                 colunaInicio = colCount;
                 linhaInicio = lineCount;
+				existeInicio = 1;
             }
 
-            else if (CaractereTexto == 'F')
+			else if (CaractereTexto == 'F')
+			{
                 CaractereLabirinto = 'f'; /* Fim do labirinto */
+				existeFim = 1;
+			}
 
             else if (CaractereTexto == ' ')
                 CaractereLabirinto = 'c'; /* Caminho */
@@ -267,6 +271,11 @@ LAB_tpCondRet LAB_criaLabirinto(char *arquivo, LAB_tppLabirinto *LabirintoASerCr
 #endif
 
     fclose(fp); /* Fecha arquivo de texto */
+
+	if (!existeInicio | !existeFim) {
+		LAB_destroiLabirinto(*LabirintoASerCriado);
+		return LAB_CondRetCaractereInvalido;
+	}
 
     MAT_vaiParaPos((*LabirintoASerCriado)->matriz, 0, 0); /* Coloca nó corrente na mesma posição que o primeiro nó */
 

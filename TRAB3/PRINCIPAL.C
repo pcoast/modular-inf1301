@@ -45,12 +45,12 @@ int main(void) {
 	char menu = 0, exit = 0, loaded = 0, selection = 'a',
 		arquivo[30];
 		
-	int line = 0, column = 0, i = 0;
+	int line = 0, column = 0;
 	LAB_tppLabirinto *lab = (LAB_tppLabirinto *)malloc(sizeof(LAB_tppLabirinto));
 
 	while (!exit) {
 		system("@cls||clear");
-		printf("!!! LABIRINTO (%d) !!!\n", i++);
+		printf("!!! LABIRINTO !!!\n");
 
 #ifdef _DEBUG
 		printf("\n Alterando elemento %d, %d\n", line, column);
@@ -90,8 +90,13 @@ int main(void) {
 			case 1:
 				scanf("%s", arquivo);
 				printf("\n");
-				if (LAB_criaLabirinto(arquivo, lab) == LAB_CondRetOK)
+				if (LAB_criaLabirinto(arquivo, lab) == LAB_CondRetOK) {
 					loaded = 1;
+				}
+				else {
+					printf("(Enter) Erro! Arquivo texto invalido. Verifique as instrucoes de criacao do labirinto.");
+					selection = getch();
+				}
 				menu = 0;
 				break;
 			case 2:
