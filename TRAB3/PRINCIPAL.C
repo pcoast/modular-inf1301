@@ -1,3 +1,19 @@
+/***************************************************************************
+*   $MCI Módulo de implementação: Módulo principal
+*
+*   Arquivo gerado:              PRINCIPAL.C
+*
+*   Projeto: Disciplina INF1301
+*   Departamento: DI/PUC-Rio
+*   Autores: avc - Antônio Chaves
+*            jpp - João Pedro Paiva
+*            pc	 - Pedro Costa
+*
+*   $HA Histórico de evolução:
+*       Versão  Autor   Data        Observações
+*       1.00    pc		07/11/2019	Implementação inicial
+*
+***************************************************************************/
 #include <stdio.h>
 #include "LABIRINTO.H"
 //#define _DEBUG

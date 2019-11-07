@@ -22,6 +22,7 @@
 *                                   resolve labirinto, free na função
 *                                   imprime labirinto e função altera
 *                                   trecho labirinto
+*		6.01	pc		07/11/2019	Adiciona tracer e corrige alguns erros
 *
 ***************************************************************************/
 #include <stdio.h>
