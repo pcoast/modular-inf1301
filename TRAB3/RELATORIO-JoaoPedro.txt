@@ -1,0 +1,6 @@
+Data		Horas Trabalhadas	Tipo Tarefa	Descrição da Tarefa Realizada
+20/10/19	3			estudar		Documentação Latex
+27/10/19	4			codificação	Módulos LAB e MAT
+27/10/19	6			codificação	Módulos LAB e MAT
+27/10/19	5			codificação	Módulos LAB e MAT
+06/11/19	6			documentação	Modelos físico e de arquitetura
