@@ -31,6 +31,8 @@ LAB_tppLabirinto labirinto;
 static const char RESET_LAB_CMD[] = "=resetteste";
 static const char CRIAR_LAB_CMD[] = "=criarlab";
 static const char IMPRIMIR_LAB_CMD[] = "=imprimirlab";
+static const char ALTERAR_LAB_CMD[] = "=alterarlab";
+static const char RESOLVER_LAB_CMD[] = "=resolverlab";
 
 /*
 	Interface de Testes do Módulo de Matrizes com Listas.
@@ -41,6 +43,8 @@ static const char IMPRIMIR_LAB_CMD[] = "=imprimirlab";
 	=resetteste - limpa o vetor de matrizes
 	=criarlab - cria o labirinto
 	=imprimirlab - imprime o labirinto
+	=alterarlab - altera o labirinto
+	=resolverlab - resolve o labirinto
 	=destruirlab - destroi o labirinto
 */
 
@@ -87,6 +91,28 @@ TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 			return TST_CondRetParm;
 
 		condRetObtida = LAB_imprimeLabirinto(labirinto);
+
+		return TST_CompararInt(condRetEsperada, condRetObtida, "Condicao de retorno errada ao imprimir labirinto.");
+	}
+	else if (strcmp(ComandoTeste, ALTERAR_LAB_CMD) == 0)
+	{
+		numLidos = LER_LerParametros("iii", &intValorDado, &outroIntValorDado, &condRetEsperada);
+
+		if (numLidos != 3)
+			return TST_CondRetParm;
+
+		condRetObtida = LAB_alteraTrechoDoLabirinto(labirinto, intValorDado, outroIntValorDado);
+
+		return TST_CompararInt(condRetEsperada, condRetObtida, "Condicao de retorno errada ao imprimir labirinto.");
+	}
+	else if (strcmp(ComandoTeste, RESOLVER_LAB_CMD) == 0)
+	{
+		numLidos = LER_LerParametros("i", &condRetEsperada);
+
+		if (numLidos != 1)
+			return TST_CondRetParm;
+
+		condRetObtida = LAB_resolveLabirinto(labirinto);
 
 		return TST_CompararInt(condRetEsperada, condRetObtida, "Condicao de retorno errada ao imprimir labirinto.");
 	}

@@ -125,6 +125,7 @@ TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 	}
 	else if (strcmp(ComandoTeste, OBTER_VALOR_CMD) == 0) {
 		char** valor = malloc(sizeof(char*));
+		*valor = NULL;
 		numLidos = LER_LerParametros("ci", &valorDado, &condRetEsperada);
 
 		if (numLidos != 2)
@@ -132,7 +133,7 @@ TST_tpCondRet TST_EfetuarComando(char * ComandoTeste)
 
 		condRetObtida = MAT_obterElemento(matrizesCriadas[cursorVetor], valor);
 
-		if (valor != NULL) {
+		if (*valor != NULL) {
 			ret = TST_CompararChar(valorDado, **valor, "Valor obtido não bate com o esperado");
 
 			if (ret != TST_CondRetOK)

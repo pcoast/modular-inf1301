@@ -31,7 +31,10 @@
 ***************************************************************************/
 
 #include "MATRIZ.H"
+#include <stdio.h>
 #include <stdlib.h>
+
+//#define _DEBUG
 
 /***********************************************************************
 *
@@ -301,14 +304,26 @@ MAT_tpCondRet MAT_vaiParaBaixo(MAT_tppMatriz CabecaDaMatriz)
 ****************************************************/
 MAT_tpCondRet MAT_adicionaColuna(MAT_tppMatriz CabecaDaMatriz, char numColunasAAdicionar)
 {
-    while (CabecaDaMatriz->pNoCorr->pNoDireita) /* Loop para chegar no primeiro nó da última coluna da matriz */
+    while (CabecaDaMatriz->pNoCorr->pNoDireita)
         MAT_vaiParaDireita(CabecaDaMatriz);
+
+	while (CabecaDaMatriz->pNoCorr->pNoCima) /* Loops para chegar no primeiro nó da última coluna da matriz */
+		MAT_vaiParaCima(CabecaDaMatriz);
+
+#ifdef _DEBUG
+	printf("\n(MAT_adicionaColuna) Foi ate a ultima coluna;");
+#endif
 
     /* No bloco de código abaixo o nó corrente percorrerá a última coluna da matriz criando nós à
 	direita para gerar uma nova coluna */
 
     while (numColunasAAdicionar--)
     {
+
+#ifdef _DEBUG
+		printf("\n(MAT_adicionaColuna) Faltam %d colunas;", (numColunasAAdicionar + 1));
+#endif
+
         do
         {
             CabecaDaMatriz->pNoCorr->pNoDireita = MAT_criaNo(); /* Cria nó da coluna nova à direita do nó corrente */
@@ -322,7 +337,15 @@ MAT_tpCondRet MAT_adicionaColuna(MAT_tppMatriz CabecaDaMatriz, char numColunasAA
                 CabecaDaMatriz->pNoCorr->pNoCima->pNoDireita->pNoBaixo = CabecaDaMatriz->pNoCorr->pNoDireita; /* Conecta o de cima do novo ao novo */
             }
 
+#ifdef _DEBUG
+			printf("\n(MAT_adicionaColuna) Adicionou um no na coluna %d", (numColunasAAdicionar + 1));
+#endif
+
         } while (MAT_vaiParaBaixo(CabecaDaMatriz) != MAT_CondRetNoNaoExiste); /* Nó corrente desce a coluna. Para somente quando caminhar para o NULL */
+
+#ifdef _DEBUG
+		printf("\n(MAT_adicionaColuna) Adicionou a coluna %d;", (numColunasAAdicionar + 1));
+#endif
 
         MAT_vaiParaDireita(CabecaDaMatriz); /* Vai para nó mais em baixo da coluna nova da matriz */
 
@@ -361,17 +384,32 @@ MAT_tpCondRet MAT_adicionaColuna(MAT_tppMatriz CabecaDaMatriz, char numColunasAA
 ****************************************************/
 MAT_tpCondRet MAT_adicionaLinha(MAT_tppMatriz CabecaDaMatriz, char numLinhasAAdicionar)
 {
-    while (CabecaDaMatriz->pNoCorr->pNoBaixo) /* Loop para chegar no primeiro nó da última linha da matriz */
+    while (CabecaDaMatriz->pNoCorr->pNoBaixo)
         MAT_vaiParaBaixo(CabecaDaMatriz);
+
+	while (CabecaDaMatriz->pNoCorr->pNoEsquerda) /* Loops para chegar no primeiro nó da última linha da matriz */
+		MAT_vaiParaEsquerda(CabecaDaMatriz);
+
+#ifdef _DEBUG
+	printf("\n(MAT_adicionaLinha) Chegou na última linha;");
+#endif
 
     /* No bloco de código abaixo o nó corrente percorrerá a última linha da matriz criando nós
 	abaixo para gerar uma nova linha */
 
     while (numLinhasAAdicionar--)
     {
+#ifdef _DEBUG
+		printf("\n(MAT_adicionaLinha) Faltam %d linhas;", (numLinhasAAdicionar + 1));
+#endif
+
         do
         {
             CabecaDaMatriz->pNoCorr->pNoBaixo = MAT_criaNo(); /* Cria nó da linha nova abaixo do nó corrente atual */
+
+#ifdef _DEBUG
+			printf("\n(MAT_adicionaLinha) Cria um no da linha %d;", (numLinhasAAdicionar + 1));
+#endif
 
             if (!CabecaDaMatriz->pNoCorr->pNoBaixo)
                 return MAT_CondRetFaltouMemoria; /* Nó criado == NULL. Retorna condição de insufuciência de memória */
@@ -385,13 +423,25 @@ MAT_tpCondRet MAT_adicionaLinha(MAT_tppMatriz CabecaDaMatriz, char numLinhasAAdi
             }
         } while (MAT_vaiParaDireita(CabecaDaMatriz) != MAT_CondRetNoNaoExiste); /* Nó corrente anda para a direita na linha. Para somente quando caminhar para o NULL */
 
-        MAT_vaiParaBaixo(CabecaDaMatriz); /* Vai para nó mais a direita da linha nova da matriz */
+#ifdef _DEBUG
+		printf("\n(MAT_adicionaLinha) Todos os nos da linha %d foram criados;", (numLinhasAAdicionar + 1));
+#endif
 
-        while (CabecaDaMatriz->pNoCorr->pNoCima) /* Loop para chegar no nó mais à esquerda da nova linha da matriz */
+        MAT_vaiParaBaixo(CabecaDaMatriz); /* Vai para nó mais a esquerda da linha nova da matriz */
+
+        while (CabecaDaMatriz->pNoCorr->pNoEsquerda) /* Loop para chegar no nó mais à esquerda da nova linha da matriz */
             MAT_vaiParaEsquerda(CabecaDaMatriz);
     }
 
+#ifdef _DEBUG
+	printf("\n(MAT_adicionaLinha) Gerou as linhas;");
+#endif
+
     MAT_vaiParaPos(CabecaDaMatriz, 0, 0); /* Coloca nó corrente na mesma posição que o primeiro nó */
+
+#ifdef _DEBUG
+	printf("\n(MAT_adicionaLinha) Foi para a cabeca");
+#endif
 
     return MAT_CondRetOK;
 }
@@ -430,6 +480,11 @@ MAT_tpCondRet MAT_cria(char Linhas, char Colunas, void (*destruirElemento)(void 
         return MAT_CondRetFaltouMemoria; /* Primeiro Nó == NULL */
 
     (*MatrizCriada) = (MAT_tppMatriz)malloc(sizeof(tpMatriz)); /* Malloca cabeça da matriz */
+
+#ifdef _DEBUG
+	printf("\n(MAT_cria) Mallocou a cabeca da matriz;");
+#endif
+
     if (!(*MatrizCriada))
         return MAT_CondRetFaltouMemoria; /* Cabeça da Matriz == NULL, Retorna condição de insufuciência de memória */
 
@@ -441,17 +496,25 @@ MAT_tpCondRet MAT_cria(char Linhas, char Colunas, void (*destruirElemento)(void 
 
     /* Cria primeira linha da matriz a partir do primeiro nó.
 	Subtrai primeiro porque um nó (o primeiro) está feito */
-    if (MAT_adicionaColuna((*MatrizCriada), Colunas) == MAT_CondRetFaltouMemoria)
+    if (MAT_adicionaColuna((*MatrizCriada), --Colunas) == MAT_CondRetFaltouMemoria)
         return MAT_CondRetFaltouMemoria;
     /* Cada chamada cria uma coluna nova na matriz. Já que só há um nó na matriz,
 	cada chamada da função só cria novos nós à direita do primeiro, formando a primeira linha */
 
+#ifdef _DEBUG
+	printf("\n(MAT_cria) Adicionou %d colunas;", Colunas);
+#endif
+
     /* Cria as linhas da matriz extendendo a primeira linha.
 	Subtrai primeiro porque uma linha (a primeira) está feita */
 
-    if (MAT_adicionaLinha((*MatrizCriada), Linhas) == MAT_CondRetFaltouMemoria)
+    if (MAT_adicionaLinha((*MatrizCriada), --Linhas) == MAT_CondRetFaltouMemoria)
         return MAT_CondRetFaltouMemoria;
     /* Cada chamada cria uma linha nova na matriz. */
+
+#ifdef _DEBUG
+	printf("\n(MAT_cria) Adicionou %d linhas;", Linhas);
+#endif
 
     return MAT_CondRetOK; /* Retorna condição de teste bem sucedido */
 }

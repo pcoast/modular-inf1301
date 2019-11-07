@@ -22,15 +22,17 @@
 *                                   resolve labirinto, free na função
 *                                   imprime labirinto e função altera
 *                                   trecho labirinto
+*		6.01	pc		07/11/2019	Adiciona tracer e corrige alguns erros
 *
 ***************************************************************************/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
 #include <time.h>
 #include "MATRIZ.H"
 #include "LABIRINTO.H"
+
+//#define _DEBUG_RESOLVE
 
 /***********************************************************************
 *
@@ -143,20 +145,22 @@ LAB_tpCondRet LAB_converteCondRet(MAT_tpCondRet CondicaoDeRetornoMatriz)
 ****************************************************/
 LAB_tpCondRet LAB_criaLabirinto(char *arquivo, LAB_tppLabirinto *LabirintoASerCriado)
 {
-
-    int i, colCount = 0, lineCount = 0;
+	int i, colCount = 0, lineCount = 0, existeInicio = 0, existeFim = 0;
     FILE *fp;
     char CaractereTexto, CaractereLabirinto;
     MAT_tpCondRet CondRetDeMatriz;
-    LAB_tpCondRet CondRetConvertidoParaLabirinto;
     tpElementoLabirinto *elementoLabirinto;
 
-    MAT_tppMatriz matriz = NULL;
+    MAT_tppMatriz *matriz = (MAT_tppMatriz *)malloc(sizeof(MAT_tppMatriz));
 
     fp = fopen(arquivo, "r"); /* Abre arquivo de texto no modo leitura */
 
     if (!fp)
         return LAB_CondRetArquivoTextoNulo; /* fp == NULL retorna condição de arquivo de texto nulo */
+
+#ifdef _DEBUG
+	printf("\n(LAB_criaLabirinto) Abriu o arquivo;");
+#endif
 
     colunas = 0;
     linhas = 0; /* Inicia contadores de coluna e de linha */
@@ -180,7 +184,15 @@ LAB_tpCondRet LAB_criaLabirinto(char *arquivo, LAB_tppLabirinto *LabirintoASerCr
     if (++linhas > 10 || colunas > 10)
         return LAB_CondRetTamanhoInvalido; /* Soma 1 ao número de linhas porque o contador não conta com a última */
 
-    CondRetDeMatriz = MAT_cria(linhas, colunas, free, &matriz); /* Cria matriz para armazenar o labirinto */
+#ifdef _DEBUG
+	printf("\n(LAB_criaLabirinto) Leu o numero de linhas/colunas;");
+#endif
+
+	CondRetDeMatriz = MAT_cria(linhas, colunas, free, matriz); /* Cria matriz para armazenar o labirinto */
+
+#ifdef _DEBUG
+	printf("\n(LAB_criaLabirinto) Matriz que armazena o labirinto criada;");
+#endif
 
     if (CondRetDeMatriz != MAT_CondRetOK)
         return LAB_converteCondRet(CondRetDeMatriz); /* Retorna condição de retorno de matriz se algo estiver incorreto */
@@ -189,7 +201,7 @@ LAB_tpCondRet LAB_criaLabirinto(char *arquivo, LAB_tppLabirinto *LabirintoASerCr
     if (!(*LabirintoASerCriado))
         return LAB_CondRetFaltouMemoria;
 
-    (*LabirintoASerCriado)->matriz = matriz;
+    (*LabirintoASerCriado)->matriz = *matriz;
 
     rewind(fp);
 
@@ -221,10 +233,14 @@ LAB_tpCondRet LAB_criaLabirinto(char *arquivo, LAB_tppLabirinto *LabirintoASerCr
                 CaractereLabirinto = 'i'; /* Início do labirinto */
                 colunaInicio = colCount;
                 linhaInicio = lineCount;
+				existeInicio = 1;
             }
 
-            else if (CaractereTexto == 'F')
+			else if (CaractereTexto == 'F')
+			{
                 CaractereLabirinto = 'f'; /* Fim do labirinto */
+				existeFim = 1;
+			}
 
             else if (CaractereTexto == ' ')
                 CaractereLabirinto = 'c'; /* Caminho */
@@ -250,9 +266,22 @@ LAB_tpCondRet LAB_criaLabirinto(char *arquivo, LAB_tppLabirinto *LabirintoASerCr
         }
     }
 
+#ifdef _DEBUG
+	printf("\n(LAB_criaLabirinto) Loop para preencher a matriz realizado;");
+#endif
+
     fclose(fp); /* Fecha arquivo de texto */
 
-    MAT_vaiParaPos((*LabirintoASerCriado)->matriz, colunaInicio, linhaInicio); /* Coloca nó corrente na mesma posição que o primeiro nó */
+	if (!existeInicio | !existeFim) {
+		LAB_destroiLabirinto(*LabirintoASerCriado);
+		return LAB_CondRetCaractereInvalido;
+	}
+
+    MAT_vaiParaPos((*LabirintoASerCriado)->matriz, 0, 0); /* Coloca nó corrente na mesma posição que o primeiro nó */
+
+#ifdef _DEBUG
+	printf("\n(LAB_criaLabirinto) Colocou a posição junto em (%d, %d);", linhaInicio, colunaInicio);
+#endif
 
     return LAB_CondRetOK;
 }
@@ -292,18 +321,27 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
 
     int respostaRandom;
 
+#ifdef _DEBUG_RESOLVE
+	int count =0;
+	printf("(LAB_resolveLabirinto) Começo vai!");
+#endif // _DEBUG
+
+
     unsigned char menorNumPassadas;
     unsigned short labirintoPossuiSolucao;
 
-    labirintoPossuiSolucao = USHRT_MAX;
+	MAT_vaiParaPos(CabecaDoLabirinto->matriz, colunaInicio, linhaInicio); /* Coloca nó corrente na mesma posição que o primeiro nó */
 
-    srandom(time(NULL)); /* Seed da função random */
+    labirintoPossuiSolucao = USHRT_MAX * (linhas * colunas);
 
     MAT_obterElemento(CabecaDoLabirinto->matriz, &ElementoDaPosicaoAtual); /* Obtem elemento da posição inicial do labirinto */
 
     while (labirintoPossuiSolucao--) /* Se completamos um certo número de movimentos e não encomtramos a saída, então ela não existe ou não é alcançâvel */
     /* Loop de caminhar pelo Labirinto, primeiro decidimos a direção de menor passadas, depois damos um passo nesta direção */
     {
+#ifdef _DEBUG_RESOLVE
+		printf("\n(LAB_resolveLabirinto) Iter: %d", ++count);
+#endif // _DEBUG_RESOLVE
 
         direcaoCandidata.tipoDirecao = MAT_DirCima;           /* Primeira direção a ser analizada é a de cima */
         menorNumPassadas = UCHAR_MAX;                         /* Menor número de passadas (espécie de mínimo) é, inicialmente, o maior número possível */
@@ -317,7 +355,21 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
             /* Funciona da seguinte forma: Caminhamos na direção sendo analizada no ciclio atual, indo para a posição candidata. Pegamos o elemento da posição candidata. Voltamos para
             o nó que estávamos, indo para a posição atual. Comparamos o número de passadas contido no elemento da posição candidata com o número de passadas mínimo (menorNumPassadas) */
 
-            Volta.tipoInteiro = (direcaoCandidata.tipoInteiro + 2) % 4; /* Define a direção para voltar da posição candidata para a posição atual */
+			switch (direcaoCandidata.tipoDirecao)
+			{
+				case MAT_DirCima:
+					Volta.tipoDirecao = MAT_DirBaixo;
+					break;
+				case MAT_DirBaixo:
+					Volta.tipoDirecao = MAT_DirCima;
+					break;
+				case MAT_DirDireita:
+					Volta.tipoDirecao = MAT_DirEsquerda;
+					break;
+				case MAT_DirEsquerda:
+					Volta.tipoDirecao = MAT_DirDireita;
+					break;
+			} /* Define a direção para voltar da posição candidata para a posição atual */
 
             MAT_vaiParaDir(CabecaDoLabirinto->matriz, direcaoCandidata.tipoDirecao);   /* Vai para a posição candidata */
             MAT_obterElemento(CabecaDoLabirinto->matriz, &ElementoDaPosicaoCandidata); /* Obtem elemento da posição candidata */
@@ -326,28 +378,19 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
             if (ElementoDaPosicaoAtual->volta != direcaoCandidata.tipoDirecao && ElementoDaPosicaoCandidata->paredeCaminhoEntradaOuSaida != 'p') /* Se a direção da posição candidata não é a
             direção de volta para a posição atual anterior, ou seja, não estamos voltando para o caminho do qual viemos, e se não estamos indo de encontro com uma parede */
             {
-                if (ElementoDaPosicaoCandidata->numPassadas < menorNumPassadas)
+                if (ElementoDaPosicaoCandidata->numPassadas <= menorNumPassadas)
                 /* Se o número de passadas da posição candidata for menor do que o menor número de passadas de outras posições candidatas */
                 {
                     menorNumPassadas = ElementoDaPosicaoCandidata->numPassadas;         /* O mínimo de passadas se torna o número de passadas da posição candidata */
                     direcaoMenorNumPassadas.tipoDirecao = direcaoCandidata.tipoDirecao; /* A direção do mínimo de passadas se torna a direção da posição candidata */
-                }
-
-                else if (ElementoDaPosicaoCandidata->numPassadas == menorNumPassadas)
-                /* Se o número de passadas da posição candidata for igual ao menor número de passadas de outras posições candidatas */
-                {
-                    respostaRandom = random() % 2; /* Escolhe randômicamente 0 ou 1 */
-                    if (!respostaRandom)           /* Se número escolhido randômicamente for 0 */
-                    {
-                        direcaoMenorNumPassadas.tipoDirecao = direcaoCandidata.tipoDirecao; /* Direção com menor número de passadas é a que está sendo analizada neste ciclo */
-                        menorNumPassadas = ElementoDaPosicaoCandidata->numPassadas;         /* Menor número de passadas é a do nó na direção que está sendo analizada neste ciclo */
-                    }
                 }
             }
 
             direcaoCandidata.tipoInteiro++; /* Muda direção candidata (Cima -> Direita -> Baixo -> Esquerda -> Direção Nenhuma) */
 
         } while (direcaoCandidata.tipoDirecao != MAT_DirNenhuma); /* Condição é quebrada quando o ciclo das direções candidatas é completo (chegamos na última direção == direção nenhuma) */
+
+
 
         if (direcaoMenorNumPassadas.tipoDirecao == MAT_DirNenhuma) /* Se não trocou a direção de menor número de passadas, ou seja, se a posição atual só pode ir de encontro com uma 
         parede ou voltar para o caminho de onde viemos, então sesempilhamos ou voltamos para a posição de início do labirinto */
@@ -373,7 +416,7 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
             if (ElementoDaPosicaoAtual->paredeCaminhoEntradaOuSaida == 'f') /* Se posição para a qual andamos é o final do labirinto, então há solução e ela foi demarcada. 
             Labirinto foi resolvido */
             {
-                printf("Chegamos ao final do Labirinto\n");
+                printf("\nChegamos ao final do Labirinto");
                 return LAB_CondRetOK;
             }
 
@@ -389,7 +432,7 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
         }
     }
 
-    printf("Labirinto não possui solução\n");
+    printf("\nLabirinto nao possui solucao");
 
     return LAB_CondRetOK;
 }
@@ -416,18 +459,19 @@ LAB_tpCondRet LAB_resolveLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
 *       labirinto.
 *
 ****************************************************/
-LAB_tpCondRet LAB_alteraTrechoDoLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
+LAB_tpCondRet LAB_alteraTrechoDoLabirinto(LAB_tppLabirinto CabecaDoLabirinto, char i, char j)
 {
 
     tpElementoLabirinto *ElementoDaPosicaoCorrente;
 
+	MAT_vaiParaPos(CabecaDoLabirinto->matriz, j, i);
     MAT_obterElemento(CabecaDoLabirinto->matriz, &ElementoDaPosicaoCorrente); /* Obtem elemento da posição inicial do labirinto */
 
     if (ElementoDaPosicaoCorrente->paredeCaminhoEntradaOuSaida == 'p') /* Se posição atual do labirinto é parede */
 
         ElementoDaPosicaoCorrente->paredeCaminhoEntradaOuSaida = 'c'; /* A parede se torna um caminho */
 
-    else if (ElementoDaPosicaoCorrente->paredeCaminhoEntradaOuSaida == 'c') /* Se posição atual do labirinto é caminho */
+    else if (ElementoDaPosicaoCorrente->paredeCaminhoEntradaOuSaida == 'c' || ElementoDaPosicaoCorrente->paredeCaminhoEntradaOuSaida == '*') /* Se posição atual do labirinto é caminho */
 
         ElementoDaPosicaoCorrente->paredeCaminhoEntradaOuSaida = 'p'; /* O caminho se torna uma parede */
 
@@ -460,22 +504,48 @@ LAB_tpCondRet LAB_imprimeLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
 
     tpElementoLabirinto **ptElementoLabirinto = (tpElementoLabirinto **)malloc(sizeof(tpElementoLabirinto *)); /* Malloc do Elemento do Labirinto */
 
+#ifdef _DEBUG
+	printf("\n(LAB_imprimeLabirinto) Alocou o espaco para os elementos do labirinto;");
+#endif
+
     if (!ptElementoLabirinto)
         return LAB_CondRetFaltouMemoria; /* Se ptElementoLabirinto == NULL, retorna condição de insufuciência de memória */
 
-    MAT_vaiParaPos((*CabecaDoLabirinto)->matriz, 0, 0); /* Coloca nó corrente na mesma posição que o primeiro nó */
+    MAT_vaiParaPos(CabecaDoLabirinto->matriz, 0, 0); /* Coloca nó corrente na mesma posição que o primeiro nó */
+
+#ifdef _DEBUG
+	printf("\n(LAB_imprimeLabirinto) Colocou o 'cursor' no inicio da matriz;");
+
+	printf("\n(LAB_imprimeLabirinto) linhas: %d, colunas: %d;", linhas, colunas);
+#endif
+	printf("\n");
 
     for (l = 0; l < linhas; l++)
     {
-        for (c = 0; c < colunas; c++)
-        {
-            MAT_obterElemento(CabecaDoLabirinto->matriz, ptElementoLabirinto);
+#ifdef _DEBUG
+		c = 0;
+#endif // _DEBUG
 
-            printf("%c ", (*ptElementoLabirinto)->paredeCaminhoEntradaOuSaida);
+		do {
+#ifdef _DEBUG
+			printf("\n(LAB_imprimeLabirinto) (%d,%d)", l,c);
+#endif
+			MAT_obterElemento(CabecaDoLabirinto->matriz, ptElementoLabirinto);
 
-            if (c < (colunas - 1))
-                MAT_vaiParaDireita(CabecaDoLabirinto->matriz);
-        }
+#ifdef _DEBUG
+			printf("\n(LAB_imprimeLabirinto) Obteve o elemento da matriz;");
+#endif
+			printf("%c ", (*ptElementoLabirinto)->paredeCaminhoEntradaOuSaida);
+
+			if ((*ptElementoLabirinto)->paredeCaminhoEntradaOuSaida == '*')
+				(*ptElementoLabirinto)->paredeCaminhoEntradaOuSaida = 'c';
+
+#ifdef _DEBUG
+			printf("(LAB_resolveLabirinto) Limpou os caminhos antigos.");
+			c++;
+#endif // _DEBUG
+
+		} while (MAT_vaiParaDireita(CabecaDoLabirinto->matriz) != MAT_CondRetNoNaoExiste);
 
         if (l < (linhas - 1))
         {
@@ -487,6 +557,9 @@ LAB_tpCondRet LAB_imprimeLabirinto(LAB_tppLabirinto CabecaDoLabirinto)
                 MAT_vaiParaEsquerda(CabecaDoLabirinto->matriz);
         }
     }
+
+	/* Limpa caminhos antigos */
+	MAT_vaiParaPos(CabecaDoLabirinto->matriz, 0, 0);
 
     free(ptElementoLabirinto);
 
