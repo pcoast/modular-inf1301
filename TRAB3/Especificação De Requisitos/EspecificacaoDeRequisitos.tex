@@ -1,0 +1,42 @@
+\documentclass[a4paper,12pt,oneside]{book}
+%
+\input{./config/packages}
+\input{./config/macros}
+
+% SRS cover page
+\title{
+  \begin{flushright}
+  \Huge{ESPECIFICAÇÃO DE REQUISITOS\\ DE SOFTWARE}\\
+  da aplicação\\
+  LABIRINTO\\
+  ~\\
+  \LARGE{Versão 1.2}\\
+  ~\\
+  INF1301 - Programação Modular\\ DI/PUC-Rio
+  \end{flushright}
+}
+
+% Author
+\author{Antônio Chaves - AVC\\João Pedro Paiva - JPP\\Pedro Costa - PC}
+\date{\today}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+\tableofcontents
+
+\input{./chapter_revisionHistory/chapter_revisionHistory}
+
+\mainmatter
+
+% \input{./chapter_preface/chapter_preface}
+\input{./chapter_introduction/chapter_introduction}
+\input{./chapter_overallDescription/chapter_overallDescription}
+\input{./chapter_externalInterfaceRequirements/chapter_externalInterfaceRequirements}
+\input{./chapter_systemFeatures/chapter_systemFeatures}
+\input{./chapter_otherNonFunctionalRequirements/chapter_otherNonFunctionalRequirements}
+% \input{./chapter_otherRequirements/chapter_otherRequirements}
+
+\end{document}

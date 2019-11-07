@@ -1,0 +1,257 @@
+\documentclass[a4paper,12pt,oneside]{book}
+%
+\input{./config/packages}
+\input{./config/macros}
+
+% SRS cover page
+\title{
+  \begin{flushright}
+  \Huge{ARGUMENTAÇÃO \\ DE CORRETUDE}\\
+  da aplicação\\
+  LABIRINTO\\
+  ~\\
+  \LARGE{Versão 1.0}\\
+  ~\\
+  INF1301 - Programação Modular\\ DI/PUC-Rio
+  \end{flushright}
+}
+
+% Author
+\author{Antônio Chaves - AVC\\João Pedro Paiva - JPP\\Pedro Costa - PC}
+\date{\today}
+
+\begin{document}
+
+\setlength{\parindent}{0in}
+
+\setlength{\parskip}{\baselineskip}
+
+
+\frontmatter
+\maketitle
+
+\tableofcontents
+
+\input{./chapter_revisionHistory/chapter_revisionHistory}
+
+\mainmatter
+
+\chapter{Pseudocódigo}
+
+\begin{algorithm}[h]
+
+    \caption{MAT\_tpCondRet MAT\_vaiParaPos(MAT\_tppMatriz CabecaDaMatriz, char Coluna, char Linha)}
+
+    \SetAlgoLined
+    % \KwData{this text}
+    % \KwResult{how to write algorithm with \LaTeX2e }
+    AE $\longrightarrow$
+
+    \Indp\Inicio
+    {
+
+        NÓ-CORRENTE $\longleftarrow$ NÓ-PRIMEIRO
+
+        \Enqto{COLUNA > 0}
+        {
+
+            COLUNA $\longleftarrow$ COLUNA - 1
+
+            MAT\_vaiParaDireita(CabecaDaMatriz)
+        }
+
+        \Enqto{LINHA > 0}
+        {
+
+            LINHA $\longleftarrow$ LINHA - 1
+
+            MAT\_vaiParaBaixo(CabecaDaMatriz)
+        }
+
+        \Retorna{MAT\_CondRetOK}
+
+    }
+
+    \Indm AS $\longrightarrow$
+
+\end{algorithm}
+
+\chapter{Argumentação de Sequência 1}
+
+AE: A posição desejada pertence à matriz. Nó corrente da matriz não aponta necessariamente para a posição inicial (mesma posição que o primeiro nó). Cabeça da matriz != NULL. Valem as assertivas estruturais da matriz com cabeça.
+
+AS: Nó corrente da matriz está na posição desejada. Valem as assertivas estruturais da matriz com cabeça.
+
+AI 1: Nó corrente da matriz aponta para o primeiro nó da matriz.
+
+AI 2: Nó corrente aponta para a posição com a coluna desejada.
+
+AI 3: Nó corrente aponta para a posição com a linha desejada.
+
+\chapter{Argumentação de Repetição 1}
+
+AE: AI 1.
+
+AS: AI 2.
+
+AINV:
+
+\begin{itemize}
+
+    \item Existem dois conjuntos: colunas percorridas e colunas que restam percorrer.
+    \item COLUNA indica o número de colunas que restam percorrer até chegar à coluna desejada.
+
+\end{itemize}
+
+\begin{enumerate}[label=\protect\circled{\arabic*}]
+    \item AE $\Longrightarrow$ AINV
+
+          \begin{itemize}
+              \item Pela AE, o nó corrente da matriz aponta para o primeiro nó da matriz. Todos os elementos estão no conjunto colunas que restam percorrer e o conjunto colunas percorridas está vazio. Logo, vale a AINV.
+          \end{itemize}
+
+    \item AE \&\& (Condição == False) $\Longrightarrow$ AS
+
+          \begin{itemize}
+              \item Pela AE, o nó corrente da matriz aponta para o primeiro nó da matriz. Para que (Condição == False), COLUNA == 0. Logo, o conjunto colunas que restam percorrer é vazio, ou seja, o nó corrente aponta para a posição com a coluna desejada. Portanto, vale a AS.
+          \end{itemize}
+
+    \item AE \&\& (Condição == True) \circled{+} B $\Longrightarrow$ AINV
+
+          \begin{itemize}
+              \item Pela AE, o nó corrente da matriz aponta para o primeiro nó da matriz. Para que  (Condição == True), COLUNA > 0. O nó corrente passará a apontar para a posição da coluna seguinte, ou seja, uma coluna passará do conjunto colunas que restam percorrer para o conjunto colunas percorridas. COLUNA será decrementada. Com isso, os dois conjuntos existem e COLUNA indica o número de colunas que restam percorrer até chegar à coluna desejada. Logo, vale a AINV.
+          \end{itemize}
+
+    \item AINV \&\& (Condição == True) \circled{+} B $\Longrightarrow$ AINV
+
+          \begin{itemize}
+              \item Para que a AINV continue valendo, B deve garantir que um dos elementos do conjuntocolunas que restam percorrer passe para o conjunto colunas percorridas, e COLUNA seja decrementada.
+          \end{itemize}
+
+    \item AINV \&\& (Condição == False) \circled{+} B $\Longrightarrow$ AS
+
+          \begin{itemize}
+              \item Se (Condição == False), então COLUNA == 0. Logo, o conjunto colunas que restam percorrer é vazio, ou seja, o nó corrente aponta para a posição com a coluna desejada, vale a AS.
+          \end{itemize}
+
+    \item Término
+
+          \begin{itemize}
+              \item Como a cada ciclo, um dos elementos do conjunto colunas que restam percorrer é retirado, e este conjunto possui um número finito de elementos, a repetição terminará em um número finito de passos.
+          \end{itemize}
+
+\end{enumerate}
+
+\chapter{Argumentação de Repetição 2}
+
+AE: AI 2.
+
+AS: AI 3.
+
+AINV:
+
+\begin{itemize}
+
+    \item Existem dois conjuntos: linhas percorridas e linhas que restam percorrer.
+    \item LINHA indica o número de linhas que restam percorrer até chegar à linha desejada.
+
+\end{itemize}
+
+\begin{enumerate}[label=\protect\circled{\arabic*}]
+    \item AE $\Longrightarrow$ AINV
+
+          \begin{itemize}
+              \item Pela AE, o nó corrente da matriz aponta para o primeiro nó da matriz. Todos os elementos estão no conjunto linhas que restam percorrer e o conjunto linhas percorridas está vazio. Logo, vale a AINV.
+          \end{itemize}
+
+    \item AE \&\& (Condição == False) $\Longrightarrow$ AS
+
+          \begin{itemize}
+              \item Pela AE, o nó corrente da matriz aponta para o primeiro nó da matriz. Para que (Condição == False), LINHA == 0. Logo, o conjunto linhas que restam percorrer é vazio, ou seja, o nó corrente aponta para a posição com a linha desejada. Portanto, vale a AS.
+          \end{itemize}
+
+    \item AE \&\& (Condição == True) \circled{+} B $\Longrightarrow$ AINV
+
+          \begin{itemize}
+              \item Pela AE, o nó corrente da matriz aponta para o primeiro nó da matriz. Para que  (Condição == True), LINHA > 0. O nó corrente passará a apontar para a posição da linha seguinte, ou seja, uma linha passará do conjunto linhas que restam percorrer para o conjunto linhas percorridas. LINHA será decrementada. Com isso, os dois conjuntos existem e LINHA indica o número de linhas que restam percorrer até chegar à linha desejada. Logo, vale a AINV.
+          \end{itemize}
+
+    \item AINV \&\& (Condição == True) \circled{+} B $\Longrightarrow$ AINV
+
+          \begin{itemize}
+              \item Para que a AINV continue valendo, B deve garantir que um dos elementos do conjuntolinhas que restam percorrer passe para o conjunto linhas percorridas, e LINHA seja decrementada.
+          \end{itemize}
+
+    \item AINV \&\& (Condição == False) \circled{+} B $\Longrightarrow$ AS
+
+          \begin{itemize}
+              \item Se (Condição == False), então LINHA == 0. Logo, o conjunto linhas que restam percorrer é vazio, ou seja, o nó corrente aponta para a posição com a linha desejada, vale a AS.
+          \end{itemize}
+
+    \item Término
+
+          \begin{itemize}
+              \item Como a cada ciclo, um dos elementos do conjunto linhas que restam percorrer é retirado, e este conjunto possui um número finito de elementos, a repetição terminará em um número finito de passos.
+          \end{itemize}
+
+\end{enumerate}
+
+\chapter{Pseudocódigo}
+
+\begin{algorithm}[h]
+
+    \caption{MAT\_tpCondRet MAT\_obterElemento(MAT\_tppMatriz CabecaDaMatriz, void **elemento)}
+
+    \SetAlgoLined
+    % \KwData{this text}
+    % \KwResult{how to write algorithm with \LaTeX2e }
+    AE $\longrightarrow$
+
+    \Indp\Inicio
+    {
+
+        \lSe{$\nexists$ELEMENTO-DO-NÓ-CORRENTE}
+        {
+
+            \Retorna MAT\_CondRetNoVazio
+        }
+
+        ELEMENTO $\longleftarrow$ ELEMENTO-DO-NÓ-CORRENTE
+
+        \Retorna{MAT\_CondRetOK}
+
+    }
+
+    \Indm AS $\longrightarrow$
+
+\end{algorithm}
+
+\chapter{Argumentação de Seleção 1}
+
+AE: Ponteiro corrente aponta para o nó de onde deseja-se obter o conteúdo. Conteúdo do nó corrente pode existir ou não. Cabeça da matriz != NULL. Valem as assertivas estruturais da matriz com cabeça.
+
+
+AS: Elemento foi obtido do nó corrente da matriz ou elemento não existe (é nulo). Valem as assertivas estruturais da matriz com cabeça.
+
+\begin{enumerate}[label=\protect\circled{\arabic*}]
+    \item AE \&\& (Condição == True) \circled{+} B1 $\Longrightarrow$ AS
+
+          Pela AE, o conteúdo do nó corrente pode existir ou não.. Como (Condição == True), não existe elemento no nó corente (conteúdo é nulo). Retornamos a condição de nó vazio. Já que o elemento é nulo, vale a AS.
+
+    \item AE \&\& (Condição == False) \circled{+} B2 $\Longrightarrow$ AS
+
+    Pela AE, conteúdo do nó corrente pode existir ou não. Como (Condição == False), existe elemento no nó corente (conteúdo não é nulo). Obtemos o elemento do nó corrente, logo, vale a AS.
+
+\end{enumerate}
+
+\chapter{Argumentação de Sequência 1}
+
+AE: O ponteiro corrente aponta para o nó de onde deseja-se obter o conteúdo e existe elemento no nó corente (conteúdo não é nulo).
+
+
+AS: AS geral.
+
+
+AI 1: ELEMENTO aponta para o conteúdo do nó corrente.
+
+\end{document}

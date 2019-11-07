@@ -608,13 +608,14 @@ MAT_tpCondRet MAT_inserir(MAT_tppMatriz CabecaDaMatriz, void *elemento)
 *	$AE Assertivas de entrada esperadas:
 *       Ponteiro corrente aponta para o nó
 *       de onde deseja-se obter o conteúdo.
+*       Conteúdo do nó corrente pode existir ou não.
 *		Cabeça da matriz != NULL.
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
 *
 *	$AS Assertivas de saída esperadas:
-*       Elemento foi obtido do nó corrente da matriz.
+*       Elemento foi obtido do nó corrente da matriz ou elemento não existe (é nulo).
 *		Valem as assertivas estruturais da matriz
 *       com cabeça.
 *
