@@ -45,6 +45,7 @@ typedef struct LIS_tagNoLista
 
 #ifdef _DEBUG
     LIS_tpCabecaLista *pCabeca; /* Ponteiro para a cabeca da estrutura */
+    char tipoEstrutura;         /* Campo que assinala o tipo da estrutura */
     int tamLista;               /* Tamanho (em bytes) da lista */
 #endif
 
@@ -90,10 +91,14 @@ int tamLista; /* Tamanho (em bytes) da lista */
 
 /***** Protôtipos das funções encapuladas no módulo *****/
 
-static void LIS_liberarNo(LIS_tppCabecaLista pCabecaDaLista, LIS_tpNoLista *pNo);
+static LIS_tpCondRet LIS_liberarNo(LIS_tppCabecaLista pCabecaDaLista, LIS_tpNoLista *pNo);
 
-static LIS_tpNoLista *LIS_criaNo(LIS_tppCabecaLista pCabecaDaLista, void *pConteudo);
-
+static LIS_tpNoLista *LIS_criaNo(void *pConteudo
+#ifdef _DEBUG
+                                 ,
+                                 LIS_tppCabecaLista pCabecaDaLista
+#endif
+);
 /*****  Código das funções exportadas pelo módulo  *****/
 
 /***************************************************
@@ -130,8 +135,8 @@ LIS_tpCondRet LIS_criarLista(void (*ExcluirValor)(void *pDado), LIS_tppCabecaLis
     (*pCabecaDaLista)->pNoCorrente = NULL;
 
 #ifdef _DEBUG
-    pCabecaDaLista->tipoEstrutura = 'l';
-    pCabecaDaLista->numNos = 0;
+    (*pCabecaDaLista)->tipoEstrutura = 'l';
+    (*pCabecaDaLista)->numNos = 0;
 #endif
 
     (*pCabecaDaLista)->ExcluirValor = ExcluirValor;
@@ -161,7 +166,7 @@ LIS_tpCondRet LIS_criarLista(void (*ExcluirValor)(void *pDado), LIS_tppCabecaLis
 ****************************************************/
 LIS_tpCondRet LIS_DestruirLista(LIS_tppCabecaLista pCabecaDaLista)
 {
-
+    LIS_tpCondRet condRetDeLista;
     LIS_tpNoLista *pNo;
     LIS_tpNoLista *pNoProximo;
 
@@ -174,7 +179,9 @@ LIS_tpCondRet LIS_DestruirLista(LIS_tppCabecaLista pCabecaDaLista)
     while (pNo)
     {
         pNoProximo = pNo->pNoProximo;
-        LIS_liberarNo(pCabecaDaLista, pNo);
+        condRetDeLista = LIS_liberarNo(pCabecaDaLista, pNo);
+        if (condRetDeLista != LIS_CondRetOK)
+            return condRetDeLista;
         pNo = pNoProximo;
     }
 
@@ -196,7 +203,7 @@ LIS_tpCondRet LIS_DestruirLista(LIS_tppCabecaLista pCabecaDaLista)
 *       Nó corrente aponta para o nó posterior à
 *       posição onde desejamos inserir um nó novo
 *       ou lista é vazia.
-*		Cabeça da lista != NULL.
+*		Cabeça da lista não é nula.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
 *
@@ -215,13 +222,20 @@ LIS_tpCondRet LIS_InserirNoAntes(LIS_tppCabecaLista pCabecaDaLista, void *pConte
     LIS_tpNoLista *pNo;
 
 #ifdef _DEBUG
+    if (!pConteudo)
+        return LIS_CondRetConteudoNaoExiste;
     if (!pCabecaDaLista)
         return LIS_CondRetListaNaoExiste;
 #endif
 
     /* Criar nó a inerir antes */
 
-    pNo = LIS_criaNo(pCabecaDaLista, pConteudo);
+    pNo = LIS_criaNo(pConteudo
+#ifdef _DEBUG
+                     ,
+                     pCabecaDaLista
+#endif
+    );
 
     if (!pNo)
         return LIS_CondRetFaltouMemoria;
@@ -266,7 +280,7 @@ LIS_tpCondRet LIS_InserirNoAntes(LIS_tppCabecaLista pCabecaDaLista, void *pConte
 *       Nó corrente aponta para o nó anterior à
 *       posição onde desejamos inserir um nó novo
 *       ou lista é vazia.
-*		Cabeça da lista != NULL.
+*		Cabeça da lista não é nula.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
 *
@@ -280,18 +294,24 @@ LIS_tpCondRet LIS_InserirNoAntes(LIS_tppCabecaLista pCabecaDaLista, void *pConte
 *
 ********************************************************/
 LIS_tpCondRet LIS_InserirNoApos(LIS_tppCabecaLista pCabecaDaLista, void *pConteudo)
-
 {
     LIS_tpNoLista *pNo;
 
 #ifdef _DEBUG
+    if (!pConteudo)
+        return LIS_CondRetConteudoNaoExiste;
     if (!pCabecaDaLista)
         return LIS_CondRetListaNaoExiste;
 #endif
 
     /* Criar nó a inerir antes */
 
-    pNo = LIS_criaNo(pCabecaDaLista, pConteudo);
+    pNo = LIS_criaNo(pConteudo
+#ifdef _DEBUG
+                     ,
+                     pCabecaDaLista
+#endif
+    );
 
     if (!pNo)
         return LIS_CondRetFaltouMemoria;
@@ -331,7 +351,7 @@ LIS_tpCondRet LIS_InserirNoApos(LIS_tppCabecaLista pCabecaDaLista, void *pConteu
 *       Ponteiro corrente aponta para o nó
 *       que desejamos excluir da lista.
 *       Conteúdo do nó corrente não é nulo.
-*		Cabeça da lista != NULL.
+*		Cabeça da lista não é nula.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
 *
@@ -354,8 +374,6 @@ LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pCabecaDaLista)
     LIS_tpNoLista *pNo;
 
 #ifdef _DEBUG
-    if (!pConteudo)
-        return LIS_CondRetConteudoNaoExiste
     if (!pCabecaDaLista)
         return LIS_CondRetListaNaoExiste;
 #endif
@@ -389,9 +407,8 @@ LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pCabecaDaLista)
         pNo->pNoProximo->pNoAnterior = pNo->pNoAnterior;
     /* Conecta nó posterior ao nó anterior do nó a ser excluído */
 
-    LIS_liberarNo(pCabecaDaLista, pNo);
-
-    return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
+    return LIS_liberarNo(pCabecaDaLista, pNo);
+    /* Retorna condição de teste bem sucedido ou condição de erro */
 }
 
 /*******************************************************
@@ -404,7 +421,7 @@ LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pCabecaDaLista)
 *       Nó corrente aponta para o nó
 *       de onde deseja-se obter o conteúdo.
 *       Conteúdo do nó corrente não é nulo.
-*		Cabeça da lista != NULL.
+*		Cabeça da lista não é nula.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
 *
@@ -421,11 +438,10 @@ LIS_tpCondRet LIS_obterConteudo(LIS_tppCabecaLista pCabecaDaLista, void **ppCont
 #ifdef _DEBUG
     if (!pCabecaDaLista)
         return LIS_CondRetListaNaoExiste;
+    if (!pCabecaDaLista->pNoCorrente->pConteudo) /* Nó corrente não possui conteúdo */
+        return LIS_CondRetNoVazio;
+        /* Retorna condição de falha na obtenção do conteúdo do nó corrente */
 #endif
-
-    if (!pCabecaDaLista->pNoCorrente->pConteudo) /* Nó corrente não possui lista */
-        return LIS_CondRetNoVazio;            /* Retorna condição de falha na obtenção 
-        do conteúdo do nó corrente */
 
     *ppConteudo = pCabecaDaLista->pNoCorrente->pConteudo;
     /* Passa, por referência, o ponteiro do conteúdo do nó corrente */
@@ -442,7 +458,7 @@ LIS_tpCondRet LIS_obterConteudo(LIS_tppCabecaLista pCabecaDaLista, void **ppCont
 *	$AE Assertivas de entrada esperadas:
 *       Nó corrente aponta para o nó anterior
 *       ao nó desejado.
-*		Cabeça da lista != NULL.
+*		Cabeça da lista não é nula.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
 *
@@ -462,7 +478,7 @@ LIS_tpCondRet LIS_vaiParaProximoNo(LIS_tppCabecaLista pCabecaDaLista)
 #endif
 
     if (!pCabecaDaLista->pNoCorrente->pNoProximo)
-    /* Sucessor do nó corrente não existe (é nulo) */
+        /* Sucessor do nó corrente não existe (é nulo) */
         return LIS_CondRetNoNaoExiste; /* Retorna condição de nó inexistente */
 
     pCabecaDaLista->pNoCorrente = pCabecaDaLista->pNoCorrente->pNoProximo;
@@ -470,7 +486,6 @@ LIS_tpCondRet LIS_vaiParaProximoNo(LIS_tppCabecaLista pCabecaDaLista)
 
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
-
 
 /*******************************************************
 *
@@ -481,7 +496,7 @@ LIS_tpCondRet LIS_vaiParaProximoNo(LIS_tppCabecaLista pCabecaDaLista)
 *	$AE Assertivas de entrada esperadas:
 *       Nó corrente aponta para o nó seguinte
 *       ao nó desejado.
-*		Cabeça da lista != NULL.
+*		Cabeça da lista não é nula.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
 *
@@ -501,7 +516,7 @@ LIS_tpCondRet LIS_vaiParaNoAnterior(LIS_tppCabecaLista pCabecaDaLista)
 #endif
 
     if (!pCabecaDaLista->pNoCorrente->pNoAnterior)
-    /* Nó corrente é o primeiro nó da lista (não possui antecessor) */
+        /* Nó corrente é o primeiro nó da lista (não possui antecessor) */
         return LIS_CondRetNoNaoExiste; /* Retorna condição de nó inexistente */
 
     pCabecaDaLista->pNoCorrente = pCabecaDaLista->pNoCorrente->pNoAnterior;
@@ -510,6 +525,106 @@ LIS_tpCondRet LIS_vaiParaNoAnterior(LIS_tppCabecaLista pCabecaDaLista)
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
+#ifdef _DEBUG
+/*******************************************************
+*
+*	$FC Função:
+*       LIS Deturpador.
+*
+*
+*	$AE Assertivas de entrada esperadas:
+*       Nó corrente aponta para o nó que
+*       queremos deturpar.
+*		Cabeça da lista não é nula.
+*		Valem as assertivas estruturais da lista
+*       duplamente encadeada com cabeça.
+*
+*
+*	$AS Assertivas de saída esperadas:
+*       Estrutura foi deturpada no nó corrente.
+*		Valem as assertivas estruturais da lista
+*       duplamente encadeada com cabeça.
+*
+********************************************************/
+LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int deturpacao)
+{
+
+    LIS_tpNoLista *pNoCorrente;
+
+    if (!pCabecaDaLista)
+        return LIS_CondRetListaNaoExiste;
+
+    pNoCorrente = pCabecaDaLista->pNoCorrente;
+
+    switch (deturpacao)
+    {
+    case 1:
+        LIS_liberarNo(pCabecaDaLista, pNoCorrente);
+        break;
+
+    case 2:
+        pNoCorrente->pNoProximo = NULL;
+        break;
+
+    case 3:
+        pNoCorrente->pNoAnterior = NULL;
+        break;
+
+    case 4:
+        pNoCorrente->pNoProximo = (LIS_tpNoLista *)&tamLista;
+        break;
+
+    case 5:
+        pNoCorrente->pNoAnterior = (LIS_tpNoLista *)&tamLista;
+        break;
+
+    case 6:
+        pNoCorrente->pConteudo = NULL;
+
+    case 7:
+        pNoCorrente->tipoEstrutura = '0';
+
+    case 8:
+
+        /* Desencadeia à esquerda */
+
+        if (pNoCorrente->pNoAnterior) /* Nó a ser excluído possui anterior */
+        {
+            pNoCorrente->pNoAnterior->pNoProximo = pNoCorrente->pNoProximo;
+            /* Conecta nó anterior ao nó posterior do nó a ser excluído */
+            pCabecaDaLista->pNoCorrente = pNoCorrente->pNoAnterior;
+            /* Nó corrente passa a ser o nó anterior do que será excluído */
+        }
+        else /* Queremos excluir o primeiro nó da lista */
+        {
+            pCabecaDaLista->pNoCorrente = pNoCorrente->pNoProximo;
+            /* Nó corrente passa a ser o nó posterior ao que será excluído */
+            pCabecaDaLista->pNoPrimeiro = pCabecaDaLista->pNoCorrente;
+            /* Primeiro nó da lista passa a ser o nó posterior ao que será 
+        excluído */
+        }
+
+        /* Desencadeia à direita */
+
+        if (pNoCorrente->pNoProximo) /* Nó a ser excluído não é o último nó da lista */
+            pNoCorrente->pNoProximo->pNoAnterior = pNoCorrente->pNoAnterior;
+        /* Conecta nó posterior ao nó anterior do nó a ser excluído */
+
+        break;
+    case 9:
+        pCabecaDaLista->pNoCorrente = NULL;
+        break;
+
+    case 10:
+        pCabecaDaLista->pNoPrimeiro = NULL;
+        break;
+    default:
+        break;
+    }
+
+    return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
+}
+#endif
 
 /*****  Código das funções encapsuladas no módulo  *****/
 
@@ -523,8 +638,8 @@ LIS_tpCondRet LIS_vaiParaNoAnterior(LIS_tppCabecaLista pCabecaDaLista)
 *	$AE Assertivas de entrada esperadas:
 *       Ponteiro corrente aponta para o nó
 *       que deseja-se liberar.
-*       Conteúdo do nó corrente não é nulo.
-*		Cabeça da lista != NULL.
+*       Nó a ser liberado não é nulo.
+*		Cabeça da lista não é nula.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
 *
@@ -536,24 +651,25 @@ LIS_tpCondRet LIS_vaiParaNoAnterior(LIS_tppCabecaLista pCabecaDaLista)
 *       duplamente encadeada com cabeça.
 *
 ********************************************************/
-void LIS_liberarNo(LIS_tppCabecaLista pCabecaDaLista, LIS_tpNoLista *pNo)
+LIS_tpCondRet LIS_liberarNo(LIS_tppCabecaLista pCabecaDaLista, LIS_tpNoLista *pNo)
 {
 
 #ifdef _DEBUG
-    if (!pConteudo)
-        return LIS_CondRetConteudoNaoExiste
     if (!pCabecaDaLista)
         return LIS_CondRetListaNaoExiste;
+    if (!pNo)
+        return LIS_CondRetNoNaoExiste;
 #endif
 
-    if (pNo->pConteudo)                               /* Nó possui conteúdo */
-        pCabecaDaLista->ExcluirValor(pNo->pConteudo); /* Libera conteúdo do nó */
+    pCabecaDaLista->ExcluirValor(pNo->pConteudo); /* Libera conteúdo do nó */
 
     free(pNo); /* Libera espaço apontado pelo endereço do nó */
 
 #ifdef _DEBUG
     pCabecaDaLista->numNos--;
 #endif
+
+    return LIS_CondRetOK;
 }
 
 /*******************************************************
@@ -575,8 +691,9 @@ void LIS_liberarNo(LIS_tppCabecaLista pCabecaDaLista, LIS_tpNoLista *pNo)
 *
 ********************************************************/
 LIS_tpNoLista *LIS_criaNo(void *pConteudo
-#ifdef _DEBUG,
-                              LIS_tppCabecaLista pCabecaDaLista
+#ifdef _DEBUG
+                          ,
+                          LIS_tppCabecaLista pCabecaDaLista
 #endif
 )
 {
@@ -585,9 +702,9 @@ LIS_tpNoLista *LIS_criaNo(void *pConteudo
 
 #ifdef _DEBUG
     if (!pConteudo)
-        return LIS_CondRetConteudoNaoExiste
+        return NULL;
     if (!pCabecaDaLista)
-        return LIS_CondRetListaNaoExiste;
+        return NULL;
 #endif
 
     pNo = (LIS_tpNoLista *)malloc(sizeof(LIS_tpNoLista));
@@ -603,6 +720,7 @@ LIS_tpNoLista *LIS_criaNo(void *pConteudo
 #ifdef _DEBUG
     pCabecaDaLista->numNos++;      /* Incrementa número de nós da lista */
     pNo->pCabeca = pCabecaDaLista; /* Ponteiro para a cabeca da estrutura */
+    pNo->tipoEstrutura = 'l';
 // pNo->tamLista +=  /* Tamanho (em bytes) da lista */
 #endif
 
