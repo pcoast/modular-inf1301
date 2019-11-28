@@ -1,0 +1,71 @@
+\documentclass[a4paper,12pt,oneside]{book}
+%
+\input{./config/packages}
+\input{./config/macros}
+
+% SRS cover page
+\title{
+  \begin{flushright}
+  \Huge{MODELO FÍSICO ESTRUTURAL,}\\
+  ASSERTIVAS\\
+  e\\
+  EXEMPLO FÍSICO\\
+  da aplicação\\
+  LABIRINTO\\
+  ~\\
+  \LARGE{Versão 2.0}\\
+  ~\\
+  INF1301 - Programação Modular\\ DI/PUC-Rio
+  \end{flushright}
+}
+
+% Author
+\author{Antônio Chaves - AVC\\João Pedro Paiva - JPP\\Pedro Costa - PC}
+\date{\today}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+\tableofcontents
+
+\input{./chapter_revisionHistory/chapter_revisionHistory}
+
+\mainmatter
+
+\chapter{Modelo Físico Estrutural}
+
+\begin{center}
+
+    \includegraphics[width=1\textwidth,height=27\baselineskip]{fisico.png}
+
+\end{center}
+
+\chapter{Assertivas Estruturais}\setlength{\parskip}{1\baselineskip}
+
+    Se o pNoCorr->pNoDireita diferente de NULL, então pNoCorr->pNoDireita->pNoEsquerda = pNoCorr;
+
+    Se o pNoCorr->pNoEsquerda diferente de NULL, então pNoCorr->pNoEsquerda->pNoDireita = pNoCorr;
+
+    Se o pNoCorr->pNoCima diferente de NULL, então pNoCorr->pNoCima->pNoBaixo = pNoCorr;
+
+    Se o pNoCorr->pNoBaixo diferente de NULL, então pNoCorr->pNoBaixo->pNoCima = pNoCorr;
+    \setlength{\parskip}{1pt}
+\chapter{Exemplo Físico}
+
+\begin{center}
+    
+    \includegraphics[width=\textwidth,height=27\baselineskip]{exemplo.png}
+
+\end{center}
+
+% \input{./chapter_preface/chapter_preface}
+% \input{./chapter_introduction/chapter_introduction}
+% \input{./chapter_overallDescription/chapter_overallDescription}
+% \input{./chapter_externalInterfaceRequirements/chapter_externalInterfaceRequirements}
+% \input{./chapter_systemFeatures/chapter_systemFeatures}
+% \input{./chapter_otherNonFunctionalRequirements/chapter_otherNonFunctionalRequirements}
+% \input{./chapter_otherRequirements/chapter_otherRequirements}
+
+\end{document}
