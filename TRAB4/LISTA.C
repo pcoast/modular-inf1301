@@ -410,7 +410,7 @@ LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pCabecaDaLista)
 *
 *
 *	$AS Assertivas de saída esperadas:
-*       Conteudo do nó corrente da lista foi obtido
+*       Conteudo do nó corrente da lista foi obtido.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
 *
@@ -432,6 +432,84 @@ LIS_tpCondRet LIS_obterConteudo(LIS_tppCabecaLista pCabecaDaLista, void **ppCont
 
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
+
+/*******************************************************
+*
+*	$FC Função:
+*       LIS Vai para nó seguinte.
+*
+*
+*	$AE Assertivas de entrada esperadas:
+*       Nó corrente aponta para o nó anterior
+*       ao nó desejado.
+*		Cabeça da lista != NULL.
+*		Valem as assertivas estruturais da lista
+*       duplamente encadeada com cabeça.
+*
+*
+*	$AS Assertivas de saída esperadas:
+*       Nó corrente aponta para o nó desejado.
+*		Valem as assertivas estruturais da lista
+*       duplamente encadeada com cabeça.
+*
+********************************************************/
+LIS_tpCondRet LIS_vaiParaProximoNo(LIS_tppCabecaLista pCabecaDaLista)
+{
+
+#ifdef _DEBUG
+    if (!pCabecaDaLista)
+        return LIS_CondRetListaNaoExiste;
+#endif
+
+    if (!pCabecaDaLista->pNoCorrente->pNoProximo)
+    /* Sucessor do nó corrente não existe (é nulo) */
+        return LIS_CondRetNoNaoExiste; /* Retorna condição de nó inexistente */
+
+    pCabecaDaLista->pNoCorrente = pCabecaDaLista->pNoCorrente->pNoProximo;
+    /* Nó corrente caminha para frente */
+
+    return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
+}
+
+
+/*******************************************************
+*
+*	$FC Função:
+*       LIS Vai para nó anterior.
+*
+*
+*	$AE Assertivas de entrada esperadas:
+*       Nó corrente aponta para o nó seguinte
+*       ao nó desejado.
+*		Cabeça da lista != NULL.
+*		Valem as assertivas estruturais da lista
+*       duplamente encadeada com cabeça.
+*
+*
+*	$AS Assertivas de saída esperadas:
+*       Nó corrente aponta para o nó desejado.
+*		Valem as assertivas estruturais da lista
+*       duplamente encadeada com cabeça.
+*
+********************************************************/
+LIS_tpCondRet LIS_vaiParaNoAnterior(LIS_tppCabecaLista pCabecaDaLista)
+{
+
+#ifdef _DEBUG
+    if (!pCabecaDaLista)
+        return LIS_CondRetListaNaoExiste;
+#endif
+
+    if (!pCabecaDaLista->pNoCorrente->pNoAnterior)
+    /* Nó corrente é o primeiro nó da lista (não possui antecessor) */
+        return LIS_CondRetNoNaoExiste; /* Retorna condição de nó inexistente */
+
+    pCabecaDaLista->pNoCorrente = pCabecaDaLista->pNoCorrente->pNoAnterior;
+    /* Nó corrente caminha para trás */
+
+    return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
+}
+
 
 /*****  Código das funções encapsuladas no módulo  *****/
 

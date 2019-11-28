@@ -48,19 +48,22 @@ typedef enum
     /* Concluiu corretamente */
 
     LIS_CondRetListaVazia,
-    /* A lista n�o cont�m nós */
+    /* A lista não contém nós */
 
     LIS_CondRetFimLista,
     /* Foi atingido o fim de lista */
 
     LIS_CondRetNaoAchou,
-    /* N�o encontrou o valor procurado */
+    /* Não encontrou o valor procurado */
 
     LIS_CondRetFaltouMemoria,
-    /* Faltou mem�ria ao tentar criar um nó de lista */
+    /* Faltou memória ao tentar criar um nó de lista */
 
-    LIS_CondRetNoVazio
+    LIS_CondRetNoVazio,
     /* Tentou obter conteúdo de um nó vazio */
+
+    LIS_CondRetNoNaoExiste
+    /* Tentou caminhar para um nó inexistente */
 
 #ifdef _DEBUG
     ,
@@ -283,7 +286,7 @@ LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pCabecaDaLista);
 *
 *
 *	$AS Assertivas de saída esperadas:
-*       Conteudo do nó corrente da lista foi obtido
+*       Conteudo do nó corrente da lista foi obtido.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
 *
@@ -304,3 +307,73 @@ LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pCabecaDaLista);
 *
 ********************************************************/
 LIS_tpCondRet LIS_obterConteudo(LIS_tppCabecaLista pCabecaDaLista, void **ppConteudo);
+
+/*******************************************************
+*
+*	$FC Função:
+*       LIS Vai para nó seguinte.
+*
+*
+*	$AE Assertivas de entrada esperadas:
+*       Nó corrente aponta para o nó anterior
+*       ao nó desejado.
+*		Cabeça da lista != NULL.
+*		Valem as assertivas estruturais da lista
+*       duplamente encadeada com cabeça.
+*
+*
+*	$AS Assertivas de saída esperadas:
+*       Nó corrente aponta para o nó desejado.
+*		Valem as assertivas estruturais da lista
+*       duplamente encadeada com cabeça.
+*
+*
+*  $EP Parâmetros
+*       $P pCabecaDaLista - O parâmetro que receberá o
+*           endereço do ponteiro para a cabeça
+*           da lista.
+*           Este parâmetro é passado por referência.
+*
+*
+*   $FV Valor retornado
+*       LIS_CondRetNoNaoExiste
+*       LIS_CondRetOK
+*
+********************************************************/
+LIS_tpCondRet LIS_vaiParaProximoNo(LIS_tppCabecaLista pCabecaDaLista);
+
+
+/*******************************************************
+*
+*	$FC Função:
+*       LIS Vai para nó anterior.
+*
+*
+*	$AE Assertivas de entrada esperadas:
+*       Nó corrente aponta para o nó seguinte
+*       ao nó desejado.
+*		Cabeça da lista != NULL.
+*		Valem as assertivas estruturais da lista
+*       duplamente encadeada com cabeça.
+*
+*
+*	$AS Assertivas de saída esperadas:
+*       Nó corrente aponta para o nó desejado.
+*		Valem as assertivas estruturais da lista
+*       duplamente encadeada com cabeça.
+*
+*
+*  $EP Parâmetros
+*       $P pCabecaDaLista - O parâmetro que receberá o
+*           endereço do ponteiro para a cabeça
+*           da lista.
+*           Este parâmetro é passado por referência.
+*
+*
+*   $FV Valor retornado
+*       LIS_CondRetNoNaoExiste
+*       LIS_CondRetOK
+*
+*
+********************************************************/
+LIS_tpCondRet LIS_vaiParaNoAnterior(LIS_tppCabecaLista pCabecaDaLista);
