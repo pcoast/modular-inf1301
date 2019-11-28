@@ -35,13 +35,13 @@ typedef struct LIS_tagNoLista
 {
 
     void *pConteudo;
-    /* Ponteiro para o valor contido no elemento */
+    /* Ponteiro para conteúdo do nó */
 
     struct LIS_tagNoLista *pNoAnterior;
-    /* Ponteiro para o elemento predecessor */
+    /* Ponteiro para o nó predecessor */
 
     struct LIS_tagNoLista *pNoProximo;
-    /* Ponteiro para o elemento sucessor */
+    /* Ponteiro para o nó sucessor */
 
 #ifdef _DEBUG
     LIS_tpCabecaLista *pCabeca; /* Ponteiro para a cabeca da estrutura */
@@ -142,11 +142,12 @@ LIS_tpCondRet LIS_criarLista(void (*ExcluirValor)(void *pDado), LIS_tppCabecaLis
 /***************************************************
 *
 *	$FC Função:
-*       LIS Destruir lista nó por nó. Função
-*       independe da posição do nó corrente.
+*       LIS Destruir lista nó por nó e liberar
+*       cabeça da lista.
 *
 *
 *	$AE Assertivas de entrada esperadas:
+*       Função independe da posição do nó corrente.
 *       Cabeça da lista != NULL.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
@@ -208,7 +209,7 @@ LIS_tpCondRet LIS_DestruirLista(LIS_tppCabecaLista pCabecaDaLista)
 *       duplamente encadeada com cabeça.
 *
 ********************************************************/
-LIS_tpCondRet LIS_InserirElementoAntes(LIS_tppCabecaLista pCabecaDaLista, void *pConteudo)
+LIS_tpCondRet LIS_InserirNoAntes(LIS_tppCabecaLista pCabecaDaLista, void *pConteudo)
 {
 
     LIS_tpNoLista *pNo;
@@ -218,14 +219,14 @@ LIS_tpCondRet LIS_InserirElementoAntes(LIS_tppCabecaLista pCabecaDaLista, void *
         return LIS_CondRetListaNaoExiste;
 #endif
 
-    /* Criar elemento a inerir antes */
+    /* Criar nó a inerir antes */
 
     pNo = LIS_criaNo(pCabecaDaLista, pConteudo);
 
     if (!pNo)
         return LIS_CondRetFaltouMemoria;
 
-    /* Encadear o elemento antes do elemento corrente */
+    /* Encadear o nó antes do nó corrente */
 
     if (!pCabecaDaLista->pNoCorrente)      /* Lista não possui nós */
         pCabecaDaLista->pNoPrimeiro = pNo; /* Nó novo é o primeiro nó */
@@ -278,7 +279,7 @@ LIS_tpCondRet LIS_InserirElementoAntes(LIS_tppCabecaLista pCabecaDaLista, void *
 *       duplamente encadeada com cabeça.
 *
 ********************************************************/
-LIS_tpCondRet LIS_InserirElementoApos(LIS_tppCabecaLista pCabecaDaLista, void *pConteudo)
+LIS_tpCondRet LIS_InserirNoApos(LIS_tppCabecaLista pCabecaDaLista, void *pConteudo)
 
 {
     LIS_tpNoLista *pNo;
@@ -288,14 +289,14 @@ LIS_tpCondRet LIS_InserirElementoApos(LIS_tppCabecaLista pCabecaDaLista, void *p
         return LIS_CondRetListaNaoExiste;
 #endif
 
-    /* Criar elemento a inerir antes */
+    /* Criar nó a inerir antes */
 
     pNo = LIS_criaNo(pCabecaDaLista, pConteudo);
 
     if (!pNo)
         return LIS_CondRetFaltouMemoria;
 
-    /* Encadear o elemento antes do elemento corrente */
+    /* Encadear o nó antes do nó corrente */
 
     if (!pCabecaDaLista->pNoCorrente)      /* Lista não possui nós */
         pCabecaDaLista->pNoPrimeiro = pNo; /* Nó novo é o primeiro nó */
@@ -329,7 +330,7 @@ LIS_tpCondRet LIS_InserirElementoApos(LIS_tppCabecaLista pCabecaDaLista, void *p
 *	$AE Assertivas de entrada esperadas:
 *       Ponteiro corrente aponta para o nó
 *       que desejamos excluir da lista.
-*       Conteúdo do nó corrente pode existir ou não.
+*       Conteúdo do nó corrente não é nulo.
 *		Cabeça da lista != NULL.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
@@ -353,6 +354,8 @@ LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pCabecaDaLista)
     LIS_tpNoLista *pNo;
 
 #ifdef _DEBUG
+    if (!pConteudo)
+        return LIS_CondRetConteudoNaoExiste
     if (!pCabecaDaLista)
         return LIS_CondRetListaNaoExiste;
 #endif
@@ -394,26 +397,25 @@ LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pCabecaDaLista)
 /*******************************************************
 *
 *	$FC Função:
-*       LIS Obtém elemento do nó corrente da lista.
+*       LIS Obtém conteúdo do nó corrente da lista.
 *
 *
 *	$AE Assertivas de entrada esperadas:
-*       Ponteiro corrente aponta para o nó
+*       Nó corrente aponta para o nó
 *       de onde deseja-se obter o conteúdo.
-*       Conteúdo do nó corrente pode existir ou não.
+*       Conteúdo do nó corrente não é nulo.
 *		Cabeça da lista != NULL.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
 *
 *
 *	$AS Assertivas de saída esperadas:
-*       Elemento foi obtido do nó corrente da lista ou
-*       elemento não existe (é nulo).
+*       Conteudo do nó corrente da lista foi obtido
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
 *
 ********************************************************/
-LIS_tpCondRet LIS_obterElemento(LIS_tppCabecaLista pCabecaDaLista, void **elemento)
+LIS_tpCondRet LIS_obterConteudo(LIS_tppCabecaLista pCabecaDaLista, void **ppConteudo)
 {
 
 #ifdef _DEBUG
@@ -425,7 +427,7 @@ LIS_tpCondRet LIS_obterElemento(LIS_tppCabecaLista pCabecaDaLista, void **elemen
         return LIS_CondRetNoVazio;            /* Retorna condição de falha na obtenção 
         do conteúdo do nó corrente */
 
-    *elemento = pCabecaDaLista->pNoCorrente->pConteudo;
+    *ppConteudo = pCabecaDaLista->pNoCorrente->pConteudo;
     /* Passa, por referência, o ponteiro do conteúdo do nó corrente */
 
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
@@ -443,7 +445,7 @@ LIS_tpCondRet LIS_obterElemento(LIS_tppCabecaLista pCabecaDaLista, void **elemen
 *	$AE Assertivas de entrada esperadas:
 *       Ponteiro corrente aponta para o nó
 *       que deseja-se liberar.
-*       Conteúdo do nó corrente pode existir ou não.
+*       Conteúdo do nó corrente não é nulo.
 *		Cabeça da lista != NULL.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
@@ -460,6 +462,8 @@ void LIS_liberarNo(LIS_tppCabecaLista pCabecaDaLista, LIS_tpNoLista *pNo)
 {
 
 #ifdef _DEBUG
+    if (!pConteudo)
+        return LIS_CondRetConteudoNaoExiste
     if (!pCabecaDaLista)
         return LIS_CondRetListaNaoExiste;
 #endif

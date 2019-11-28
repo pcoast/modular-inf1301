@@ -48,7 +48,7 @@ typedef enum
     /* Concluiu corretamente */
 
     LIS_CondRetListaVazia,
-    /* A lista n�o cont�m elementos */
+    /* A lista n�o cont�m nós */
 
     LIS_CondRetFimLista,
     /* Foi atingido o fim de lista */
@@ -57,7 +57,7 @@ typedef enum
     /* N�o encontrou o valor procurado */
 
     LIS_CondRetFaltouMemoria,
-    /* Faltou mem�ria ao tentar criar um elemento de lista */
+    /* Faltou mem�ria ao tentar criar um nó de lista */
 
     LIS_CondRetNoVazio
     /* Tentou obter conteúdo de um nó vazio */
@@ -100,7 +100,7 @@ typedef enum
 *           ponteiro para a função de destruição do
 *           conteúdo de um nó da lista.
 *           Este parâmetro é passado por valor.
-*       $P pLista - O parâmetro que receberá o
+*       $P pCabecaDaLista - O parâmetro que receberá o
 *           endereço do ponteiro para a cabeça
 *           da lista.
 *           Este parâmetro é passado por referência.
@@ -111,7 +111,7 @@ typedef enum
 *       LIS_CondRetOK
 *
 ****************************************************/
-LIS_tpCondRet LIS_criarLista(void (*ExcluirValor)(void *pDado), LIS_tppCabecaLista *pLista);
+LIS_tpCondRet LIS_criarLista(void (*ExcluirValor)(void *pDado), LIS_tppCabecaLista *pCabecaDaLista);
 
 /***************************************************
 *
@@ -133,7 +133,7 @@ LIS_tpCondRet LIS_criarLista(void (*ExcluirValor)(void *pDado), LIS_tppCabecaLis
 *
 *
 *  $EP Parâmetros
-*       $P pLista - O parâmetro que receberá o
+*       $P pCabecaDaLista - O parâmetro que receberá o
 *           endereço do ponteiro para a cabeça
 *           da lista.
 *           Este parâmetro é passado por referência.
@@ -143,7 +143,7 @@ LIS_tpCondRet LIS_criarLista(void (*ExcluirValor)(void *pDado), LIS_tppCabecaLis
 *       LIS_CondRetOK
 *
 ****************************************************/
-LIS_tpCondRet LIS_DestruirLista(LIS_tppCabecaLista pLista);
+LIS_tpCondRet LIS_DestruirLista(LIS_tppCabecaLista pCabecaDaLista);
 
 /*******************************************************
 *
@@ -169,10 +169,10 @@ LIS_tpCondRet LIS_DestruirLista(LIS_tppCabecaLista pLista);
 *
 *
 *  $EP Parâmetros
-*       $P pValor - O parâmetro que receberá o
+*       $P pConteudo - O parâmetro que receberá o
 *           ponteiro para o conteúdo do nó da lista.
 *           Este parâmetro é passado por valor.
-*       $P pLista - O parâmetro que receberá o
+*       $P pCabecaDaLista - O parâmetro que receberá o
 *           endereço do ponteiro para a cabeça
 *           da lista.
 *           Este parâmetro é passado por referência.
@@ -183,7 +183,7 @@ LIS_tpCondRet LIS_DestruirLista(LIS_tppCabecaLista pLista);
 *       LIS_CondRetOK
 *
 ********************************************************/
-LIS_tpCondRet LIS_InserirElementoAntes(LIS_tppCabecaLista pLista, void *pValor);
+LIS_tpCondRet LIS_InserirNoAntes(LIS_tppCabecaLista pCabecaDaLista, void *pConteudo);
 
 /*******************************************************
 *
@@ -209,10 +209,10 @@ LIS_tpCondRet LIS_InserirElementoAntes(LIS_tppCabecaLista pLista, void *pValor);
 *
 *
 *  $EP Parâmetros
-*       $P pValor - O parâmetro que receberá o
+*       $P pConteudo - O parâmetro que receberá o
 *           ponteiro para o conteúdo do nó da lista.
 *           Este parâmetro é passado por valor.
-*       $P pLista - O parâmetro que receberá o
+*       $P pCabecaDaLista - O parâmetro que receberá o
 *           endereço do ponteiro para a cabeça
 *           da lista.
 *           Este parâmetro é passado por referência.
@@ -223,7 +223,7 @@ LIS_tpCondRet LIS_InserirElementoAntes(LIS_tppCabecaLista pLista, void *pValor);
 *       LIS_CondRetOK
 *
 ********************************************************/
-LIS_tpCondRet LIS_InserirElementoApos(LIS_tppCabecaLista pLista, void *pValor);
+LIS_tpCondRet LIS_InserirNoApos(LIS_tppCabecaLista pCabecaDaLista, void *pConteudo);
 
 /*******************************************************
 *
@@ -235,7 +235,7 @@ LIS_tpCondRet LIS_InserirElementoApos(LIS_tppCabecaLista pLista, void *pValor);
 *	$AE Assertivas de entrada esperadas:
 *       Ponteiro corrente aponta para o nó
 *       que desejamos excluir da lista.
-*       Conteúdo do nó corrente pode existir ou não.
+*       Conteúdo do nó corrente não é nulo.
 *		Cabeça da lista != NULL.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
@@ -254,7 +254,7 @@ LIS_tpCondRet LIS_InserirElementoApos(LIS_tppCabecaLista pLista, void *pValor);
 *
 *
 *  $EP Parâmetros
-*       $P pLista - O parâmetro que receberá o
+*       $P pCabecaDaLista - O parâmetro que receberá o
 *           endereço do ponteiro para a cabeça
 *           da lista.
 *           Este parâmetro é passado por referência.
@@ -265,35 +265,34 @@ LIS_tpCondRet LIS_InserirElementoApos(LIS_tppCabecaLista pLista, void *pValor);
 *       LIS_CondRetOK
 *
 ********************************************************/
-LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pLista);
+LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pCabecaDaLista);
 
 /*******************************************************
 *
 *	$FC Função:
-*       LIS Obtém elemento do nó corrente da lista.
+*       LIS Obtém conteúdo do nó corrente da lista.
 *
 *
 *	$AE Assertivas de entrada esperadas:
-*       Ponteiro corrente aponta para o nó
+*       Nó corrente aponta para o nó
 *       de onde deseja-se obter o conteúdo.
-*       Conteúdo do nó corrente pode existir ou não.
+*       Conteúdo do nó corrente não é nulo.
 *		Cabeça da lista != NULL.
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
 *
 *
 *	$AS Assertivas de saída esperadas:
-*       Elemento foi obtido do nó corrente da lista ou
-*       elemento não existe (é nulo).
+*       Conteudo do nó corrente da lista foi obtido
 *		Valem as assertivas estruturais da lista
 *       duplamente encadeada com cabeça.
 *
 *
 *  $EP Parâmetros
-*       $P elemento - O parâmetro que receberá o
+*       $P ppConteudo - O parâmetro que receberá o
 *           endereço do ponteiro para o conteúdo do nó.
 *           Este parâmetro é passado por referência.
-*       $P pLista - O parâmetro que receberá o
+*       $P pCabecaDaLista - O parâmetro que receberá o
 *           endereço do ponteiro para a cabeça
 *           da lista.
 *           Este parâmetro é passado por referência.
@@ -304,4 +303,4 @@ LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pLista);
 *       LIS_CondRetOK
 *
 ********************************************************/
-LIS_tpCondRet LIS_obterElemento(LIS_tppCabecaLista CabecaDaLista, void **elemento);
+LIS_tpCondRet LIS_obterConteudo(LIS_tppCabecaLista pCabecaDaLista, void **ppConteudo);
