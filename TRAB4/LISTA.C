@@ -1,4 +1,4 @@
-/***************************************************************************
+/*******************************************************************************
 *   $MCI Módulo de implementação: Módulo Lista
 *
 *   Arquivo gerado:              LISTA.C
@@ -12,15 +12,19 @@
 *
 *   $HA Histórico de evolução:
 *       Versão  Autor   Data        Observações
-*       1.00    jpp     26/11/2019  Início do desenvolvimento
+*       1.00    jpp     27/11/2019  Início do desenvolvimento
+*       2.00    jpp     28/11/2019  Deturpador
+*       3.00    jpp     29/11/2019  Verificador
 *
-***************************************************************************/
+*******************************************************************************/
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include "LISTA.H"
 
-/***********************************************************************
+
+/*******************************************************************************
 *
 *   $TC Tipo de dados:
 *       LIS Descritor do nó da lista.
@@ -29,8 +33,7 @@
 *   $ED Descrição do tipo:
 *       Descreve a organização do nó.
 *
-***********************************************************************/
-
+*******************************************************************************/
 typedef struct LIS_tagNoLista
 {
 
@@ -51,26 +54,29 @@ typedef struct LIS_tagNoLista
 
 } LIS_tpNoLista;
 
-/***********************************************************************
+
+/*******************************************************************************
 *
 *   $TC Tipo de dados:
 *       LIS Descritor da cabeça de uma lista.
 *
 *
 *   $ED Descrição do tipo:
-*       A cabeça da lista é o ponto de acesso para uma determinada
-*       lista.
-*       Por intermédio da referência para o nó corrente e dos
-*       ponteiros adjascentes pode-se navegar a lista sem necessitar
-*       de uma pilha.
+*       A cabeça da lista é o ponto de acesso para uma determinada lista.
+*       Por intermédio da referência para o nó corrente e dos ponteiros
+*       adjascentes pode-se navegar a lista sem necessitar de uma pilha.
 *
-***********************************************************************/
-
+*******************************************************************************/
 typedef struct LIS_tagLista
 {
 
     LIS_tpNoLista *pNoPrimeiro;
     /* Ponteiro para o primeiro nó da lista */
+
+#ifdef _DEBUG
+    LIS_tpNoLista *pNoUltimo;
+    /* Ponteiro para o último nó da lista */
+#endif
 
     LIS_tpNoLista *pNoCorrente;
     /* Ponteiro para o nó corrente da lista */
@@ -85,11 +91,11 @@ typedef struct LIS_tagLista
 
 } LIS_tpCabecaLista;
 
-/***** Variáveis encapuladas no módulo *****/
+/********************** Variáveis encapuladas no módulo ***********************/
 
 int tamLista; /* Tamanho (em bytes) da lista */
 
-/***** Protôtipos das funções encapuladas no módulo *****/
+/**************** Protôtipos das funções encapuladas no módulo ****************/
 
 static LIS_tpCondRet LIS_liberarNo(LIS_tppCabecaLista pCabecaDaLista, LIS_tpNoLista *pNo);
 
@@ -99,25 +105,17 @@ static LIS_tpNoLista *LIS_criaNo(void *pConteudo
                                  LIS_tppCabecaLista pCabecaDaLista
 #endif
 );
-/*****  Código das funções exportadas pelo módulo  *****/
 
-/***************************************************
+
+/***************** Código das funções exportadas pelo módulo ******************/
+
+
+/*******************************************************************************
 *
 *	$FC Função:
 *       LIS Criar a cabeça da lista.
 *
-*
-*   $AE Assertivas de entrada esperadas:
-*		Função de excluir valor não é nula.
-*
-*
-*	$AS Assertivas de saída esperadas:
-*       Cabeça da lista foi criada.
-*       Primeiro nó e nó corrente são nulos.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-****************************************************/
+*******************************************************************************/
 LIS_tpCondRet LIS_criarLista(void (*ExcluirValor)(void *pDado), LIS_tppCabecaLista *pCabecaDaLista)
 {
 
@@ -144,26 +142,13 @@ LIS_tpCondRet LIS_criarLista(void (*ExcluirValor)(void *pDado), LIS_tppCabecaLis
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
-/***************************************************
+
+/*******************************************************************************
 *
 *	$FC Função:
-*       LIS Destruir lista nó por nó e liberar
-*       cabeça da lista.
+*       LIS Destruir lista nó por nó e liberar cabeça da lista.
 *
-*
-*	$AE Assertivas de entrada esperadas:
-*       Função independe da posição do nó corrente.
-*       Cabeça da lista != NULL.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-*
-*	$AS Assertivas de saída esperadas:
-*       Lista foi destruída.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-****************************************************/
+*******************************************************************************/
 LIS_tpCondRet LIS_DestruirLista(LIS_tppCabecaLista pCabecaDaLista)
 {
     LIS_tpCondRet condRetDeLista;
@@ -186,6 +171,11 @@ LIS_tpCondRet LIS_DestruirLista(LIS_tppCabecaLista pCabecaDaLista)
     }
 
     pCabecaDaLista->pNoPrimeiro = NULL;
+
+#ifdef _DEBUG
+    pCabecaDaLista->pNoUltimo = NULL;
+#endif
+
     pCabecaDaLista->pNoCorrente = NULL;
 
     free(pCabecaDaLista);
@@ -193,29 +183,13 @@ LIS_tpCondRet LIS_DestruirLista(LIS_tppCabecaLista pCabecaDaLista)
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
-/*******************************************************
+
+/*******************************************************************************
 *
 *	$FC Função:
 *       LIS Insere novo nó antes do nó corrente.
 *
-*
-*	$AE Assertivas de entrada esperadas:
-*       Nó corrente aponta para o nó posterior à
-*       posição onde desejamos inserir um nó novo
-*       ou lista é vazia.
-*		Cabeça da lista não é nula.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-*
-*	$AS Assertivas de saída esperadas:
-*       Um novo nó foi inserido antes do nó corrente ou
-*       nó novo é o único nó da lista.
-*       Nó corrente agora aponta para o nó novo.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-********************************************************/
+*******************************************************************************/
 LIS_tpCondRet LIS_InserirNoAntes(LIS_tppCabecaLista pCabecaDaLista, void *pConteudo)
 {
 
@@ -242,12 +216,18 @@ LIS_tpCondRet LIS_InserirNoAntes(LIS_tppCabecaLista pCabecaDaLista, void *pConte
 
     /* Encadear o nó antes do nó corrente */
 
-    if (!pCabecaDaLista->pNoCorrente)      /* Lista não possui nós */
+    if (!pCabecaDaLista->pNoCorrente) /* Lista não possui nós */
+    {
         pCabecaDaLista->pNoPrimeiro = pNo; /* Nó novo é o primeiro nó */
+#ifdef _DEBUG
+        pCabecaDaLista->pNoUltimo = pNo;
+#endif
+    }
 
     else /* Lista possui nós. Vamos inserir antes do nó corrente */
     {
-        if (pCabecaDaLista->pNoCorrente->pNoAnterior) /* Nó corrente possui anterior */
+        if (pCabecaDaLista->pNoCorrente->pNoAnterior)
+        /* Nó corrente possui anterior */
         {
             pNo->pNoAnterior = pCabecaDaLista->pNoCorrente->pNoAnterior;
             /* Nó anterior do nó novo é o anterior do corrente */
@@ -270,29 +250,13 @@ LIS_tpCondRet LIS_InserirNoAntes(LIS_tppCabecaLista pCabecaDaLista, void *pConte
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
-/*******************************************************
+
+/*******************************************************************************
 *
 *	$FC Função:
 *       LIS Insere novo nó após nó corrente da lista.
 *
-*
-*	$AE Assertivas de entrada esperadas:
-*       Nó corrente aponta para o nó anterior à
-*       posição onde desejamos inserir um nó novo
-*       ou lista é vazia.
-*		Cabeça da lista não é nula.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-*
-*	$AS Assertivas de saída esperadas:
-*       Um novo nó foi inserido após o corrente ou
-*       nó novo é o único nó da lista.
-*       Nó corrente agora aponta para o nó novo.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-********************************************************/
+*******************************************************************************/
 LIS_tpCondRet LIS_InserirNoApos(LIS_tppCabecaLista pCabecaDaLista, void *pConteudo)
 {
     LIS_tpNoLista *pNo;
@@ -318,20 +282,36 @@ LIS_tpCondRet LIS_InserirNoApos(LIS_tppCabecaLista pCabecaDaLista, void *pConteu
 
     /* Encadear o nó antes do nó corrente */
 
-    if (!pCabecaDaLista->pNoCorrente)      /* Lista não possui nós */
+    if (!pCabecaDaLista->pNoCorrente) /* Lista não possui nós */
+    {
         pCabecaDaLista->pNoPrimeiro = pNo; /* Nó novo é o primeiro nó */
+#ifdef _DEBUG
+        pCabecaDaLista->pNoUltimo = pNo;
+#endif
+    }
 
     else /* Lista possui nós. Vamos inserir depois do nó corrente */
     {
 
-        pNo->pNoProximo = pCabecaDaLista->pNoCorrente->pNoProximo;
-        /* Nó posterior do nó novo é o posterior do corrente */
-        pCabecaDaLista->pNoCorrente->pNoProximo->pNoAnterior = pNo;
-        /* Nó anterior ao posterior do corrente é o novo nó */
+        if (pCabecaDaLista->pNoCorrente->pNoProximo)
+        /* Nó corrente possui sucessor */
+        {
+            pNo->pNoProximo = pCabecaDaLista->pNoCorrente->pNoProximo;
+            /* Nó sucessor do nó novo é o sucessor do corrente */
+            pCabecaDaLista->pNoCorrente->pNoProximo->pNoAnterior = pNo;
+            /* Nó anterior do sucessor do corrente é o novo nó */
+        }
+
+#ifdef _DEBUG
+        else /* Nó corrente é o último nó */
+            pCabecaDaLista->pNoUltimo = pNo;
+/* Último nó da lista é o nó novo */
+#endif
+
         pNo->pNoAnterior = pCabecaDaLista->pNoCorrente;
-        /* Nó posterior ao nó novo é o corrente */
+        /* Nó anterior ao nó novo é o corrente */
         pCabecaDaLista->pNoCorrente->pNoProximo = pNo;
-        /* Nó anterior ao corrente é o nó novo */
+        /* Nó sucessor do corrente é o nó novo */
     }
 
     pCabecaDaLista->pNoCorrente = pNo;
@@ -340,34 +320,13 @@ LIS_tpCondRet LIS_InserirNoApos(LIS_tppCabecaLista pCabecaDaLista, void *pConteu
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
-/*******************************************************
+
+/*******************************************************************************
 *
 *	$FC Função:
-*       LIS Exclui nó apontado pelo nó corrente
-*       da lista.
+*       LIS Exclui nó apontado pelo nó corrente da lista.
 *
-*
-*	$AE Assertivas de entrada esperadas:
-*       Ponteiro corrente aponta para o nó
-*       que desejamos excluir da lista.
-*       Conteúdo do nó corrente não é nulo.
-*		Cabeça da lista não é nula.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-*
-*	$AS Assertivas de saída esperadas:
-*       Nó corrente da lista foi excluído ou
-*       lista é vazia (nó corrente é nulo).
-*       Novo nó corrente é o nó anterior ao nó
-*       excluído, ou, caso o nó excluído foi o
-*       primeiro nó da lista, o novo nó corrente é o
-*       nó posterior ao nó excluído (atualmente o
-*       primeiro nó da lista).
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-********************************************************/
+*******************************************************************************/
 LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pCabecaDaLista)
 {
 
@@ -411,34 +370,21 @@ LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pCabecaDaLista)
     /* Retorna condição de teste bem sucedido ou condição de erro */
 }
 
-/*******************************************************
+
+/*******************************************************************************
 *
 *	$FC Função:
 *       LIS Obtém conteúdo do nó corrente da lista.
 *
-*
-*	$AE Assertivas de entrada esperadas:
-*       Nó corrente aponta para o nó
-*       de onde deseja-se obter o conteúdo.
-*       Conteúdo do nó corrente não é nulo.
-*		Cabeça da lista não é nula.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-*
-*	$AS Assertivas de saída esperadas:
-*       Conteudo do nó corrente da lista foi obtido.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-********************************************************/
+*******************************************************************************/
 LIS_tpCondRet LIS_obterConteudo(LIS_tppCabecaLista pCabecaDaLista, void **ppConteudo)
 {
 
 #ifdef _DEBUG
     if (!pCabecaDaLista)
         return LIS_CondRetListaNaoExiste;
-    if (!pCabecaDaLista->pNoCorrente->pConteudo) /* Nó corrente não possui conteúdo */
+    if (!pCabecaDaLista->pNoCorrente->pConteudo)
+        /* Nó corrente não possui conteúdo */
         return LIS_CondRetNoVazio;
         /* Retorna condição de falha na obtenção do conteúdo do nó corrente */
 #endif
@@ -449,26 +395,13 @@ LIS_tpCondRet LIS_obterConteudo(LIS_tppCabecaLista pCabecaDaLista, void **ppCont
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
-/*******************************************************
+
+/*******************************************************************************
 *
 *	$FC Função:
 *       LIS Vai para nó seguinte.
 *
-*
-*	$AE Assertivas de entrada esperadas:
-*       Nó corrente aponta para o nó anterior
-*       ao nó desejado.
-*		Cabeça da lista não é nula.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-*
-*	$AS Assertivas de saída esperadas:
-*       Nó corrente aponta para o nó desejado.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-********************************************************/
+*******************************************************************************/
 LIS_tpCondRet LIS_vaiParaProximoNo(LIS_tppCabecaLista pCabecaDaLista)
 {
 
@@ -487,26 +420,13 @@ LIS_tpCondRet LIS_vaiParaProximoNo(LIS_tppCabecaLista pCabecaDaLista)
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
-/*******************************************************
+
+/*******************************************************************************
 *
 *	$FC Função:
 *       LIS Vai para nó anterior.
 *
-*
-*	$AE Assertivas de entrada esperadas:
-*       Nó corrente aponta para o nó seguinte
-*       ao nó desejado.
-*		Cabeça da lista não é nula.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-*
-*	$AS Assertivas de saída esperadas:
-*       Nó corrente aponta para o nó desejado.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-********************************************************/
+*******************************************************************************/
 LIS_tpCondRet LIS_vaiParaNoAnterior(LIS_tppCabecaLista pCabecaDaLista)
 {
 
@@ -525,28 +445,15 @@ LIS_tpCondRet LIS_vaiParaNoAnterior(LIS_tppCabecaLista pCabecaDaLista)
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
+
 #ifdef _DEBUG
-/*******************************************************
+/*******************************************************************************
 *
 *	$FC Função:
 *       LIS Deturpador.
 *
-*
-*	$AE Assertivas de entrada esperadas:
-*       Nó corrente aponta para o nó que
-*       queremos deturpar.
-*		Cabeça da lista não é nula.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-*
-*	$AS Assertivas de saída esperadas:
-*       Estrutura foi deturpada no nó corrente.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
-*
-********************************************************/
-LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int deturpacao)
+*******************************************************************************/
+LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int const deturpacao)
 {
 
     LIS_tpNoLista *pNoCorrente;
@@ -558,33 +465,33 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int deturpacao)
 
     switch (deturpacao)
     {
-    case 1:
+    case 1: /* Elimina o elemento corrente da estrutura escolhida */
         LIS_liberarNo(pCabecaDaLista, pNoCorrente);
         break;
 
-    case 2:
+    case 2: /* Atribui NULL ao ponteiro para o próximo nó */
         pNoCorrente->pNoProximo = NULL;
         break;
 
-    case 3:
+    case 3: /* Atribui NULL ao ponteiro para o nó anterior */
         pNoCorrente->pNoAnterior = NULL;
         break;
 
-    case 4:
+    case 4: /* Atribui lixo ao ponteiro para o próximo nó */
         pNoCorrente->pNoProximo = (LIS_tpNoLista *)&tamLista;
         break;
 
-    case 5:
+    case 5: /* Atribui lixo ao ponteiro o nó anterior */
         pNoCorrente->pNoAnterior = (LIS_tpNoLista *)&tamLista;
         break;
 
-    case 6:
+    case 6: /* Atribui NULL ao ponteiro para o conteúdo do nó */
         pNoCorrente->pConteudo = NULL;
 
-    case 7:
+    case 7: /* Altera o tipo de estrutura apontado no nó */
         pNoCorrente->tipoEstrutura = '0';
 
-    case 8:
+    case 8: /* Desencadeia nó sem liberá-lo com free */
 
         /* Desencadeia à esquerda */
 
@@ -606,29 +513,141 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int deturpacao)
 
         /* Desencadeia à direita */
 
-        if (pNoCorrente->pNoProximo) /* Nó a ser excluído não é o último nó da lista */
+        if (pNoCorrente->pNoProximo)
+            /* Nó a ser excluído não é o último nó da lista */
             pNoCorrente->pNoProximo->pNoAnterior = pNoCorrente->pNoAnterior;
         /* Conecta nó posterior ao nó anterior do nó a ser excluído */
 
         break;
-    case 9:
+
+    case 9: /* Atribui NULL ao ponteiro corrente */
         pCabecaDaLista->pNoCorrente = NULL;
         break;
 
-    case 10:
+    case 10: /* Atribui NULL ao ponteiro de origem */
         pCabecaDaLista->pNoPrimeiro = NULL;
         break;
+
+    case 11: /* Atribui NULL ao ponteiro para função de destruição do conteúdo
+    de um nó */
+        pCabecaDaLista->ExcluirValor = NULL;
+
     default:
         break;
     }
 
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
+
+
+/*******************************************************************************
+*
+*	$FC Função:
+*       LIS Verificador.
+*
+*******************************************************************************/
+LIS_tpCondRet LIS_verificador(LIS_tppCabecaLista pCabecaDaLista, int const numFalhasEsperadas)
+{
+
+    int numFalhasObservadas, numNos;
+
+    LIS_tpNoLista *pNo;
+
+    if (!pCabecaDaLista)
+        return LIS_CondRetListaNaoExiste;
+
+    numFalhasObservadas = 0; /* Inicialização do contador de número de falhas */
+
+    if (!pCabecaDaLista->ExcluirValor)
+    /* Função de destruição do conteúdo de um nó é nula */
+        ++numFalhasObservadas;
+
+    if (pCabecaDaLista->numNos && !pCabecaDaLista->pNoCorrente)
+    /* Lista não é vazia (numNos != 0) mas nó corrente é nulo */
+        ++numFalhasObservadas;
+
+    if (pCabecaDaLista->numNos && !pCabecaDaLista->pNoPrimeiro)
+    /* Lista não é vazia (numNos != 0) mas primeiro nó é nulo */
+        ++numFalhasObservadas;
+
+    /* Vamos caminhar do primeiro nó até o último nó checando cada nó */
+    
+    pNo = pCabecaDaLista->pNoPrimeiro;
+
+    numNos = pCabecaDaLista->numNos;
+
+    while (pNo) /* Enquanto não caminhou para nó nulo */
+    {
+        if (!numNos)
+        /* Não chegou no final da lista mas o número de nós é zero */
+        {
+            ++numFalhasObservadas;
+            break;
+        }
+
+        if (pCabecaDaLista->tipoEstrutura != pNo->tipoEstrutura)
+        /* Tipo da estrutura apontado pela cabeça é diferente do apontado pelo
+        nó */
+            ++numFalhasObservadas;
+
+        if (!pNo->pConteudo) /* Conteúdo do nó é nulo */
+            ++numFalhasObservadas;
+
+        pNo = pNo->pNoProximo; /* Vai para próximo nó */
+        --numNos;
+    }
+
+    if (numNos) /* Chegou num nó nulo, mas o número de nós não é zero */
+        ++numFalhasObservadas;
+
+    /* Vamos caminhar do último nó até o primeiro nó checando cada nó */
+
+    pNo = pCabecaDaLista->pNoUltimo;
+
+    numNos = pCabecaDaLista->numNos;
+
+    while (pNo) /* Enquanto não caminhou para nó nulo */
+    {
+        if (!numNos)
+        /* Não chegou no início da lista mas o número de nós é zero */
+        {
+            ++numFalhasObservadas;
+            break;
+        }
+
+        if (pCabecaDaLista->tipoEstrutura != pNo->tipoEstrutura)
+        /* Tipo da estrutura apontado pela cabeça é diferente do apontado pelo
+        nó. Checamos na volta tamém pois pode ser que não tenhamos analisado
+        todos os nós da lista se o prox de um nó intermediário seja nulo */
+            ++numFalhasObservadas;
+
+        if (!pNo->pConteudo) /* Conteúdo do nó é nulo */
+            ++numFalhasObservadas;
+        /* Checamos na volta tamém pois pode ser que não tenhamos analisado
+        todos os nós da lista se o prox de um nó intermediário seja nulo */
+
+        pNo = pNo->pNoAnterior; /* Vai para nó anterior */
+        --numNos;
+    }
+
+    if (numNos) /* Chegou num nó nulo, mas o número de nós não é zero */
+        ++numFalhasObservadas;
+
+    if (numFalhasObservadas == numFalhasEsperadas)
+    /* Encontramos todas as falhas colocadas */
+        return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
+
+    return LIS_CondRetNumFalhasIncorreto;
+    /* Verificador não encontrou número de falhas correto */
+
+}
 #endif
 
-/*****  Código das funções encapsuladas no módulo  *****/
 
-/*******************************************************
+/***************** Código das funções encapsuladas no módulo ******************/
+
+
+/*******************************************************************************
 *
 *	$FC Função:
 *       LIS Libera espaço alocado apontado pelo nó
@@ -644,13 +663,14 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int deturpacao)
 *       duplamente encadeada com cabeça.
 *
 *
-*	$AS Assertivas de saída esperadas:
-*       Espaço alocado apontado pelo nó corrente da
-*       lista foi liberado.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
+*  $EP Parâmetros
+*       $P pCabecaDaLista - O parâmetro que receberá o endereço do ponteiro para
+*           a cabeça da lista.
+*           Este parâmetro é passado por referência.
+*       $P pNo - O parâmetro que receberá o ponteiro para o nó a ser liberado.
+*           Este parâmetro é passado por valor.
 *
-********************************************************/
+*******************************************************************************/
 LIS_tpCondRet LIS_liberarNo(LIS_tppCabecaLista pCabecaDaLista, LIS_tpNoLista *pNo)
 {
 
@@ -671,8 +691,21 @@ LIS_tpCondRet LIS_liberarNo(LIS_tppCabecaLista pCabecaDaLista, LIS_tpNoLista *pN
 
     return LIS_CondRetOK;
 }
+/*******************************************************************************
+*
+*	$AS Assertivas de saída esperadas:
+*       Espaço alocado apontado pelo nó corrente da lista foi liberado.
+*		Valem as assertivas estruturais da lista duplamente encadeada com
+*       cabeça.
+*
+*
+*   $FV Valor retornado
+*       LIS_CondRetOK
+*
+*******************************************************************************/
 
-/*******************************************************
+
+/*******************************************************************************
 *
 *	$FC Função:
 *       LIS Cria nó da lista.
@@ -680,16 +713,16 @@ LIS_tpCondRet LIS_liberarNo(LIS_tppCabecaLista pCabecaDaLista, LIS_tpNoLista *pN
 *
 *	$AE Assertivas de entrada esperadas:
 *       Conteúdo a ser inserido no nó não é nulo. 
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
+*		Valem as assertivas estruturais da lista duplamente encadeada com
+*       cabeça.
 *
 *
-*	$AS Assertivas de saída esperadas:
-*       Nó foi criado.
-*		Valem as assertivas estruturais da lista
-*       duplamente encadeada com cabeça.
+*  $EP Parâmetros
+*       $P pConteudo - O parâmetro que receberá o ponteiro para o conteúdo a
+*           ser inserido no nó criado.
+*           Este parâmetro é passado por valor.
 *
-********************************************************/
+*******************************************************************************/
 LIS_tpNoLista *LIS_criaNo(void *pConteudo
 #ifdef _DEBUG
                           ,
@@ -726,3 +759,16 @@ LIS_tpNoLista *LIS_criaNo(void *pConteudo
 
     return pNo;
 }
+/*******************************************************************************
+*
+*	$AS Assertivas de saída esperadas:
+*       Nó foi criado.
+*		Valem as assertivas estruturais da lista duplamente encadeada com
+*       cabeça.
+*
+*
+*   $FV Valor retornado
+*       pNo (ponteiro para nó criado)
+*       NULL
+*
+*******************************************************************************/
