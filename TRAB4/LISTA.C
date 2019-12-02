@@ -93,8 +93,6 @@ typedef struct LIS_tagLista
 
 /********************** Variáveis encapuladas no módulo ***********************/
 
-int tamLista; /* Tamanho (em bytes) da lista */
-
 /**************** Protôtipos das funções encapuladas no módulo ****************/
 
 static LIS_tpCondRet LIS_liberarNo(LIS_tppCabecaLista pCabecaDaLista, LIS_tpNoLista *pNo);
@@ -456,6 +454,8 @@ LIS_tpCondRet LIS_vaiParaNoAnterior(LIS_tppCabecaLista pCabecaDaLista)
 LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int const deturpacao)
 {
 
+    int lixo;
+
     LIS_tpNoLista *pNoCorrente;
 
     if (!pCabecaDaLista)
@@ -478,11 +478,11 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int const deturp
         break;
 
     case 4: /* Atribui lixo ao ponteiro para o próximo nó */
-        pNoCorrente->pNoProximo = (LIS_tpNoLista *)&tamLista;
+        pNoCorrente->pNoProximo = (LIS_tpNoLista *)&lixo;
         break;
 
     case 5: /* Atribui lixo ao ponteiro o nó anterior */
-        pNoCorrente->pNoAnterior = (LIS_tpNoLista *)&tamLista;
+        pNoCorrente->pNoAnterior = (LIS_tpNoLista *)&lixo;
         break;
 
     case 6: /* Atribui NULL ao ponteiro para o conteúdo do nó */
@@ -528,7 +528,15 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int const deturp
         pCabecaDaLista->pNoPrimeiro = NULL;
         break;
 
-    case 11: /* Atribui NULL ao ponteiro para função de destruição do conteúdo
+    case 11: /* Atribui lixo ao ponteiro corrente */
+        pCabecaDaLista->pNoCorrente = (LIS_tpNoLista*) &lixo;
+        break;
+
+    case 12: /* Atribui lixo ao ponteiro de origem */
+        pCabecaDaLista->pNoPrimeiro = (LIS_tpNoLista*) &lixo;
+        break;
+
+    case 13: /* Atribui NULL ao ponteiro para função de destruição do conteúdo
     de um nó */
         pCabecaDaLista->ExcluirValor = NULL;
 
@@ -546,7 +554,7 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int const deturp
 *       LIS Verificador.
 *
 *******************************************************************************/
-LIS_tpCondRet LIS_verificador(LIS_tppCabecaLista pCabecaDaLista, int const numFalhasEsperadas)
+int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista, int const numFalhasEsperadas)
 {
 
     int numFalhasObservadas, numNos;
@@ -570,6 +578,15 @@ LIS_tpCondRet LIS_verificador(LIS_tppCabecaLista pCabecaDaLista, int const numFa
     /* Lista não é vazia (numNos != 0) mas primeiro nó é nulo */
         ++numFalhasObservadas;
 
+    if (pCabecaDaLista->numNos && pCabecaDaLista->pNoCorrente->pCabeca!=pCabecaDaLista)
+    /* Lista não é vazia (numNos != 0) e ponteiro corrente aponta para lixo */
+        ++numFalhasObservadas;
+
+    if (pCabecaDaLista->numNos && pCabecaDaLista->pNoPrimeiro->pCabeca!=pCabecaDaLista)
+    /* Lista não é vazia (numNos != 0) e ponteiro do primeiro nó aponta para
+    lixo */
+        ++numFalhasObservadas;
+
     /* Vamos caminhar do primeiro nó até o último nó checando cada nó */
     
     pNo = pCabecaDaLista->pNoPrimeiro;
@@ -591,6 +608,16 @@ LIS_tpCondRet LIS_verificador(LIS_tppCabecaLista pCabecaDaLista, int const numFa
             ++numFalhasObservadas;
 
         if (!pNo->pConteudo) /* Conteúdo do nó é nulo */
+            ++numFalhasObservadas;
+
+        if (pNo->pNoProximo && pNo->pNoProximo->pNoAnterior!=pNo)
+        /* Anterior do próximo não é o atual (algum dos ponteiros aponta para
+        lixo) */
+            ++numFalhasObservadas;
+
+        if (pNo->pNoAnterior && pNo->pNoAnterior->pNoProximo!=pNo)
+            /* Sucessor do anterior não é o atual (algum dos ponteiros aponta para
+        lixo) */
             ++numFalhasObservadas;
 
         pNo = pNo->pNoProximo; /* Vai para próximo nó */
@@ -633,12 +660,7 @@ LIS_tpCondRet LIS_verificador(LIS_tppCabecaLista pCabecaDaLista, int const numFa
     if (numNos) /* Chegou num nó nulo, mas o número de nós não é zero */
         ++numFalhasObservadas;
 
-    if (numFalhasObservadas == numFalhasEsperadas)
-    /* Encontramos todas as falhas colocadas */
-        return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
-
-    return LIS_CondRetNumFalhasIncorreto;
-    /* Verificador não encontrou número de falhas correto */
+    return numFalhasObservadas;
 
 }
 #endif
