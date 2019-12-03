@@ -1,1025 +1,1035 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: CNT  Contadores de passagem
+*  $MCI Mï¿½dulo de implementaï¿½ï¿½o: CNT  Contadores de passagem
 *
 *  Arquivo gerado:              CONTA.c
 *  Letras identificadoras:      CNT
 *
-*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
+*  Nome da base de software:    Arcabouï¿½o para a automaï¿½ï¿½o de testes de programas redigidos em C
 *  Arquivo da base de software: C:\AUTOTEST\PROJETOS\ARCABOUC.BSW
 *
-*  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
+*  Projeto: INF 1301 / 1628 Automatizaï¿½ï¿½o dos testes de mï¿½dulos C
 *  Gestor:  LES/DI/PUC-Rio
 *  Autores: avs
 *
-*  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     4       avs   01/fev/2006 criar linguagem script simbólica
-*     3       avs   08/dez/2004 uniformização dos exemplos
-*     2       avs   07/jul/2003 unificação de todos os módulos em um só projeto
-*     1       avs   16/abr/2003 início desenvolvimento
+*  $HA Histï¿½rico de evoluï¿½ï¿½o:
+*     Versï¿½o  Autor    Data     Observaï¿½ï¿½es
+*     4       avs   01/fev/2006 criar linguagem script simbï¿½lica
+*     3       avs   08/dez/2004 uniformizaï¿½ï¿½o dos exemplos
+*     2       avs   07/jul/2003 unificaï¿½ï¿½o de todos os mï¿½dulos em um sï¿½ projeto
+*     1       avs   16/abr/2003 inï¿½cio desenvolvimento
 *
 ***************************************************************************/
 
-#include    <string.h>
-#include    <stdio.h>
-#include    <time.h>
-#include    <malloc.h>
+#include <string.h>
+#include <stdio.h>
+#include <time.h>
+#include <malloc.h>
 
-#include    "Generico.h"
-#include    "TabSimb.h"
+#include "Generico.h"
+#include "TabSimb.h"
 
 #ifdef _DEBUG
-   #include   "CEspDin.h"
+#include "CEspDin.h"
 #endif
 
 #define CONTA_OWN
-#include "CONTA.h"
+#include "CONTA.H"
 #undef CONTA_OWN
 
-#define   ARQUIVO_ACUMULADOR      1
-#define   ARQUIVO_DEFINICAO       2
+#define ARQUIVO_ACUMULADOR 1
+#define ARQUIVO_DEFINICAO 2
 
-#define   FALSE                   0
-#define   TRUE                    1
+#define FALSE 0
+#define TRUE 1
 
-#define   DIM_NOME_CONTADOR       100
-#define   STR_DIM_NOME_CONTADOR   "98"
-#define   DIM_NOME_ARQUIVO        120
-#define   DIM_BUFFER              150
-#define   DIM_TABELA              317
+#define DIM_NOME_CONTADOR 100
+#define STR_DIM_NOME_CONTADOR "98"
+#define DIM_NOME_ARQUIVO 120
+#define DIM_BUFFER 150
+#define DIM_TABELA 317
 
-#define   TRIM_CHAR               " \n\r\t\x1A"
+#define TRIM_CHAR " \n\r\t\x1A"
 
-#define   ERRO_CONTADOR           "cc>"
+#define ERRO_CONTADOR "cc>"
 
-#define   EXT_ACUMULADOR          "count"
-#define   EXT_DEFINICAO           "count"
+#define EXT_ACUMULADOR "count"
+#define EXT_DEFINICAO "count"
 
-#define   COMENTARIO              "//"
-#define   OP_ATRIBUICAO           '='
+#define COMENTARIO "//"
+#define OP_ATRIBUICAO '='
 
-const char ContadorNaoInicializado[ ] = "Módulo contadores ainda não foi inicializado." ;
+const char ContadorNaoInicializado[] = "Mï¿½dulo contadores ainda nï¿½o foi inicializado.";
 
 /***********************************************************************
 *
 *  $TC Tipo de dados: CNT Descritor de contador
 *
 *
-*  $ED Descrição do tipo
-*     Cada contador é identificado por um nome.
-*     O acesso ao nome se dará atrabés de uma tabela de símbolos.
-*     Além disso será mantida uma lista linear de contadores, ordenada
+*  $ED Descriï¿½ï¿½o do tipo
+*     Cada contador ï¿½ identificado por um nome.
+*     O acesso ao nome se darï¿½ atrabï¿½s de uma tabela de sï¿½mbolos.
+*     Alï¿½m disso serï¿½ mantida uma lista linear de contadores, ordenada
 *     em ordem crescente pelo nome do contador.
 *
 ***********************************************************************/
 
-   typedef struct tgContador {
+typedef struct tgContador
+{
 
-         struct tgContador * pProxContador ;
-               /* Próximo contador na lista ordenada de contadores */
+    struct tgContador *pProxContador;
+    /* Prï¿½ximo contador na lista ordenada de contadores */
 
-         long Contagem ;
-               /* Valor de contagem do contador
+    long Contagem;
+    /* Valor de contagem do contador
                *
-               *$ED Descrição
+               *$ED Descriï¿½ï¿½o
                *
-               *   Conta o número de vezes que a função CNT_Contar
-               *   foi ativada com relação ao contador */
+               *   Conta o nï¿½mero de vezes que a funï¿½ï¿½o CNT_Contar
+               *   foi ativada com relaï¿½ï¿½o ao contador */
 
-         char NomeContador[ DIM_NOME_CONTADOR ] ;
-               /* Nome do contador, string C padrão */
+    char NomeContador[DIM_NOME_CONTADOR];
+    /* Nome do contador, string C padrï¿½o */
 
-         int Fonte ;
-               /* Fonte do nome
+    int Fonte;
+    /* Fonte do nome
                *
-               *$ED Descrição
-               *   O atributo contém "ARQUIVO_ACUMULADOR" se o contador
+               *$ED Descriï¿½ï¿½o
+               *   O atributo contï¿½m "ARQUIVO_ACUMULADOR" se o contador
                *   tiver sido lido de um arquivo acumulador ou
                *   "ARQUIVO_DEFINICAO" se tiver sido lido de um arquivo
                *   de definicao. Se ao ler de um arquivo de definicao
                *   o contador estiver marcado "ARQUIVO_ACUMULADOR",
-               *   o indicador é mudado para "ARQUIVO_DEFINICAO".
-               *   Se já era "ARQUIVO_DEFINICAO", é emitida uma mensagem
-               *   de erro de duplicidade de definição. */
+               *   o indicador ï¿½ mudado para "ARQUIVO_DEFINICAO".
+               *   Se jï¿½ era "ARQUIVO_DEFINICAO", ï¿½ emitida uma mensagem
+               *   de erro de duplicidade de definiï¿½ï¿½o. */
 
-   } tpContador ;
+} tpContador;
 
-/*****  Dados encapsulados no módulo  *****/
+/*****  Dados encapsulados no mï¿½dulo  *****/
 
-      static int Inicializado = FALSE ;
-            /* Controle de inicialização de contadores
+static int Inicializado = FALSE;
+/* Controle de inicializaï¿½ï¿½o de contadores
                *
-               *$ED Descrição
-               *   Controla se o sistema de contagem foi ou não iniciado */
+               *$ED Descriï¿½ï¿½o
+               *   Controla se o sistema de contagem foi ou nï¿½o iniciado */
 
-      static int EfetuaContagem = FALSE ;
-            /* Controle de contagem
+static int EfetuaContagem = FALSE;
+/* Controle de contagem
                *
-               *$ED Descrição
-               *   Contagem é realizada somente se EfetuaContagem == TRUE */
+               *$ED Descriï¿½ï¿½o
+               *   Contagem ï¿½ realizada somente se EfetuaContagem == TRUE */
 
-      static TBS_tppTabela pTabela = NULL ;
-            /* Ponteiro para a tabela de símbolos em uso */
+static TBS_tppTabela pTabela = NULL;
+/* Ponteiro para a tabela de sï¿½mbolos em uso */
 
-      static tpContador * pContadorCorr = NULL ;
-            /* Ponteiro para contador corrente do iterador */
+static tpContador *pContadorCorr = NULL;
+/* Ponteiro para contador corrente do iterador */
 
-      static tpContador * pOrgListaContadores = NULL ;
-            /* Origem da lista ordenada de contadores */
+static tpContador *pOrgListaContadores = NULL;
+/* Origem da lista ordenada de contadores */
 
-      static int numContadores = 0 ;
-            /* Número total de contadores */
+static int numContadores = 0;
+/* Nï¿½mero total de contadores */
 
-      static int numTotalErros = 0 ;
-            /* Número total de erros encontrados até o momento */
+static int numTotalErros = 0;
+/* Nï¿½mero total de erros encontrados atï¿½ o momento */
 
-      static long ContagemTotal = 0 ;
-            /* Contagem total
+static long ContagemTotal = 0;
+/* Contagem total
                *
-               *$ED Descrição
-               *     Contém a somatória de todas as contagens */
+               *$ED Descriï¿½ï¿½o
+               *     Contï¿½m a somatï¿½ria de todas as contagens */
 
-      static char NomeArquivoAcumulador[ DIM_NOME_ARQUIVO ] ;
-            /* Nome do arquivo acumulador de contadores */
+static char NomeArquivoAcumulador[DIM_NOME_ARQUIVO];
+/* Nome do arquivo acumulador de contadores */
 
-      static int    numLinha = 0 ;
-            /* Número da linha do arquivo sendo lido */
+static int numLinha = 0;
+/* Nï¿½mero da linha do arquivo sendo lido */
 
-      static char   BufferLeitura[ DIM_BUFFER ] ;
-            /* Buffer de leitura de contadores */
+static char BufferLeitura[DIM_BUFFER];
+/* Buffer de leitura de contadores */
 
-/***** Protótipos das funções encapuladas no módulo *****/
+/***** Protï¿½tipos das funï¿½ï¿½es encapuladas no mï¿½dulo *****/
 
-   static char * ObterNomeContador( void * pDado ) ;
+static char *ObterNomeContador(void *pDado);
 
-   static void MontarNomeArquivo( char * NomeArquivo ,
-                                  char * NomeExtensao ) ;
+static void MontarNomeArquivo(char *NomeArquivo,
+                              char *NomeExtensao);
 
-   static int LerLinha( FILE * pArquivo ) ;
+static int LerLinha(FILE *pArquivo);
 
-   static int LerContadores( char * NomeArquivo , int Fonte ) ;
+static int LerContadores(char *NomeArquivo, int Fonte);
 
-   static void ExibirPrefixo( int numLinha ) ;
+static void ExibirPrefixo(int numLinha);
 
-/*****  Código das funções exportadas pelo módulo  *****/
+/*****  Cï¿½digo das funï¿½ï¿½es exportadas pelo mï¿½dulo  *****/
 
 /***************************************************************************
 *
-*  Função: CNT  &Inicializar contadores
+*  Funï¿½ï¿½o: CNT  &Inicializar contadores
 *  ****/
 
-   CNT_tpCondRet CNT_InicializarContadores( char * NomeArquivo )
-   {
+CNT_tpCondRet CNT_InicializarContadores(char *NomeArquivo)
+{
 
-      if ( Inicializado == TRUE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , "Contadores já foram inicializados."  ) ;
-         return CNT_CondRetInicializado ;
-      } /* if */
+    if (Inicializado == TRUE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), "Contadores jï¿½ foram inicializados.");
+        return CNT_CondRetInicializado;
+    } /* if */
 
-      /* Inicializar todas as constantes globais do contador */
+    /* Inicializar todas as constantes globais do contador */
 
-         EfetuaContagem       = FALSE ;
-         pOrgListaContadores  = NULL ;
-         pContadorCorr        = NULL ;
-         numContadores        = 0 ;
-         ContagemTotal        = 0 ;
-         numLinha             = -1 ;
-         memset( BufferLeitura , '?' , DIM_BUFFER ) ;
-         BufferLeitura[ DIM_BUFFER - 1 ] = 0 ;
+    EfetuaContagem = FALSE;
+    pOrgListaContadores = NULL;
+    pContadorCorr = NULL;
+    numContadores = 0;
+    ContagemTotal = 0;
+    numLinha = -1;
+    memset(BufferLeitura, '?', DIM_BUFFER);
+    BufferLeitura[DIM_BUFFER - 1] = 0;
 
-      /* Criar tabela de simbolos dos contadores */
+    /* Criar tabela de simbolos dos contadores */
 
-         pTabela = TBS_CriarTabela( DIM_TABELA , ObterNomeContador , NULL ) ;
+    pTabela = TBS_CriarTabela(DIM_TABELA, ObterNomeContador, NULL);
 
-         TST_ASSERT( pTabela != NULL ) ;
+    TST_ASSERT(pTabela != NULL);
 
-      /* Registrar o arquivo de contagem acumulado */
+    /* Registrar o arquivo de contagem acumulado */
 
-         Inicializado = TRUE ;
+    Inicializado = TRUE;
 
-         if ( NomeArquivo == NULL )
-         {
-            NomeArquivoAcumulador[ 0 ] = 0 ;
-         } else {
-            if ( numContadores != 0 )
+    if (NomeArquivo == NULL)
+    {
+        NomeArquivoAcumulador[0] = 0;
+    }
+    else
+    {
+        if (numContadores != 0)
+        {
+            ExibirPrefixo(-1);
+            fprintf(TST_ObterArqLog(), "\nError: O arquivo acumulador deve ser lido antes de todos os outros.");
+            return CNT_CondRetErro;
+        }
+        else
+        {
+            strcpy(NomeArquivoAcumulador, NomeArquivo);
+            MontarNomeArquivo(NomeArquivoAcumulador, EXT_ACUMULADOR);
+            if (LerContadores(NomeArquivoAcumulador, ARQUIVO_ACUMULADOR) != 0)
             {
-               ExibirPrefixo( -1 ) ;
-               fprintf( TST_ObterArqLog( ) , "\nError: O arquivo acumulador deve ser lido antes de todos os outros."  ) ;
-               return CNT_CondRetErro ;
-            } else
-            {
-               strcpy( NomeArquivoAcumulador , NomeArquivo ) ;
-               MontarNomeArquivo( NomeArquivoAcumulador , EXT_ACUMULADOR ) ;
-               if ( LerContadores( NomeArquivoAcumulador , ARQUIVO_ACUMULADOR ) != 0 )
-               {
-                  return CNT_CondRetErro ;
-               } /* if */
+                return CNT_CondRetErro;
             } /* if */
-         } /* if */
-         return CNT_CondRetOK ;
+        }     /* if */
+    }         /* if */
+    return CNT_CondRetOK;
 
-   } /* Fim função: CNT  &Inicializar contadores */
-
-/***************************************************************************
-*
-*  Função: CNT  &Terminar contadores
-*  ****/
-
-   CNT_tpCondRet CNT_TerminarContadores( )
-   {
-
-      int numErros = 0 ;
-
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return CNT_CondRetErro ;
-      } /* if */
-
-      /* Gravar a contagem acumulada */
-
-         if ( NomeArquivoAcumulador[ 0 ] != 0 )
-         {
-            numErros = CNT_GravarContadores( NomeArquivoAcumulador ) ;
-         } /* if */
-
-      /* Inicializar as variáveis de controle e a tabela */
-
-         TBS_DestruirTabela( pTabela ) ;
-         pTabela = NULL ;
-
-         Inicializado = FALSE ;
-
-         if ( numErros != 0 )
-         {
-            return CNT_CondRetErro ;
-         } /* if */
-
-         return CNT_CondRetOK ;
-
-   } /* Fim função: CNT  &Terminar contadores */
+} /* Fim funï¿½ï¿½o: CNT  &Inicializar contadores */
 
 /***************************************************************************
 *
-*  Função: CNT  &Iniciar a contagem
+*  Funï¿½ï¿½o: CNT  &Terminar contadores
 *  ****/
 
-   void CNT_IniciarContagem( )
-   {
+CNT_tpCondRet CNT_TerminarContadores()
+{
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , "Contadores ainda não foram inicializados."  ) ;
-         return ;
-      } /* if */
+    int numErros = 0;
 
-      EfetuaContagem = TRUE ;
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return CNT_CondRetErro;
+    } /* if */
 
-   } /* Fim função: CNT  &Iniciar a contagem */
+    /* Gravar a contagem acumulada */
+
+    if (NomeArquivoAcumulador[0] != 0)
+    {
+        numErros = CNT_GravarContadores(NomeArquivoAcumulador);
+    } /* if */
+
+    /* Inicializar as variï¿½veis de controle e a tabela */
+
+    TBS_DestruirTabela(pTabela);
+    pTabela = NULL;
+
+    Inicializado = FALSE;
+
+    if (numErros != 0)
+    {
+        return CNT_CondRetErro;
+    } /* if */
+
+    return CNT_CondRetOK;
+
+} /* Fim funï¿½ï¿½o: CNT  &Terminar contadores */
 
 /***************************************************************************
 *
-*  Função: CNT  &Parar contagem
+*  Funï¿½ï¿½o: CNT  &Iniciar a contagem
 *  ****/
 
-   void CNT_PararContagem( )
-   {
+void CNT_IniciarContagem()
+{
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return ;
-      } /* if */
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), "Contadores ainda nï¿½o foram inicializados.");
+        return;
+    } /* if */
 
-      EfetuaContagem = FALSE ;
+    EfetuaContagem = TRUE;
 
-   } /* Fim função: CNT  &Parar contagem */
+} /* Fim funï¿½ï¿½o: CNT  &Iniciar a contagem */
 
 /***************************************************************************
 *
-*  Função: CNT  &Registrar arquivo acumulador
+*  Funï¿½ï¿½o: CNT  &Parar contagem
 *  ****/
 
-   void CNT_RegistrarAcumulador( char * NomeArquivo )
-   {
+void CNT_PararContagem()
+{
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return ;
-      } /* if */
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return;
+    } /* if */
 
-      if ( NomeArquivo == NULL )
-      {
-         NomeArquivoAcumulador[ 0 ] = 0 ;
-      } else {
-         strcpy( NomeArquivoAcumulador , NomeArquivo ) ;
-         MontarNomeArquivo( NomeArquivoAcumulador , EXT_ACUMULADOR ) ;
-      } /* if */
+    EfetuaContagem = FALSE;
 
-   } /* Fim função: CNT  &Registrar arquivo acumulador */
+} /* Fim funï¿½ï¿½o: CNT  &Parar contagem */
 
 /***************************************************************************
 *
-*  Função: CNT  &Ler arquivo de definição de contadores
+*  Funï¿½ï¿½o: CNT  &Registrar arquivo acumulador
 *  ****/
 
-   int CNT_LerContadores( char * NomeArquivoDefinicao )
-   {
+void CNT_RegistrarAcumulador(char *NomeArquivo)
+{
 
-      char NomeArquivo[ DIM_NOME_ARQUIVO ] ;
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return;
+    } /* if */
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return 1 ;
-      } /* if */
+    if (NomeArquivo == NULL)
+    {
+        NomeArquivoAcumulador[0] = 0;
+    }
+    else
+    {
+        strcpy(NomeArquivoAcumulador, NomeArquivo);
+        MontarNomeArquivo(NomeArquivoAcumulador, EXT_ACUMULADOR);
+    } /* if */
 
-      strcpy( NomeArquivo , NomeArquivoDefinicao ) ;
-
-      MontarNomeArquivo( NomeArquivo , EXT_DEFINICAO ) ;
-
-      return LerContadores( NomeArquivo , ARQUIVO_DEFINICAO ) ;
-
-   } /* Fim função: CNT  &Ler arquivo de definição de contadores */
+} /* Fim funï¿½ï¿½o: CNT  &Registrar arquivo acumulador */
 
 /***************************************************************************
 *
-*  Função: CNT  &Gravar arquivo de contagem acumulada
+*  Funï¿½ï¿½o: CNT  &Ler arquivo de definiï¿½ï¿½o de contadores
 *  ****/
 
-   int CNT_GravarContadores( char * NomeArquivo )
-   {
+int CNT_LerContadores(char *NomeArquivoDefinicao)
+{
 
-      FILE * pArq ;
+    char NomeArquivo[DIM_NOME_ARQUIVO];
 
-      char CharTime[ 25 ] ;
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return 1;
+    } /* if */
 
-      time_t StartTime ;
-      struct tm * pTime ;
+    strcpy(NomeArquivo, NomeArquivoDefinicao);
 
-      tpContador * pContador ;
+    MontarNomeArquivo(NomeArquivo, EXT_DEFINICAO);
 
-      /* Abrir arquivo acumulador para gravação */
+    return LerContadores(NomeArquivo, ARQUIVO_DEFINICAO);
 
-         pArq = fopen( NomeArquivo , "w" ) ;
-         if ( pArq == NULL )
-         {
-            ExibirPrefixo( -1 ) ;
-            fprintf( TST_ObterArqLog( ) , "Não abriu o arquivo de acumuladores %s" ,
-                     NomeArquivo ) ;
-            return 1 ;
-         } /* if */
+} /* Fim funï¿½ï¿½o: CNT  &Ler arquivo de definiï¿½ï¿½o de contadores */
 
-      /* Gerar arquivo acumulador */
+/***************************************************************************
+*
+*  Funï¿½ï¿½o: CNT  &Gravar arquivo de contagem acumulada
+*  ****/
 
-         /* Gravar cabeçalho de arquivo de acumuladores */
+int CNT_GravarContadores(char *NomeArquivo)
+{
 
-            time( & StartTime ) ;
-            pTime = localtime( & StartTime ) ;
+    FILE *pArq;
 
-            sprintf( CharTime , "%04i/%02i/%02i-%02i:%02i:%02i" ,
-                     pTime->tm_year + 1900 , pTime->tm_mon + 1 ,
-                     pTime->tm_mday        , pTime->tm_hour ,
-                     pTime->tm_min         , pTime->tm_sec ) ;
+    char CharTime[25];
 
-            fprintf( pArq ,   "//////////////////////////////////////////////////////////////////////" ) ;
-            fprintf( pArq , "\n// Contadores acumulados, gerado: %s" , CharTime ) ;
-            fprintf( pArq , "\n//////////////////////////////////////////////////////////////////////" ) ;
-            fprintf( pArq , "\n" ) ;
+    time_t StartTime;
+    struct tm *pTime;
 
-         /* Gravar todos contadores e respectivas contagens */
+    tpContador *pContador;
 
-            pContador = pOrgListaContadores ;
-            while ( pContador != NULL )
+    /* Abrir arquivo acumulador para gravaï¿½ï¿½o */
+
+    pArq = fopen(NomeArquivo, "w");
+    if (pArq == NULL)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), "Nï¿½o abriu o arquivo de acumuladores %s",
+                NomeArquivo);
+        return 1;
+    } /* if */
+
+    /* Gerar arquivo acumulador */
+
+    /* Gravar cabeï¿½alho de arquivo de acumuladores */
+
+    time(&StartTime);
+    pTime = localtime(&StartTime);
+
+    sprintf(CharTime, "%04i/%02i/%02i-%02i:%02i:%02i",
+            pTime->tm_year + 1900, pTime->tm_mon + 1,
+            pTime->tm_mday, pTime->tm_hour,
+            pTime->tm_min, pTime->tm_sec);
+
+    fprintf(pArq, "//////////////////////////////////////////////////////////////////////");
+    fprintf(pArq, "\n// Contadores acumulados, gerado: %s", CharTime);
+    fprintf(pArq, "\n//////////////////////////////////////////////////////////////////////");
+    fprintf(pArq, "\n");
+
+    /* Gravar todos contadores e respectivas contagens */
+
+    pContador = pOrgListaContadores;
+    while (pContador != NULL)
+    {
+        fprintf(pArq, "\n%s\\%c%ld", pContador->NomeContador,
+                OP_ATRIBUICAO, pContador->Contagem);
+        pContador = pContador->pProxContador;
+    } /* while */
+
+    /* Gravar final de arquivo acumulador */
+
+    fprintf(pArq, "\n");
+    fprintf(pArq, "\n//////////////////////////////////////////////////////////////////////");
+    fprintf(pArq, "\n// Fim arquivo de contadores acumulados");
+    fprintf(pArq, "\n//////////////////////////////////////////////////////////////////////");
+    fprintf(pArq, "\n");
+
+    /* Fechar arquivo acumulador */
+
+    fclose(pArq);
+
+    return 0;
+
+} /* Fim funï¿½ï¿½o: CNT  &Gravar arquivo de contagem acumulada */
+
+/***************************************************************************
+*
+*  Funï¿½ï¿½o: CNT  &Contar
+*  ****/
+
+CNT_tpCondRet CNT_Contar(char *NomeContador, int numLinha)
+{
+
+    tpContador *pContador;
+
+#ifdef _DEBUG
+    TST_ASSERT(NomeContador != NULL);
+#endif
+
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), "Contadores ainda nï¿½o foram inicializados.");
+        return CNT_CondRetNaoInicializado;
+    } /* if */
+
+    if (EfetuaContagem)
+    {
+        pContador = (tpContador *)TBS_ProcurarSimbolo(pTabela, NomeContador);
+        if (pContador != NULL)
+        {
+            if (pContador->Contagem == -1)
             {
-               fprintf( pArq , "\n%s\\%c%ld" , pContador->NomeContador ,
-                        OP_ATRIBUICAO , pContador->Contagem ) ;
-               pContador = pContador->pProxContador ;
-            } /* while */
-
-         /* Gravar final de arquivo acumulador */
-
-            fprintf( pArq , "\n" ) ;
-            fprintf( pArq , "\n//////////////////////////////////////////////////////////////////////" ) ;
-            fprintf( pArq , "\n// Fim arquivo de contadores acumulados" ) ;
-            fprintf( pArq , "\n//////////////////////////////////////////////////////////////////////" ) ;
-            fprintf( pArq , "\n" ) ;
-
-      /* Fechar arquivo acumulador */
-
-         fclose( pArq ) ;
-
-         return 0 ;
-
-   } /* Fim função: CNT  &Gravar arquivo de contagem acumulada */
-
-/***************************************************************************
-*
-*  Função: CNT  &Contar
-*  ****/
-
-   CNT_tpCondRet CNT_Contar( char * NomeContador , int numLinha )
-   {
-
-      tpContador * pContador ;
-
-      #ifdef _DEBUG
-         TST_ASSERT( NomeContador != NULL ) ;
-      #endif
-
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , "Contadores ainda não foram inicializados."  ) ;
-         return CNT_CondRetNaoInicializado ;
-      } /* if */
-
-      if ( EfetuaContagem )
-      {
-         pContador = ( tpContador * ) TBS_ProcurarSimbolo( pTabela, NomeContador ) ;
-         if ( pContador != NULL )
-         {
-            if ( pContador->Contagem == -1 )
+                pContador->Contagem = 1;
+            }
+            else if (pContador->Contagem >= 0)
             {
-               pContador->Contagem = 1 ;
-            } else if ( pContador->Contagem >= 0 )
+                pContador->Contagem++;
+                ContagemTotal++;
+            }
+            else if (pContador->Contagem == -2)
             {
-               pContador->Contagem ++ ;
-               ContagemTotal ++ ;
-            } else if ( pContador->Contagem == -2 )
+                ExibirPrefixo(numLinha);
+                fprintf(TST_ObterArqLog(), "Contador \"%s\" nï¿½o deve ser contado.",
+                        NomeContador);
+                return CNT_CondRetProibido;
+            }
+            else
             {
-               ExibirPrefixo( numLinha ) ;
-               fprintf( TST_ObterArqLog( ) , "Contador \"%s\" não deve ser contado." ,
-                        NomeContador ) ;
-               return CNT_CondRetProibido ;
-            } else
-            {
-               ExibirPrefixo( numLinha ) ;
-               fprintf( TST_ObterArqLog( ) , "Contador \"%s\" contém valor ilegal: %d." ,
-                        NomeContador , pContador->Contagem ) ;
-               return CNT_CondRetNaoContador ;
+                ExibirPrefixo(numLinha);
+                fprintf(TST_ObterArqLog(), "Contador \"%s\" contï¿½m valor ilegal: %d.",
+                        NomeContador, pContador->Contagem);
+                return CNT_CondRetNaoContador;
             } /* if */
-         } else
-         {
-            ExibirPrefixo( numLinha ) ;
-            fprintf( TST_ObterArqLog( ) , "Contador \"%s\" não existe." ,
-                     NomeContador ) ;
-            return CNT_CondRetNaoContador ;
-         } /* if */
-      } /* if */
+        }
+        else
+        {
+            ExibirPrefixo(numLinha);
+            fprintf(TST_ObterArqLog(), "Contador \"%s\" nï¿½o existe.",
+                    NomeContador);
+            return CNT_CondRetNaoContador;
+        } /* if */
+    }     /* if */
 
-      return CNT_CondRetOK ;
+    return CNT_CondRetOK;
 
-   } /* Fim função: CNT  &Contar */
-
-/***************************************************************************
-*
-*  Função: CNT  &Verificar contagem
-*  ****/
-
-   int CNT_VerificarContagem( )
-   {
-
-      tpContador * pContador ;
-      int numErros = 0 ;
-
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return -1 ;
-      } /* if */
-
-      pContador = pOrgListaContadores ;
-      while ( pContador != NULL )
-      {
-         if ( pContador->Contagem == 0 )
-         {
-            numErros ++ ;
-            ExibirPrefixo( 0 ) ;
-            fprintf( TST_ObterArqLog( ) , "Contagem em \"%s\" é zero." ,
-                     pContador->NomeContador ) ;
-         } /* if */
-         pContador = pContador->pProxContador ;
-      } /* while */
-
-      return numErros ;
-
-   } /* Fim função: CNT  &Verificar contagem */
+} /* Fim funï¿½ï¿½o: CNT  &Contar */
 
 /***************************************************************************
 *
-*  Função: CNT  &Obter valor de contagem
+*  Funï¿½ï¿½o: CNT  &Verificar contagem
 *  ****/
 
-   long CNT_ObterContagem( char * NomeContador )
-   {
+int CNT_VerificarContagem()
+{
 
-      tpContador * pContador ;
+    tpContador *pContador;
+    int numErros = 0;
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return -1 ;
-      } /* if */
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return -1;
+    } /* if */
 
-      pContador = ( tpContador * ) TBS_ProcurarSimbolo( pTabela , NomeContador ) ;
-      if ( pContador == NULL )
-      {
-         return CNT_CondRetNaoContador ;
-      } /* if */
+    pContador = pOrgListaContadores;
+    while (pContador != NULL)
+    {
+        if (pContador->Contagem == 0)
+        {
+            numErros++;
+            ExibirPrefixo(0);
+            fprintf(TST_ObterArqLog(), "Contagem em \"%s\" ï¿½ zero.",
+                    pContador->NomeContador);
+        } /* if */
+        pContador = pContador->pProxContador;
+    } /* while */
 
-      return pContador->Contagem ;
+    return numErros;
 
-   } /* Fim função: CNT  &Obter valor de contagem */
+} /* Fim funï¿½ï¿½o: CNT  &Verificar contagem */
 
 /***************************************************************************
 *
-*  Função: CNT  &Obter número de contadores
+*  Funï¿½ï¿½o: CNT  &Obter valor de contagem
 *  ****/
 
-   int CNT_ObterNumeroContadores( )
-   {
+long CNT_ObterContagem(char *NomeContador)
+{
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return -1 ;
-      } /* if */
+    tpContador *pContador;
 
-      return numContadores ;
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return -1;
+    } /* if */
 
-   } /* Fim função: CNT  &Obter número de contadores */
+    pContador = (tpContador *)TBS_ProcurarSimbolo(pTabela, NomeContador);
+    if (pContador == NULL)
+    {
+        return CNT_CondRetNaoContador;
+    } /* if */
+
+    return pContador->Contagem;
+
+} /* Fim funï¿½ï¿½o: CNT  &Obter valor de contagem */
 
 /***************************************************************************
 *
-*  Função: CNT  &Obter total de contagem
+*  Funï¿½ï¿½o: CNT  &Obter nï¿½mero de contadores
 *  ****/
 
-   long CNT_ObterContagemTotal( )
-   {
+int CNT_ObterNumeroContadores()
+{
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return -1 ;
-      } /* if */
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return -1;
+    } /* if */
 
-      return ContagemTotal ;
+    return numContadores;
 
-   } /* Fim função: CNT  &Obter total de contagem */
+} /* Fim funï¿½ï¿½o: CNT  &Obter nï¿½mero de contadores */
 
 /***************************************************************************
 *
-*  Função: CNT  &Iterador: obter contagem corrente
+*  Funï¿½ï¿½o: CNT  &Obter total de contagem
 *  ****/
 
-   long CNT_ObterContagemCorrente( )
-   {
+long CNT_ObterContagemTotal()
+{
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return -1 ;
-      } /* if */
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return -1;
+    } /* if */
 
-      if ( pContadorCorr != NULL )
-      {
-         return pContadorCorr->Contagem ;
-      } /* if */
+    return ContagemTotal;
 
-      return CNT_CondRetNaoIterador ;
-
-   } /* Fim função: CNT  &Iterador: obter contagem corrente */
+} /* Fim funï¿½ï¿½o: CNT  &Obter total de contagem */
 
 /***************************************************************************
 *
-*  Função: CNT  &Iterator: obter nome de contador corrente
+*  Funï¿½ï¿½o: CNT  &Iterador: obter contagem corrente
 *  ****/
 
-   char * CNT_ObterContadorCorrente( )
-   {
+long CNT_ObterContagemCorrente()
+{
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return NULL ;
-      } /* if */
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return -1;
+    } /* if */
 
-      if ( pContadorCorr != NULL )
-      {
-         return pContadorCorr->NomeContador ;
-      } /* if */
+    if (pContadorCorr != NULL)
+    {
+        return pContadorCorr->Contagem;
+    } /* if */
 
-      return NULL ;
+    return CNT_CondRetNaoIterador;
 
-   } /* Fim função: CNT  &Iterator: obter nome de contador corrente */
+} /* Fim funï¿½ï¿½o: CNT  &Iterador: obter contagem corrente */
 
 /***************************************************************************
 *
-*  Função: CNT  &Iterador: avançar para o próximo contador
+*  Funï¿½ï¿½o: CNT  &Iterator: obter nome de contador corrente
 *  ****/
 
-   void CNT_IrProximoContador( )
-   {
+char *CNT_ObterContadorCorrente()
+{
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return ;
-      } /* if */
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return NULL;
+    } /* if */
 
-      if ( pContadorCorr != NULL )
-      {
-         pContadorCorr = pContadorCorr->pProxContador ;
-      } /* if */
+    if (pContadorCorr != NULL)
+    {
+        return pContadorCorr->NomeContador;
+    } /* if */
 
-   } /* Fim função: CNT  &Iterador: avançar para o próximo contador */
+    return NULL;
+
+} /* Fim funï¿½ï¿½o: CNT  &Iterator: obter nome de contador corrente */
 
 /***************************************************************************
 *
-*  Função: CNT  &Iterator: iniciar percorrimento da lista em ordem alfabética
+*  Funï¿½ï¿½o: CNT  &Iterador: avanï¿½ar para o prï¿½ximo contador
 *  ****/
 
-   void CNT_IniciarIterador( )
-   {
+void CNT_IrProximoContador()
+{
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return ;
-      } /* if */
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return;
+    } /* if */
 
-      pContadorCorr = pOrgListaContadores ;
+    if (pContadorCorr != NULL)
+    {
+        pContadorCorr = pContadorCorr->pProxContador;
+    } /* if */
 
-   } /* Fim função: CNT  &Iterator: iniciar percorrimento da lista em ordem alfabética */
+} /* Fim funï¿½ï¿½o: CNT  &Iterador: avanï¿½ar para o prï¿½ximo contador */
 
 /***************************************************************************
 *
-*  Função: CNT  &Iterator: verificar se o iterador está ativo
+*  Funï¿½ï¿½o: CNT  &Iterator: iniciar percorrimento da lista em ordem alfabï¿½tica
 *  ****/
 
-   int CNT_EhAtivoIterador( )
-   {
+void CNT_IniciarIterador()
+{
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return FALSE ;
-      } /* if */
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return;
+    } /* if */
 
-      if ( pContadorCorr != NULL )
-      {
-         return TRUE ;
-      } /* if */
-      return FALSE ;
+    pContadorCorr = pOrgListaContadores;
 
-   } /* Fim função: CNT  &Iterator: verificar se o iterador está ativo */
+} /* Fim funï¿½ï¿½o: CNT  &Iterator: iniciar percorrimento da lista em ordem alfabï¿½tica */
 
 /***************************************************************************
 *
-*  Função: CNT  &Zerar todos contadores
+*  Funï¿½ï¿½o: CNT  &Iterator: verificar se o iterador estï¿½ ativo
 *  ****/
 
-   CNT_tpCondRet CNT_ZerarContadores( )
-   {
+int CNT_EhAtivoIterador()
+{
 
-      tpContador * pContadorCorr ;
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return FALSE;
+    } /* if */
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return CNT_CondRetNaoInicializado ;
-      } /* if */
+    if (pContadorCorr != NULL)
+    {
+        return TRUE;
+    } /* if */
+    return FALSE;
 
-      for( pContadorCorr  = pOrgListaContadores ;
-           pContadorCorr != NULL ;
-           pContadorCorr  = pContadorCorr->pProxContador )
-      {
-         if ( pContadorCorr->Contagem > 0 )
-         {
-            pContadorCorr->Contagem = 0 ;
-         } /* if */
-      } /* for */
-
-      return CNT_CondRetOK ;
-
-   } /* Fim função: CNT  &Zerar todos contadores */
+} /* Fim funï¿½ï¿½o: CNT  &Iterator: verificar se o iterador estï¿½ ativo */
 
 /***************************************************************************
 *
-*  Função: CNT  &Zerar contador dado
+*  Funï¿½ï¿½o: CNT  &Zerar todos contadores
 *  ****/
 
-   CNT_tpCondRet CNT_ZerarContador( char * NomeContador )
-   {
+CNT_tpCondRet CNT_ZerarContadores()
+{
 
-      tpContador * pContador ;
+    tpContador *pContadorCorr;
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return CNT_CondRetNaoInicializado ;
-      } /* if */
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return CNT_CondRetNaoInicializado;
+    } /* if */
 
-      pContador = ( tpContador * ) TBS_ProcurarSimbolo( pTabela , NomeContador ) ;
+    for (pContadorCorr = pOrgListaContadores;
+         pContadorCorr != NULL;
+         pContadorCorr = pContadorCorr->pProxContador)
+    {
+        if (pContadorCorr->Contagem > 0)
+        {
+            pContadorCorr->Contagem = 0;
+        } /* if */
+    }     /* for */
 
-      if ( pContador != NULL )
-      {
-         if ( pContador->Contagem > 0 )
-         {
-            pContador->Contagem = 0 ;
-         } /* if */
-      } else
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , "Contador \"%s\" não existe." ,
-                   NomeContador ) ;
-         return CNT_CondRetNaoContador ;
+    return CNT_CondRetOK;
 
-      } /* if */
+} /* Fim funï¿½ï¿½o: CNT  &Zerar todos contadores */
 
-      return CNT_CondRetOK ;
+/***************************************************************************
+*
+*  Funï¿½ï¿½o: CNT  &Zerar contador dado
+*  ****/
 
-   } /* Fim função: CNT  &Zerar contador dado */
+CNT_tpCondRet CNT_ZerarContador(char *NomeContador)
+{
+
+    tpContador *pContador;
+
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return CNT_CondRetNaoInicializado;
+    } /* if */
+
+    pContador = (tpContador *)TBS_ProcurarSimbolo(pTabela, NomeContador);
+
+    if (pContador != NULL)
+    {
+        if (pContador->Contagem > 0)
+        {
+            pContador->Contagem = 0;
+        } /* if */
+    }
+    else
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), "Contador \"%s\" nï¿½o existe.",
+                NomeContador);
+        return CNT_CondRetNaoContador;
+
+    } /* if */
+
+    return CNT_CondRetOK;
+
+} /* Fim funï¿½ï¿½o: CNT  &Zerar contador dado */
 
 #ifdef _DEBUG
 
 /***************************************************************************
 *
-*  Função: CNT  &Verificar a estrutura dos contadores
+*  Funï¿½ï¿½o: CNT  &Verificar a estrutura dos contadores
 *  ****/
 
-   int CNT_VerificarEstruturaContadores( )
-   {
+int CNT_VerificarEstruturaContadores()
+{
 
-      tpContador * pContador ;
-      tpContador * pContadorAnt ;
+    tpContador *pContador;
+    tpContador *pContadorAnt;
 
-      int numErros    = 0 ;
-      int numSimbolos = 0 ;
+    int numErros = 0;
+    int numSimbolos = 0;
 
-      if ( Inicializado == FALSE )
-      {
-         ExibirPrefixo( -1 ) ;
-         fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-         return 1 ;
-      } /* if */
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return 1;
+    } /* if */
 
-      /* Verificar se contadores está inicializado */
+    /* Verificar se contadores estï¿½ inicializado */
 
-         if ( Inicializado == FALSE )
-         {
-            ExibirPrefixo( -1 ) ;
-            fprintf( TST_ObterArqLog( ) , ContadorNaoInicializado ) ;
-            return 1 ;
-         } /* if */
+    if (Inicializado == FALSE)
+    {
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), ContadorNaoInicializado);
+        return 1;
+    } /* if */
 
-      /* Verificar tabela de simbolos contadores */
+    /* Verificar tabela de simbolos contadores */
 
-         if ( TBS_ValidarTabela( pTabela ) != TBS_CondRetOK )
-         {
-            numErros ++ ;
-            ExibirPrefixo( -1 ) ;
-            fprintf( TST_ObterArqLog( ) , "Tabela de símbolos (contadores) em erro." ) ;
-         } /* if */
+    if (TBS_ValidarTabela(pTabela) != TBS_CondRetOK)
+    {
+        numErros++;
+        ExibirPrefixo(-1);
+        fprintf(TST_ObterArqLog(), "Tabela de sï¿½mbolos (contadores) em erro.");
+    } /* if */
 
-      /* Verificar a lista de contadores */
+    /* Verificar a lista de contadores */
 
-         if ( pOrgListaContadores != NULL )
-         {
+    if (pOrgListaContadores != NULL)
+    {
 
-            numSimbolos  = 0 ;
+        numSimbolos = 0;
 
-            pContadorAnt = NULL ;
-            pContador    = pOrgListaContadores ;
+        pContadorAnt = NULL;
+        pContador = pOrgListaContadores;
 
-            while ( pContador != NULL ) {
+        while (pContador != NULL)
+        {
 
-            /* Verificar conteúdo de contagem */
+            /* Verificar conteï¿½do de contagem */
 
-               numSimbolos++ ;
+            numSimbolos++;
 
-               if ( pContador->Contagem < -2 )
-               {
-                  numErros ++ ;
-                  ExibirPrefixo( 0 ) ;
-                  fprintf( TST_ObterArqLog( ) , "Valor de contagem ilegal: %d  no contador %s" ,
-                           pContador->Contagem , pContador->NomeContador ) ;
-               } /* if */
+            if (pContador->Contagem < -2)
+            {
+                numErros++;
+                ExibirPrefixo(0);
+                fprintf(TST_ObterArqLog(), "Valor de contagem ilegal: %d  no contador %s",
+                        pContador->Contagem, pContador->NomeContador);
+            } /* if */
 
             /* Verificar nome de contador */
 
-               if ( pContador->NomeContador[ 0 ] == 0 )
-               {
-                  numErros   ++ ;
-                  ExibirPrefixo( 0 ) ;
-                  fprintf( TST_ObterArqLog( ) , "Nome de contador é vazio." ) ;
-               } /* if */
-
-            /* Verificar ordenação do nome de contadores */
-
-               if ( pContadorAnt != NULL )
-               {
-                  if ( strcmp( pContadorAnt->NomeContador , pContador->NomeContador ) >= 0 )
-                  {
-                     numErros ++ ;
-                     ExibirPrefixo( 0 ) ;
-                     fprintf( TST_ObterArqLog( ) , "Erro de ordenação na lsiat de contadores." ) ;
-                     fprintf( TST_ObterArqLog( ) , "\n                    Primeiro: %s" ,
-                                 pContadorAnt->NomeContador ) ;
-                     fprintf( TST_ObterArqLog( ) , "\n                    Segundo:  %s" ,
-                                 pContador->NomeContador ) ;
-                  } /* if */
-               } /* if */
-
-            /* Avançar para o próximo contador */
-
-               pContadorAnt = pContador ;
-               pContador    = pContador->pProxContador ;
-
-            } /* fim repete: Verificar a lista de contadores */
-
-            if ( numSimbolos != numContadores )
+            if (pContador->NomeContador[0] == 0)
             {
-               numErros   ++ ;
-               ExibirPrefixo( 0 ) ;
-               fprintf( TST_ObterArqLog( ) , "Número de contadores errado. Tabela é: %d  Lista é: %d" ,
-                        numContadores , numSimbolos ) ;
+                numErros++;
+                ExibirPrefixo(0);
+                fprintf(TST_ObterArqLog(), "Nome de contador ï¿½ vazio.");
             } /* if */
 
-         } /* fim ativa: Verificar a lista de contadores */
+            /* Verificar ordenaï¿½ï¿½o do nome de contadores */
 
-      return numErros ;
+            if (pContadorAnt != NULL)
+            {
+                if (strcmp(pContadorAnt->NomeContador, pContador->NomeContador) >= 0)
+                {
+                    numErros++;
+                    ExibirPrefixo(0);
+                    fprintf(TST_ObterArqLog(), "Erro de ordenaï¿½ï¿½o na lsiat de contadores.");
+                    fprintf(TST_ObterArqLog(), "\n                    Primeiro: %s",
+                            pContadorAnt->NomeContador);
+                    fprintf(TST_ObterArqLog(), "\n                    Segundo:  %s",
+                            pContador->NomeContador);
+                } /* if */
+            }     /* if */
 
-   } /* Fim função: CNT  &Verificar a estrutura dos contadores */
+            /* Avanï¿½ar para o prï¿½ximo contador */
+
+            pContadorAnt = pContador;
+            pContador = pContador->pProxContador;
+
+        } /* fim repete: Verificar a lista de contadores */
+
+        if (numSimbolos != numContadores)
+        {
+            numErros++;
+            ExibirPrefixo(0);
+            fprintf(TST_ObterArqLog(), "Nï¿½mero de contadores errado. Tabela ï¿½: %d  Lista ï¿½: %d",
+                    numContadores, numSimbolos);
+        } /* if */
+
+    } /* fim ativa: Verificar a lista de contadores */
+
+    return numErros;
+
+} /* Fim funï¿½ï¿½o: CNT  &Verificar a estrutura dos contadores */
 
 #endif
 
-
-/*****  Código das funções encapsuladas no módulo  *****/
-
+/*****  Cï¿½digo das funï¿½ï¿½es encapsuladas no mï¿½dulo  *****/
 
 /***********************************************************************
 *
-*  $FC Função: CNT  -Obter nome do contador
+*  $FC Funï¿½ï¿½o: CNT  -Obter nome do contador
 *
-*  $ED Descrição da função
-*     Obtém o ponteiro para o nome do contador
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
+*     Obtï¿½m o ponteiro para o nome do contador
 *
 ***********************************************************************/
 
-   char * ObterNomeContador( void * pDado )
-   {
+char *ObterNomeContador(void *pDado)
+{
 
-      tpContador * pContador ;
+    tpContador *pContador;
 
-      pContador = ( tpContador * ) pDado ;
-      return pContador->NomeContador ;
+    pContador = (tpContador *)pDado;
+    return pContador->NomeContador;
 
-   } /* Fim função: CNT  -Obter nome do contador */
-
+} /* Fim funï¿½ï¿½o: CNT  -Obter nome do contador */
 
 /***********************************************************************
 *
-*  $FC Função: CNT  -Montar nome de arquivo
+*  $FC Funï¿½ï¿½o: CNT  -Montar nome de arquivo
 *
-*  $ED Descrição da função
-*     Adiciona o nome de extensão caso o nome de arquivo não o contenha
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
+*     Adiciona o nome de extensï¿½o caso o nome de arquivo nï¿½o o contenha
 *
 ***********************************************************************/
 
-   void MontarNomeArquivo( char * NomeArquivo ,
-                           char * NomeExtensao )
-   {
+void MontarNomeArquivo(char *NomeArquivo,
+                       char *NomeExtensao)
+{
 
-      int    i ;
+    int i;
 
-      for( i = strlen( NomeArquivo ) ; i > 0 ; i -- )
-      {
-         if ( NomeArquivo[ i ] == '.' )
-         {
-            return ;
-         } else if ( NomeArquivo[ i ] == '\\' )
-         {
-            break ;
-         } /* if */
-      } /* for */
+    for (i = strlen(NomeArquivo); i > 0; i--)
+    {
+        if (NomeArquivo[i] == '.')
+        {
+            return;
+        }
+        else if (NomeArquivo[i] == '\\')
+        {
+            break;
+        } /* if */
+    }     /* for */
 
-      strcat( NomeArquivo , "." ) ;
-      strcat( NomeArquivo , NomeExtensao ) ;
+    strcat(NomeArquivo, ".");
+    strcat(NomeArquivo, NomeExtensao);
 
-   } /* Fim função: CNT  -Montar nome de arquivo */
-
+} /* Fim funï¿½ï¿½o: CNT  -Montar nome de arquivo */
 
 /***********************************************************************
 *
-*  $FC Função: CNT  -Ler linha limpa
+*  $FC Funï¿½ï¿½o: CNT  -Ler linha limpa
 *
-*  $ED Descrição da função
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
 *     Le linha acumulador limpa
 *
 *  $FV Valor retornado
-*     Retorna o número de linhas lidas
+*     Retorna o nï¿½mero de linhas lidas
 *       -1 se fim de arquivo
 *       -2 se erro de leitura
 *
 ***********************************************************************/
 
-   int LerLinha( FILE * pArquivo )
-   {
+int LerLinha(FILE *pArquivo)
+{
 
-      char * pLido ;
+    char *pLido;
 
-      int i ;
+    int i;
 
-      /* Tratar fim de arquivo em contadores */
+    /* Tratar fim de arquivo em contadores */
 
-         if ( feof( pArquivo ))
-         {
-            BufferLeitura[ 0 ]  = 0 ;
-            return -1 ;
-         } /* if */
+    if (feof(pArquivo))
+    {
+        BufferLeitura[0] = 0;
+        return -1;
+    } /* if */
 
-      /* Ler a linha de contadores */
+    /* Ler a linha de contadores */
 
-         pLido = fgets( BufferLeitura , DIM_BUFFER , pArquivo ) ;
+    pLido = fgets(BufferLeitura, DIM_BUFFER, pArquivo);
 
-         if ( pLido != NULL )
-         {
-            numLinha ++ ;
-         } else
-         {
-            BufferLeitura[ 0 ] = 0 ;
-            if ( feof( pArquivo ))
-            {
-               return -1 ;
-            } else
-            {
-               ExibirPrefixo( numLinha ) ;
-               fprintf( TST_ObterArqLog( ) , "Erro de leitura." ) ;
-               return -2 ;
-            } /* if */
-         } /* if */
+    if (pLido != NULL)
+    {
+        numLinha++;
+    }
+    else
+    {
+        BufferLeitura[0] = 0;
+        if (feof(pArquivo))
+        {
+            return -1;
+        }
+        else
+        {
+            ExibirPrefixo(numLinha);
+            fprintf(TST_ObterArqLog(), "Erro de leitura.");
+            return -2;
+        } /* if */
+    }     /* if */
 
-      /* Limpar a linha de contadores */
+    /* Limpar a linha de contadores */
 
-         for ( i = strlen( BufferLeitura ) - 1 ; i >= 0 ; i-- )
-         {
-            if ( strchr( TRIM_CHAR , BufferLeitura[ i ] ) == NULL )
-            {
-               break ;
-            } /* if */
-         } /* for */
+    for (i = strlen(BufferLeitura) - 1; i >= 0; i--)
+    {
+        if (strchr(TRIM_CHAR, BufferLeitura[i]) == NULL)
+        {
+            break;
+        } /* if */
+    }     /* for */
 
-         BufferLeitura[ i + 1 ] = 0 ;
+    BufferLeitura[i + 1] = 0;
 
-         return i + 1 ;
+    return i + 1;
 
-   } /* Fim função: CNT  -Ler linha limpa */
-
+} /* Fim funï¿½ï¿½o: CNT  -Ler linha limpa */
 
 /***********************************************************************
 *
-*  $FC Função: CNT  -Ler arquivo de definição de contadores
+*  $FC Funï¿½ï¿½o: CNT  -Ler arquivo de definiï¿½ï¿½o de contadores
 *
-*  $ED Descrição da função
-*     Lê o conjunto de contadores definidos em um arquivo
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
+*     Lï¿½ o conjunto de contadores definidos em um arquivo
 *
-*  $EP Parâmetros
+*  $EP Parï¿½metros
 *     NomeArquivo
 *     Fonte       - identifica o tipo de arquivo
 *                      ARQUIVO_DEFINICAO
 *                      ARQUIVO_ACUMULADOR
-*                   A fonte é utilizada para controlar duplicidade de
-*                   declaração de contadores
+*                   A fonte ï¿½ utilizada para controlar duplicidade de
+*                   declaraï¿½ï¿½o de contadores
 *
 *  $FV Valor retornado
-*     Retorna o número de erros encontrados
+*     Retorna o nï¿½mero de erros encontrados
 *
 *  $FA Arquivos manipulados
 *     Formato do arquivo de contadores
 *
-*     Cada linha poderá ser uma de
-*       //              - comentário, ignorado
+*     Cada linha poderï¿½ ser uma de
+*       //              - comentï¿½rio, ignorado
 *       linha em branco - ignorada
 *       nome            - nome de um contador, inicializado para 0
 *       nome\=vv        - nome de um contador inicializado para vv
@@ -1028,226 +1038,230 @@ const char ContadorNaoInicializado[ ] = "Módulo contadores ainda não foi inicial
 *                      vv == -2 contador proibido.
 *                      vv <= -3 erro de dado
 *     Nomes podem ser quaisquer strings, podendo conter brancos.
-*     Os caracteres em branco finais serão eliminados
+*     Os caracteres em branco finais serï¿½o eliminados
 *
-*  $EIU Interface com usuário pessoa
-*     Erro - arquivo não existe e é de definição
+*  $EIU Interface com usuï¿½rio pessoa
+*     Erro - arquivo nï¿½o existe e ï¿½ de definiï¿½ï¿½o
 *     Erro - nome definido mais de uma vez
 *
 ***********************************************************************/
 
-   int LerContadores( char * NomeArquivo , int Fonte )
-   {
+int LerContadores(char *NomeArquivo, int Fonte)
+{
 
-      FILE * pArq ;
-      int    numErros ;
-      int    numLidos ;
+    FILE *pArq;
+    int numErros;
+    int numLidos;
 
-      tpContador * pContador ;
-      char NomeContador[ DIM_NOME_CONTADOR + 1 ] ;
+    tpContador *pContador;
+    char NomeContador[DIM_NOME_CONTADOR + 1];
 
-      char OpAtribuicao ;
-      int  numCampos ;
-      long ValorContagem ;
+    char OpAtribuicao;
+    int numCampos;
+    long ValorContagem;
 
-      tpContador * pContadorCorr ;
-      tpContador * pContadorAnt ;
+    tpContador *pContadorCorr;
+    tpContador *pContadorAnt;
 
-      numErros   = 0 ;
-      numLinha   = 0 ;
-      pArq       = NULL ;
+    numErros = 0;
+    numLinha = 0;
+    pArq = NULL;
 
-      /* Abrir arquivo de contadores para leitura */
+    /* Abrir arquivo de contadores para leitura */
 
-         pArq = fopen( NomeArquivo , "r" ) ;
-         if ( pArq == NULL )
-         {
-            if ( Fonte == ARQUIVO_DEFINICAO )
+    pArq = fopen(NomeArquivo, "r");
+    if (pArq == NULL)
+    {
+        if (Fonte == ARQUIVO_DEFINICAO)
+        {
+            ExibirPrefixo(-1);
+            fprintf(TST_ObterArqLog(), "Nï¿½o abriu o arquivo \"%s\"",
+                    NomeArquivo);
+            numErros++;
+        } /* if */
+
+        return numErros;
+    } /* if */
+
+    /* Interpretar todas as linhas do arquivo de contadores */
+
+    numLidos = LerLinha(pArq);
+
+    while (numLidos >= 0)
+    {
+
+        /* Tratar linha de contadores em branco */
+
+        if (numLidos == 0)
+        {
+
+        } /* fim ativa: Tratar linha de contadores em branco */
+
+        /* Tratar linha de contadores comentï¿½rio */
+
+        else if (memcmp(BufferLeitura, COMENTARIO, strlen(COMENTARIO)) == 0)
+        {
+
+        } /* fim ativa: Tratar linha de contadores comentï¿½rio */
+
+        /* Tratar linha de declaraï¿½ï¿½o de contador */
+
+        else
+        {
+
+            /* Extrair nome e inicializaï¿½ï¿½o de linha */
+
+            ValorContagem = 0;
+
+            numCampos = sscanf(BufferLeitura, " %" STR_DIM_NOME_CONTADOR "[^\\]\\%c%ld",
+                               NomeContador, &OpAtribuicao, &ValorContagem);
+
+            if (numCampos == 3)
             {
-               ExibirPrefixo( -1 ) ;
-               fprintf( TST_ObterArqLog( ) , "Não abriu o arquivo \"%s\"" ,
-                        NomeArquivo ) ;
-               numErros ++ ;
+                if (OpAtribuicao != OP_ATRIBUICAO)
+                {
+                    ExibirPrefixo(numLinha);
+                    fprintf(TST_ObterArqLog(), "\nOperador atribuiï¿½ï¿½o incorreto: %s",
+                            BufferLeitura);
+                    numErros++;
+                } /* if */
+
+                if (ValorContagem <= -3)
+                {
+                    ExibirPrefixo(numLinha);
+                    fprintf(TST_ObterArqLog(), "\nValor inicial da contagem ilegal: %s",
+                            BufferLeitura);
+                    numErros++;
+                } /* if */
+            }
+            else if (numCampos != 1)
+            {
+                ExibirPrefixo(numLinha);
+                fprintf(TST_ObterArqLog(), "\nFormato correto: nome\\=valor. ï¿½: %s",
+                        BufferLeitura);
+                numErros++;
             } /* if */
 
-            return numErros ;
-         } /* if */
+            /* Criar estrutura contador */
 
-      /* Interpretar todas as linhas do arquivo de contadores */
+            pContador = (tpContador *)malloc(sizeof(tpContador));
+            pContador->pProxContador = NULL;
+            pContador->Contagem = ValorContagem;
+            pContador->Fonte = Fonte;
+            strcpy(pContador->NomeContador, NomeContador);
 
-         numLidos = LerLinha( pArq ) ;
+            /* Inserir contador na tabela */
 
-         while ( numLidos >= 0 ) {
-
-         /* Tratar linha de contadores em branco */
-
-            if ( numLidos == 0 )
+            if (TBS_InserirSimbolo(pTabela, pContador) != TBS_CondRetOK)
             {
 
-            } /* fim ativa: Tratar linha de contadores em branco */
+                free(pContador);
 
-         /* Tratar linha de contadores comentário */
+                pContador = (tpContador *)TBS_ProcurarSimbolo(pTabela, NomeContador);
+                TST_ASSERT(pContador != NULL);
 
-            else if ( memcmp( BufferLeitura , COMENTARIO , strlen( COMENTARIO )) == 0 )
-            {
+                if (Fonte == ARQUIVO_ACUMULADOR)
+                {
+                    ExibirPrefixo(numLinha);
+                    fprintf(TST_ObterArqLog(), "Nome de contador duplicado em acumulador: %s",
+                            NomeContador);
+                    numErros++;
+                }
+                else
+                {
+                    if (pContador->Fonte == ARQUIVO_DEFINICAO)
+                    {
+                        ExibirPrefixo(numLinha);
+                        fprintf(TST_ObterArqLog(), "Nome de contador duplicado em arquivo de definiï¿½ï¿½o: %s",
+                                NomeContador);
+                        numErros++;
+                    }
+                    else
+                    {
+                        pContador->Fonte = ARQUIVO_DEFINICAO;
+                    } /* if */
+                }     /* if */
 
-            } /* fim ativa: Tratar linha de contadores comentário */
+            } /* fim ativa: Inserir contador na tabela */
 
-         /* Tratar linha de declaração de contador */
+            /* Inserir contador em lista ordenada */
 
             else
             {
 
-               /* Extrair nome e inicialização de linha */
+                numContadores++;
 
-                  ValorContagem = 0 ;
+                pContadorCorr = pOrgListaContadores;
+                pContadorAnt = NULL;
 
-                  numCampos = sscanf( BufferLeitura , " %" STR_DIM_NOME_CONTADOR "[^\\]\\%c%ld" ,
-                                      NomeContador , &OpAtribuicao , &ValorContagem ) ;
+                while (pContadorCorr != NULL)
+                {
+                    if (strcmp(NomeContador,
+                               pContadorCorr->NomeContador) < 0)
+                    {
+                        break;
+                    } /* if */
+                    pContadorAnt = pContadorCorr;
+                    pContadorCorr = pContadorCorr->pProxContador;
+                } /* while */
 
-                  if ( numCampos == 3 )
-                  {
-                     if ( OpAtribuicao != OP_ATRIBUICAO )
-                     {
-                        ExibirPrefixo( numLinha ) ;
-                        fprintf( TST_ObterArqLog( ) , "\nOperador atribuição incorreto: %s" ,
-                                 BufferLeitura ) ;
-                        numErros ++ ;
-                     } /* if */
+                if (pContadorAnt == NULL)
+                {
+                    pContador->pProxContador = pOrgListaContadores;
+                    pOrgListaContadores = pContador;
+                }
+                else
+                {
+                    pContador->pProxContador = pContadorCorr;
+                    pContadorAnt->pProxContador = pContador;
+                } /* if */
 
-                     if ( ValorContagem <= -3 )
-                     {
-                        ExibirPrefixo( numLinha ) ;
-                        fprintf( TST_ObterArqLog( ) , "\nValor inicial da contagem ilegal: %s" ,
-                                 BufferLeitura ) ;
-                        numErros ++ ;
-                     } /* if */
+            } /* fim ativa: Inserir contador em lista ordenada */
 
-                  } else if ( numCampos != 1 )
-                  {
-                     ExibirPrefixo( numLinha ) ;
-                     fprintf( TST_ObterArqLog( ) , "\nFormato correto: nome\\=valor. É: %s" ,
-                              BufferLeitura ) ;
-                     numErros ++ ;
-                  } /* if */
+        } /* fim ativa: Tratar linha de declaraï¿½ï¿½o de contador */
 
-               /* Criar estrutura contador */
+        /* Ler nova linha de contador */
 
-                  pContador = ( tpContador * ) malloc( sizeof( tpContador )) ;
-                  pContador->pProxContador = NULL ;
-                  pContador->Contagem      = ValorContagem ;
-                  pContador->Fonte         = Fonte ;
-                  strcpy( pContador->NomeContador , NomeContador ) ;
+        numLidos = LerLinha(pArq);
 
-               /* Inserir contador na tabela */
+    } /* fim repete: Interpretar todas as linhas do arquivo de contadores */
 
-                  if ( TBS_InserirSimbolo( pTabela , pContador ) != TBS_CondRetOK  )
-                  {
+    /* Fechar o arquivo de contadores lido */
 
-                     free( pContador ) ;
+    if (pArq != NULL)
+    {
+        fclose(pArq);
+    } /* if */
 
-                     pContador = ( tpContador * ) TBS_ProcurarSimbolo( pTabela, NomeContador ) ;
-                     TST_ASSERT( pContador != NULL ) ;
+    return numErros;
 
-                     if ( Fonte == ARQUIVO_ACUMULADOR )
-                     {
-                        ExibirPrefixo( numLinha ) ;
-                        fprintf( TST_ObterArqLog( ) , "Nome de contador duplicado em acumulador: %s" ,
-                                 NomeContador ) ;
-                        numErros ++ ;
-                     } else {
-                        if ( pContador->Fonte == ARQUIVO_DEFINICAO )
-                        {
-                           ExibirPrefixo( numLinha ) ;
-                           fprintf( TST_ObterArqLog( ) , "Nome de contador duplicado em arquivo de definição: %s" ,
-                                    NomeContador ) ;
-                           numErros ++ ;
-                        } else {
-                           pContador->Fonte = ARQUIVO_DEFINICAO ;
-                        } /* if */
-                     } /* if */
-
-                  } /* fim ativa: Inserir contador na tabela */
-
-               /* Inserir contador em lista ordenada */
-
-                  else
-                  {
-
-                     numContadores ++ ;
-
-                     pContadorCorr = pOrgListaContadores ;
-                     pContadorAnt  = NULL ;
-
-                     while ( pContadorCorr != NULL )
-                     {
-                        if ( strcmp( NomeContador ,
-                                     pContadorCorr->NomeContador ) < 0 )
-                        {
-                           break ;
-                        } /* if */
-                        pContadorAnt  = pContadorCorr ;
-                        pContadorCorr = pContadorCorr->pProxContador ;
-                     } /* while */
-
-                     if ( pContadorAnt == NULL )
-                     {
-                        pContador->pProxContador = pOrgListaContadores ;
-                        pOrgListaContadores      = pContador ;
-                     } else
-                     {
-                        pContador->pProxContador    = pContadorCorr ;
-                        pContadorAnt->pProxContador = pContador ;
-                     } /* if */
-
-                  } /* fim ativa: Inserir contador em lista ordenada */
-
-            } /* fim ativa: Tratar linha de declaração de contador */
-
-         /* Ler nova linha de contador */
-
-            numLidos = LerLinha( pArq ) ;
-
-         } /* fim repete: Interpretar todas as linhas do arquivo de contadores */
-
-      /* Fechar o arquivo de contadores lido */
-
-         if ( pArq != NULL )
-         {
-            fclose( pArq ) ;
-         } /* if */
-
-      return numErros ;
-
-   } /* Fim função: CNT  -Ler arquivo de definição de contadores */
-
+} /* Fim funï¿½ï¿½o: CNT  -Ler arquivo de definiï¿½ï¿½o de contadores */
 
 /***********************************************************************
 *
-*  $FC Função: CNT  -Exibir prefixo de mensagem
+*  $FC Funï¿½ï¿½o: CNT  -Exibir prefixo de mensagem
 *
-*  $ED Descrição da função
-*     Exibe o prefixo de mensagens de erro geradas pelo módulo de contagem
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
+*     Exibe o prefixo de mensagens de erro geradas pelo mï¿½dulo de contagem
 *
 ***********************************************************************/
 
-   void ExibirPrefixo( int numLinha )
-   {
+void ExibirPrefixo(int numLinha)
+{
 
-      char Msg[ DIM_BUFFER ] ;
+    char Msg[DIM_BUFFER];
 
-      Msg[ 0 ] = 0 ;
+    Msg[0] = 0;
 
-      if ( numLinha > 0 )
-      {
-         sprintf( Msg , "  Linha: %5d " , numLinha ) ;
-      } /* if */
+    if (numLinha > 0)
+    {
+        sprintf(Msg, "  Linha: %5d ", numLinha);
+    } /* if */
 
-      TST_ContarFalhas( ) ;
+    TST_ContarFalhas();
 
-      TST_ExibirPrefixo( ERRO_CONTADOR , Msg ) ;
+    TST_ExibirPrefixo(ERRO_CONTADOR, Msg);
 
-   } /* Fim função: CNT  -Exibir prefixo de mensagem */
+} /* Fim funï¿½ï¿½o: CNT  -Exibir prefixo de mensagem */
 
-/********** Fim do módulo de implementação: CNT  Contadores de passagem **********/
-
+/********** Fim do mï¿½dulo de implementaï¿½ï¿½o: CNT  Contadores de passagem **********/

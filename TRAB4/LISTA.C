@@ -18,11 +18,14 @@
 *
 *******************************************************************************/
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "LISTA.H"
 
+#ifdef _DEBUG
+#include "CONTA.H"
+#include "CESPDIN.H"
+#endif
 
 /*******************************************************************************
 *
@@ -49,11 +52,11 @@ typedef struct LIS_tagNoLista
 #ifdef _DEBUG
     LIS_tpCabecaLista *pCabeca; /* Ponteiro para a cabeca da estrutura */
     char tipoEstrutura;         /* Campo que assinala o tipo da estrutura */
-    int tamLista;               /* Tamanho (em bytes) da lista */
+    int tamNo;                  /* Tamanho em bytes de cada nó da lista */
+    int tamLista;               /* Tamanho em bytes da lista (soma dos tamanhos dos nós) */
 #endif
 
 } LIS_tpNoLista;
-
 
 /*******************************************************************************
 *
@@ -87,6 +90,8 @@ typedef struct LIS_tagLista
 #ifdef _DEBUG
     char tipoEstrutura; /* Campo que assinala o tipo da estrutura */
     int numNos;         /* Número de nós da lista */
+    int tamNo;          /* Tamanho em bytes de cada nó da lista */
+    int tamLista;       /* Tamanho em bytes da lista (soma dos tamanhos dos nós) */
 #endif
 
 } LIS_tpCabecaLista;
@@ -104,9 +109,7 @@ static LIS_tpNoLista *LIS_criaNo(void *pConteudo
 #endif
 );
 
-
 /***************** Código das funções exportadas pelo módulo ******************/
-
 
 /*******************************************************************************
 *
@@ -120,6 +123,7 @@ LIS_tpCondRet LIS_criarLista(void (*ExcluirValor)(void *pDado), LIS_tppCabecaLis
 #ifdef _DEBUG
     if (!ExcluirValor)
         return LIS_CondRetFuncaoDeExclusaoNaoExiste;
+    CED_InicializarControlador();
 #endif
 
     *pCabecaDaLista = (LIS_tpCabecaLista *)malloc(sizeof(LIS_tpCabecaLista));
@@ -133,13 +137,15 @@ LIS_tpCondRet LIS_criarLista(void (*ExcluirValor)(void *pDado), LIS_tppCabecaLis
 #ifdef _DEBUG
     (*pCabecaDaLista)->tipoEstrutura = 'l';
     (*pCabecaDaLista)->numNos = 0;
+    (*pCabecaDaLista)->tamLista = 0;
+    (*pCabecaDaLista)->tamNo = sizeof(LIS_tpNoLista);
+    (*pCabecaDaLista)->pNoUltimo = NULL;
 #endif
 
     (*pCabecaDaLista)->ExcluirValor = ExcluirValor;
 
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
-
 
 /*******************************************************************************
 *
@@ -180,7 +186,6 @@ LIS_tpCondRet LIS_DestruirLista(LIS_tppCabecaLista pCabecaDaLista)
 
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
-
 
 /*******************************************************************************
 *
@@ -247,7 +252,6 @@ LIS_tpCondRet LIS_InserirNoAntes(LIS_tppCabecaLista pCabecaDaLista, void *pConte
 
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
-
 
 /*******************************************************************************
 *
@@ -318,7 +322,6 @@ LIS_tpCondRet LIS_InserirNoApos(LIS_tppCabecaLista pCabecaDaLista, void *pConteu
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
-
 /*******************************************************************************
 *
 *	$FC Função:
@@ -368,7 +371,6 @@ LIS_tpCondRet LIS_ExcluirNo(LIS_tppCabecaLista pCabecaDaLista)
     /* Retorna condição de teste bem sucedido ou condição de erro */
 }
 
-
 /*******************************************************************************
 *
 *	$FC Função:
@@ -392,7 +394,6 @@ LIS_tpCondRet LIS_obterConteudo(LIS_tppCabecaLista pCabecaDaLista, void **ppCont
 
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
-
 
 /*******************************************************************************
 *
@@ -418,7 +419,6 @@ LIS_tpCondRet LIS_vaiParaProximoNo(LIS_tppCabecaLista pCabecaDaLista)
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
-
 /*******************************************************************************
 *
 *	$FC Função:
@@ -442,7 +442,6 @@ LIS_tpCondRet LIS_vaiParaNoAnterior(LIS_tppCabecaLista pCabecaDaLista)
 
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
-
 
 #ifdef _DEBUG
 /*******************************************************************************
@@ -529,16 +528,19 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int const deturp
         break;
 
     case 11: /* Atribui lixo ao ponteiro corrente */
-        pCabecaDaLista->pNoCorrente = (LIS_tpNoLista*) &lixo;
+        pCabecaDaLista->pNoCorrente = (LIS_tpNoLista *)&lixo;
         break;
 
     case 12: /* Atribui lixo ao ponteiro de origem */
-        pCabecaDaLista->pNoPrimeiro = (LIS_tpNoLista*) &lixo;
+        pCabecaDaLista->pNoPrimeiro = (LIS_tpNoLista *)&lixo;
         break;
 
     case 13: /* Atribui NULL ao ponteiro para função de destruição do conteúdo
     de um nó */
         pCabecaDaLista->ExcluirValor = NULL;
+
+    case 14: /* Altera tamanho do nó */
+        pCabecaDaLista->pNoCorrente->tamNo = sizeof(LIS_tpNoLista) * 2;
 
     default:
         break;
@@ -547,14 +549,13 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int const deturp
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
-
 /*******************************************************************************
 *
 *	$FC Função:
 *       LIS Verificador.
 *
 *******************************************************************************/
-int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista, int const numFalhasEsperadas)
+int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
 {
 
     int numFalhasObservadas, numNos;
@@ -564,31 +565,48 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista, int const numFalhasEspera
     if (!pCabecaDaLista)
         return LIS_CondRetListaNaoExiste;
 
+    CNT_InicializarContadores("contagemacumulada.txt");
+    CNT_IniciarContagem();
+    CNT_LerContadores("contadores.txt");
+
     numFalhasObservadas = 0; /* Inicialização do contador de número de falhas */
 
     if (!pCabecaDaLista->ExcluirValor)
     /* Função de destruição do conteúdo de um nó é nula */
+    {
         ++numFalhasObservadas;
+        CNT_Contar("13", 0);
+    }
 
     if (pCabecaDaLista->numNos && !pCabecaDaLista->pNoCorrente)
     /* Lista não é vazia (numNos != 0) mas nó corrente é nulo */
+    {
         ++numFalhasObservadas;
+        CNT_Contar("9", 0);
+    }
 
     if (pCabecaDaLista->numNos && !pCabecaDaLista->pNoPrimeiro)
     /* Lista não é vazia (numNos != 0) mas primeiro nó é nulo */
+    {
         ++numFalhasObservadas;
+        CNT_Contar("10", 0);
+    }
 
-    if (pCabecaDaLista->numNos && pCabecaDaLista->pNoCorrente->pCabeca!=pCabecaDaLista)
+    if (pCabecaDaLista->numNos && pCabecaDaLista->pNoCorrente->pCabeca != pCabecaDaLista)
     /* Lista não é vazia (numNos != 0) e ponteiro corrente aponta para lixo */
+    {
         ++numFalhasObservadas;
-
-    if (pCabecaDaLista->numNos && pCabecaDaLista->pNoPrimeiro->pCabeca!=pCabecaDaLista)
+        CNT_Contar("11", 0);
+    }
+    if (pCabecaDaLista->numNos && pCabecaDaLista->pNoPrimeiro->pCabeca != pCabecaDaLista)
     /* Lista não é vazia (numNos != 0) e ponteiro do primeiro nó aponta para
     lixo */
+    {
         ++numFalhasObservadas;
-
+        CNT_Contar("12", 0);
+    }
     /* Vamos caminhar do primeiro nó até o último nó checando cada nó */
-    
+
     pNo = pCabecaDaLista->pNoPrimeiro;
 
     numNos = pCabecaDaLista->numNos;
@@ -599,34 +617,41 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista, int const numFalhasEspera
         /* Não chegou no final da lista mas o número de nós é zero */
         {
             ++numFalhasObservadas;
+            CNT_Contar("4", 0);
             break;
         }
 
         if (pCabecaDaLista->tipoEstrutura != pNo->tipoEstrutura)
         /* Tipo da estrutura apontado pela cabeça é diferente do apontado pelo
         nó */
+        {
             ++numFalhasObservadas;
+            CNT_Contar("7", 0);
+        }
+
+        if (pCabecaDaLista->tamNo != pNo->tamNo)
+        /* Tamanho do nó apontado pela cabeça é diferente do apontado pelo
+        nó */
+        {
+            ++numFalhasObservadas;
+            CNT_Contar("14", 0);
+        }
 
         if (!pNo->pConteudo) /* Conteúdo do nó é nulo */
+        {
             ++numFalhasObservadas;
-
-        if (pNo->pNoProximo && pNo->pNoProximo->pNoAnterior!=pNo)
-        /* Anterior do próximo não é o atual (algum dos ponteiros aponta para
-        lixo) */
-            ++numFalhasObservadas;
-
-        if (pNo->pNoAnterior && pNo->pNoAnterior->pNoProximo!=pNo)
-            /* Sucessor do anterior não é o atual (algum dos ponteiros aponta para
-        lixo) */
-            ++numFalhasObservadas;
+            CNT_Contar("6", 0);
+        }
 
         pNo = pNo->pNoProximo; /* Vai para próximo nó */
         --numNos;
     }
 
     if (numNos) /* Chegou num nó nulo, mas o número de nós não é zero */
+    {
         ++numFalhasObservadas;
-
+        CNT_Contar("2", 0);
+    }
     /* Vamos caminhar do último nó até o primeiro nó checando cada nó */
 
     pNo = pCabecaDaLista->pNoUltimo;
@@ -639,6 +664,8 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista, int const numFalhasEspera
         /* Não chegou no início da lista mas o número de nós é zero */
         {
             ++numFalhasObservadas;
+            CNT_Contar("5", 0);
+
             break;
         }
 
@@ -646,10 +673,24 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista, int const numFalhasEspera
         /* Tipo da estrutura apontado pela cabeça é diferente do apontado pelo
         nó. Checamos na volta tamém pois pode ser que não tenhamos analisado
         todos os nós da lista se o prox de um nó intermediário seja nulo */
+        {
             ++numFalhasObservadas;
+            CNT_Contar("7", 0);
+        }
+
+        if (pCabecaDaLista->tamNo != pNo->tamNo)
+        /* Tamanho do nó apontado pela cabeça é diferente do apontado pelo
+        nó */
+        {
+            ++numFalhasObservadas;
+            CNT_Contar("14", 0);
+        }
 
         if (!pNo->pConteudo) /* Conteúdo do nó é nulo */
+        {
             ++numFalhasObservadas;
+            CNT_Contar("6", 0);
+        }
         /* Checamos na volta tamém pois pode ser que não tenhamos analisado
         todos os nós da lista se o prox de um nó intermediário seja nulo */
 
@@ -658,16 +699,21 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista, int const numFalhasEspera
     }
 
     if (numNos) /* Chegou num nó nulo, mas o número de nós não é zero */
+    {
         ++numFalhasObservadas;
+        CNT_Contar("3", 0);
+    }
+
+    CNT_GravarContadores("contagemacumulada.txt");
+    CNT_PararContagem();
+    CNT_VerificarContagem();
+    CNT_TerminarContadores();
 
     return numFalhasObservadas;
-
 }
 #endif
 
-
 /***************** Código das funções encapsuladas no módulo ******************/
-
 
 /*******************************************************************************
 *
@@ -726,7 +772,6 @@ LIS_tpCondRet LIS_liberarNo(LIS_tppCabecaLista pCabecaDaLista, LIS_tpNoLista *pN
 *
 *******************************************************************************/
 
-
 /*******************************************************************************
 *
 *	$FC Função:
@@ -776,7 +821,10 @@ LIS_tpNoLista *LIS_criaNo(void *pConteudo
     pCabecaDaLista->numNos++;      /* Incrementa número de nós da lista */
     pNo->pCabeca = pCabecaDaLista; /* Ponteiro para a cabeca da estrutura */
     pNo->tipoEstrutura = 'l';
-// pNo->tamLista +=  /* Tamanho (em bytes) da lista */
+    pNo->tamNo = sizeof(LIS_tpNoLista);
+    pCabecaDaLista->tamLista += pNo->tamNo;
+    pNo->tamLista = pCabecaDaLista->tamLista;
+    CED_MarcarEspacoNaoAtivo(pNo->pConteudo);
 #endif
 
     return pNo;

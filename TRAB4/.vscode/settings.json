@@ -2,6 +2,8 @@
     "files.associations": {
         "LISTA.C": "cpp",
         "LABIRINTO.C": "cpp",
-        "MATRIZ.C": "cpp"
+        "MATRIZ.C": "cpp",
+        "CESPDIN.C": "cpp",
+        "CONTA.C": "cpp"
     }
 }

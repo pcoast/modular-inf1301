@@ -435,23 +435,19 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int deturpacao);
 *       $P pCabecaDaLista - O parâmetro que receberá o endereço do ponteiro para
 *           a cabeça da lista.
 *           Este parâmetro é passado por referência.
-*       $P numFalhasEsperadas - O parâmetro que receberá o número de
-*           deturpações feitas.
-*           Este parâmetro é passado por valor.
 *
 *******************************************************************************/
-LIS_tpCondRet LIS_verificador(LIS_tppCabecaLista pCabecaDaLista, int const numFalhasEsperadas);
+int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista);
 /*******************************************************************************
 *
 *	$AS Assertivas de saída esperadas:
-*       O número correto ou incorreto de deturpações foi detectado.
+*       O número correto de deturpações foi detectado ou programa voou.
 *		Valem as assertivas estruturais da lista duplamente encadeada com
 *       cabeça.
 *
 *
 *   $FV Valor retornado
-*       LIS_CondRetOK
-*       LIS_CondRetNumFalhasIncorreto
+*       numFalhasObservadas
 *
 *******************************************************************************/
 #endif
