@@ -1,0 +1,16 @@
+Documentação de Teste do Módulo Lista Autoverificável
+
+Comandos disponíveis:
+    =criarlista                   <inxLista>
+    =destruirlista                <inxLista>
+    =esvaziarlista                <inxLista>
+    =inselemantes                 <inxLista>  <string>  <CondRetEsp>
+    =inselemapos                  <inxLista>  <string>  <CondRetEsp>
+    =obtervalorelem               <inxLista>  <string>  <CondRetEsp>
+    =excluirelem                  <inxLista>  <CondRetEsp>
+    =irprox						  <inxLista>
+    =iranterior                   <inxLista>
+
+ - Com Instrumentação Ligada:
+    =deturpa	                    <inxLista>  <deturpacao>
+    =verifica						<inxLista>  <numFalhas>
