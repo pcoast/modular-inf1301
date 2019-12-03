@@ -74,8 +74,8 @@ typedef enum
     LIS_CondRetConteudoNaoExiste,
     /* Tentou incluir um conteúdo nulo em um nó da lista */
 
-    LIS_CondRetNumFalhasIncorreto,
-    /* Verificador encontrou número de falhas incorreto */
+    LIS_CondRetTamDesigual,
+    /* Tamanho da lista apontado pela cabeça não é o apontado pelo nó novo */
 
 #endif
 

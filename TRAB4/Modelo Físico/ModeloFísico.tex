@@ -10,10 +10,11 @@
   ASSERTIVAS\\
   e\\
   EXEMPLO FÍSICO\\
-  da aplicação\\
-  LABIRINTO\\
+  do módulo\\
+  LISTA DUPLAMENTE\\
+  ENCADEADA COM CABEÇA\\
   ~\\
-  \LARGE{Versão 2.0}\\
+  \LARGE{Versão 1.0}\\
   ~\\
   INF1301 - Programação Modular\\ DI/PUC-Rio
   \end{flushright}
@@ -44,19 +45,25 @@
 
 \chapter{Assertivas Estruturais}\setlength{\parskip}{1\baselineskip}
 
-    Se o pNoCorr->pNoDireita diferente de NULL, então pNoCorr->pNoDireita->pNoEsquerda = pNoCorr;
+\sloppy$\forall \textrm{ nó } pNo \in \textrm{lista : } pNo \rightarrow pNoProximo \ != \ NULL \implies pNo \rightarrow pNoProximo \rightarrow pNoAnterior == pNo$
 
-    Se o pNoCorr->pNoEsquerda diferente de NULL, então pNoCorr->pNoEsquerda->pNoDireita = pNoCorr;
+\noindent\sloppy$\forall \textrm{ nó } pNo \in \textrm{lista : } pNo \rightarrow pNoAnterior \ != \ NULL \implies pNo \rightarrow pNoAnterior \rightarrow pNoProximo == pNo$
 
-    Se o pNoCorr->pNoCima diferente de NULL, então pNoCorr->pNoCima->pNoBaixo = pNoCorr;
+\noindent O tipo de estrutura apontado pela cabeça da lista é igual ao tipo de estrutura apontado por cada nó.
 
-    Se o pNoCorr->pNoBaixo diferente de NULL, então pNoCorr->pNoBaixo->pNoCima = pNoCorr;
-    \setlength{\parskip}{1pt}
+\noindent O tamanho do nó apontado pela cabeça da lista é igual ao tamanho do nó apontado por cada nó.
+
+\noindent O tamanho da lista apontado pelo nó mais recentemente adicionado é igual ao tamanho da lista apontado pela cabeça.
+
+
+\noindent\sloppy$\forall \textrm{ nó } pNo \in \textrm{lista : } pNo \rightarrow pCabeca == pCabecaDaLista$
+
+\setlength{\parskip}{1pt}
 \chapter{Exemplo Físico}
 
 \begin{center}
-    
-    \includegraphics[width=\textwidth,height=27\baselineskip]{exemplo.png}
+
+    \includegraphics[height=27\baselineskip]{exemplo.png}
 
 \end{center}
 
