@@ -250,6 +250,11 @@ LIS_tpCondRet LIS_InserirNoAntes(LIS_tppCabecaLista pCabecaDaLista, void *pConte
     pCabecaDaLista->pNoCorrente = pNo;
     /* Nó corrente é o nó novo */
 
+#ifdef _DEBUG
+    if (pCabecaDaLista->tamLista != pNo->tamLista)
+        return LIS_CondRetTamDesigual;
+#endif
+
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
@@ -318,6 +323,11 @@ LIS_tpCondRet LIS_InserirNoApos(LIS_tppCabecaLista pCabecaDaLista, void *pConteu
 
     pCabecaDaLista->pNoCorrente = pNo;
     /* Nó corrente é o nó novo */
+
+#ifdef _DEBUG
+    if (pCabecaDaLista->tamLista != pNo->tamLista)
+        return LIS_CondRetTamDesigual;
+#endif
 
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
