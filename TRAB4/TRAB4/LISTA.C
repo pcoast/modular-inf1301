@@ -572,7 +572,7 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int deturpacao)
 int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
 {
 
-    int numFalhasObservadas, numNos;
+    int numFalhasObservadas, numNos, numSucessosObservados;
 
     LIS_tpNoLista *pNo;
 
@@ -583,13 +583,18 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
     CNT_IniciarContagem();
     CNT_LerContadores("contadores.txt");
 
-    numFalhasObservadas = 0; /* Inicialização do contador de número de falhas */
+    numFalhasObservadas   = 0; /* Inicialização do contador de número de falhas   */
+    numSucessosObservados = 0; /* Inicialização do contador de número de sucessos */
 
     if (!pCabecaDaLista->ExcluirValor)
     /* Função de destruição do conteúdo de um nó é nula */
     {
         ++numFalhasObservadas;
         CNT_Contar("13", 0);
+    }
+    else{
+        ++numSucessosObservados;
+        CNT_Contar("27", 0);
     }
 
     if (pCabecaDaLista->numNos && !pCabecaDaLista->pNoCorrente)
@@ -598,6 +603,10 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
         ++numFalhasObservadas;
         CNT_Contar("9", 0);
     }
+    else{
+        ++numSucessosObservados;
+        CNT_Contar("23", 0);
+    }
 
     if (pCabecaDaLista->numNos && !pCabecaDaLista->pNoPrimeiro)
     /* Lista não é vazia (numNos != 0) mas primeiro nó é nulo */
@@ -605,12 +614,20 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
         ++numFalhasObservadas;
         CNT_Contar("10", 0);
     }
-
+    else{
+        ++numSucessosObservados;
+        CNT_Contar("24", 0);
+    }
+    
     if (pCabecaDaLista->numNos && pCabecaDaLista->pNoCorrente->pCabeca != pCabecaDaLista)
     /* Lista não é vazia (numNos != 0) e ponteiro corrente aponta para lixo */
     {
         ++numFalhasObservadas;
         CNT_Contar("11", 0);
+    }
+    else{
+        ++numSucessosObservados;
+        CNT_Contar("25", 0);
     }
     if (pCabecaDaLista->numNos && pCabecaDaLista->pNoPrimeiro->pCabeca != pCabecaDaLista)
     /* Lista não é vazia (numNos != 0) e ponteiro do primeiro nó aponta para
@@ -618,6 +635,10 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
     {
         ++numFalhasObservadas;
         CNT_Contar("12", 0);
+    }
+    else{
+        ++numSucessosObservados;
+        CNT_Contar("26", 0);
     }
     /* Vamos caminhar do primeiro nó até o último nó checando cada nó */
 
@@ -634,6 +655,10 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
             CNT_Contar("4", 0);
             break;
         }
+        else{
+            ++numSucessosObservados;
+            CNT_Contar("18", 0);
+        }
 
         if (pCabecaDaLista->tipoEstrutura != pNo->tipoEstrutura)
         /* Tipo da estrutura apontado pela cabeça é diferente do apontado pelo
@@ -641,6 +666,10 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
         {
             ++numFalhasObservadas;
             CNT_Contar("7", 0);
+        }    
+        else{
+            ++numSucessosObservados;
+            CNT_Contar("21", 0);
         }
 
         if (pCabecaDaLista->tamNo != pNo->tamNo)
@@ -650,11 +679,19 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
             ++numFalhasObservadas;
             CNT_Contar("14", 0);
         }
+        else{
+            ++numSucessosObservados;
+            CNT_Contar("28", 0);
+        }
 
         if (!pNo->pConteudo) /* Conteúdo do nó é nulo */
         {
             ++numFalhasObservadas;
             CNT_Contar("6", 0);
+        }
+        else{
+            ++numSucessosObservados;
+            CNT_Contar("20", 0);
         }
 
         pNo = pNo->pNoProximo; /* Vai para próximo nó */
@@ -665,6 +702,10 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
     {
         ++numFalhasObservadas;
         CNT_Contar("2", 0);
+    }
+    else{
+        ++numSucessosObservados;
+        CNT_Contar("16", 0);
     }
     /* Vamos caminhar do último nó até o primeiro nó checando cada nó */
 
@@ -682,6 +723,10 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
 
             break;
         }
+        else{
+            ++numSucessosObservados;
+            CNT_Contar("19", 0);
+        }
 
         if (pCabecaDaLista->tipoEstrutura != pNo->tipoEstrutura)
         /* Tipo da estrutura apontado pela cabeça é diferente do apontado pelo
@@ -691,6 +736,10 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
             ++numFalhasObservadas;
             CNT_Contar("7", 0);
         }
+        else{
+            ++numSucessosObservados;
+            CNT_Contar("21", 0);
+        }
 
         if (pCabecaDaLista->tamNo != pNo->tamNo)
         /* Tamanho do nó apontado pela cabeça é diferente do apontado pelo
@@ -699,11 +748,19 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
             ++numFalhasObservadas;
             CNT_Contar("14", 0);
         }
+        else{
+            ++numSucessosObservados;
+            CNT_Contar("28", 0);
+        }
 
         if (!pNo->pConteudo) /* Conteúdo do nó é nulo */
         {
             ++numFalhasObservadas;
             CNT_Contar("6", 0);
+        }
+        else{
+            ++numSucessosObservados;
+            CNT_Contar("20", 0);
         }
         /* Checamos na volta tamém pois pode ser que não tenhamos analisado
         todos os nós da lista se o prox de um nó intermediário seja nulo */
@@ -716,6 +773,10 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
     {
         ++numFalhasObservadas;
         CNT_Contar("3", 0);
+    }
+    else{
+        ++numSucessosObservados;
+        CNT_Contar("17", 0);
     }
 
     CNT_GravarContadores("contagemacumulada.txt");
