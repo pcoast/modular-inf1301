@@ -29,7 +29,6 @@
 *
 *******************************************************************************/
 
-
 /********************* Declarações exportadas pelo módulo *********************/
 
 
@@ -68,13 +67,15 @@ typedef enum
 
     LIS_CondRetNoVazio, /* Tentou obter conteúdo de um nó vazio */
 
+	LIS_CondRetTamDesigual, /* Tamanho não bate */
+
     LIS_CondRetFuncaoDeExclusaoNaoExiste,
     /* Tentou utlizar uma função de exclusão do conteúdo de um nó inexistente */
 
     LIS_CondRetConteudoNaoExiste,
     /* Tentou incluir um conteúdo nulo em um nó da lista */
 
-    LIS_CondRetNumFalhasIncorreto,
+    LIS_CondRetNumFalhasIncorreto
     /* Verificador encontrou número de falhas incorreto */
 
 #endif

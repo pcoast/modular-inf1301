@@ -50,7 +50,7 @@ typedef struct LIS_tagNoLista
     /* Ponteiro para o nó sucessor */
 
 #ifdef _DEBUG
-    LIS_tpCabecaLista *pCabeca; /* Ponteiro para a cabeca da estrutura */
+    LIS_tppCabecaLista pCabeca; /* Ponteiro para a cabeca da estrutura */
     char tipoEstrutura;         /* Campo que assinala o tipo da estrutura */
     int tamNo;                  /* Tamanho em bytes de cada nó da lista */
     int tamLista;               /* Tamanho em bytes da lista (soma dos tamanhos dos nós) */
@@ -460,7 +460,7 @@ LIS_tpCondRet LIS_vaiParaNoAnterior(LIS_tppCabecaLista pCabecaDaLista)
 *       LIS Deturpador.
 *
 *******************************************************************************/
-LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int const deturpacao)
+LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int deturpacao)
 {
 
     int lixo;
