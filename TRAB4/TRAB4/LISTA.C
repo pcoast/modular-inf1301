@@ -123,7 +123,7 @@ LIS_tpCondRet LIS_criarLista(void (*ExcluirValor)(void *pDado), LIS_tppCabecaLis
 #ifdef _DEBUG
     if (!ExcluirValor)
         return LIS_CondRetFuncaoDeExclusaoNaoExiste;
-    CED_InicializarControlador();
+    //CED_InicializarControlador();
 #endif
 
     *pCabecaDaLista = (LIS_tpCabecaLista *)malloc(sizeof(LIS_tpCabecaLista));
@@ -496,9 +496,11 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int deturpacao)
 
     case 6: /* Atribui NULL ao ponteiro para o conteúdo do nó */
         pNoCorrente->pConteudo = NULL;
+		break;
 
     case 7: /* Altera o tipo de estrutura apontado no nó */
         pNoCorrente->tipoEstrutura = '0';
+		break;
 
     case 8: /* Desencadeia nó sem liberá-lo com free */
 
@@ -548,9 +550,11 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int deturpacao)
     case 13: /* Atribui NULL ao ponteiro para função de destruição do conteúdo
     de um nó */
         pCabecaDaLista->ExcluirValor = NULL;
+		break;
 
     case 14: /* Altera tamanho do nó */
         pCabecaDaLista->pNoCorrente->tamNo = sizeof(LIS_tpNoLista) * 2;
+		break;
 
     default:
         break;
@@ -777,7 +781,7 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
 
     CNT_GravarContadores("contagemacumulada.txt");
     CNT_PararContagem();
-    CNT_VerificarContagem();
+    //CNT_VerificarContagem();
     CNT_TerminarContadores();
 
     return numFalhasObservadas;
@@ -895,7 +899,7 @@ LIS_tpNoLista *LIS_criaNo(void *pConteudo
     pNo->tamNo = sizeof(LIS_tpNoLista);
     pCabecaDaLista->tamLista += pNo->tamNo;
     pNo->tamLista = pCabecaDaLista->tamLista;
-    CED_MarcarEspacoNaoAtivo(pNo->pConteudo);
+    //CED_MarcarEspacoNaoAtivo(pNo->pConteudo);
 #endif
 
     return pNo;

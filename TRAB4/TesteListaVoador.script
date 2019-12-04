@@ -1,0 +1,34 @@
+// Script:    TesteLista.script
+// Autor:     Pedro Costa
+// Data:      02/dez/2019
+// Propósito: Testar o módulo lista genérica duplamente encadeada autoverificável e sua instrumentação
+
+== Inicializar valores
+=declararparm   lista0  int 0
+=declararparm   lista1  int 1
+=declararparm   lista2  int 2
+
+=declararparm   str0    string  "abcdefg"
+=declararparm   str1    string  "qwerty"
+=declararparm   str2    string  "xxx"
+=declararparm   str3    string  "xpto"
+
+=declararparm   OK             int  0
+=declararparm   ListaVazia     int  1
+=declararparm   FimLista       int  2
+=declararparm   NaoAchou       int  3
+=declararparm   FaltouMemoria  int  4
+
+=declararparm   pNULL          int  0
+=declararparm   pNaoNULL       int  1
+
+== Criando outra lista
+=criarlista 1
+=verifica 1 0
+=inselemapos 1 str0 0
+=inselemapos 1 str1 0
+=inselemapos 1 str2 0
+=inselemapos 1 str3	0
+=deturpa 1 9
+=verifica 1 1
+//voa!

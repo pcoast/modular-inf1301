@@ -1,0 +1,18 @@
+Documentação de Teste do Módulo Lista Autoverificável
+
+Comandos disponíveis:
+    =criarlista                   <inxLista>
+    =destruirlista                <inxLista>
+    =esvaziarlista                <inxLista>
+    =inselemantes                 <inxLista>  <string>  <CondRetEsp>
+    =inselemapos                  <inxLista>  <string>  <CondRetEsp>
+    =obtervalorelem               <inxLista>  <string>  <CondRetEsp>
+    =excluirelem                  <inxLista>  <CondRetEsp>
+    =irprox						  <inxLista>
+    =iranterior                   <inxLista>
+
+ - Com Instrumentação Ligada:
+    =deturpa	                    <inxLista>  <deturpacao>
+    =verifica						<inxLista>  <numFalhas>
+
+Os testes para o módulo sem instrumentação rodam normalmente. Já os testes com instrumentação encontram uma série de problemas. Um deles, inclusive, faz com que o teste não chegue ao final e o programa "voe". Trata-se do teste executador pelo arquivo "EXECUTAR2", encontrado na pasta TRAB4-2. Esse programa voa pois a memória da estrutura que deveria ser acessada no momento da verificação aponta para NULL.

@@ -263,7 +263,7 @@ LIS_tppCabecaLista vtListas[ DIM_VT_LISTA ] ;
          else if ( strcmp( ComandoTeste , OBTER_VALOR_CMD ) == 0 )
          {
             numLidos = LER_LerParametros( "isi" ,
-                       &inxLista , StringDado , &ValEsp ) ;
+                       &inxLista , StringDado , &CondRetEsp ) ;
 
             if ( ( numLidos != 3 )
               || ( ! ValidarInxLista( inxLista , NAO_VAZIO )) )
@@ -271,22 +271,16 @@ LIS_tppCabecaLista vtListas[ DIM_VT_LISTA ] ;
                return TST_CondRetParm ;
             } /* if */
 
-			LIS_obterConteudo(vtListas[inxLista], &pDado);
+			TST_tpCondRet condRetObtida = LIS_obterConteudo(vtListas[inxLista], &pDado);
 
-            if ( ValEsp == 0 )
-            {
-               return TST_CompararPonteiroNulo( 0 , pDado ,
-                         "Valor n�o deveria existir." ) ;
-            } /* if */
+			if (pDado != NULL) {
+				CondRet = TST_CompararChar(StringDado, pDado, "Valor obtido não bate com o esperado");
 
-            if ( pDado == NULL )
-            {
-               return TST_CompararPonteiroNulo( 1 , pDado ,
-                         "Dado tipo um deveria existir." ) ;
-            } /* if */
+				if (CondRet != TST_CondRetOK)
+					return CondRet;
+			}
 
-            return TST_CompararString( StringDado , pDado ,
-                         "Valor do elemento errado." ) ;
+			return TST_CompararInt(CondRetEsp, condRetObtida, "Retorno errado ao obter elemento.");
 
          } /* fim ativa: Testar obter valor do elemento corrente */
 

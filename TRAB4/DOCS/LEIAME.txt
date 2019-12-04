@@ -1,0 +1,6 @@
+Trabalho 4 de Programação Modular
+
+Como rodar o trabalho:
+
+1) Entre em uma das pastas "TRAB4-1" e "TRAB4-2", que correspondem ao módulo lista sem e com instrumentação, respectivamente.
+2) Clique duas vezes no arquivo EXECUTAR.bat. No caso do TRAB4-2, existe mais de um arquivo desse tipo, sendo eles numerados. Cada um representa um script de teste e explicações individuais podem ser encontradas na pasta de documentação, no arquivo documentação de teste.
