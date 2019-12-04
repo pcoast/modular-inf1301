@@ -1,0 +1,80 @@
+\documentclass[a4paper,12pt,oneside]{book}
+%
+\input{./config/packages}
+\input{./config/macros}
+
+% SRS cover page
+\title{
+  \begin{flushright}
+  \Huge{DIAGRAMA DE ARQUITETURA\\ DE SOFTWARE}\\
+  da aplicação\\
+  LABIRINTO\\
+  ~\\
+  \LARGE{Versão 1.0}\\
+  ~\\
+  INF1301 - Programação Modular\\ DI/PUC-Rio
+  \end{flushright}
+}
+
+% Author
+\author{Antônio Chaves - AVC\\João Pedro Paiva - JPP\\Pedro Costa - PC}
+\date{\today}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+% \tableofcontents
+
+\input{./chapter_revisionHistory/chapter_revisionHistory}
+
+\mainmatter
+
+\begin{center}
+
+    \includegraphics[width=1\textwidth]{arquitetura.png}
+    
+\end{center}
+
+\begin{enumerate}
+
+    \item 
+    
+    LAB\_tpCondRet LAB\_criaLabirinto(char *arquivo, LAB\_tppLabirinto *LabirintoASerCriado);
+
+    LAB\_tpCondRet LAB\_imprimeLabirinto(LAB\_tppLabirinto CabecaDaLabirinto);
+    
+    LAB\_tpCondRet LAB\_resolveLabirinto(LAB\_tppLabirinto CabecaDaLabirinto);
+
+    void LAB\_destroiLabirinto(LAB\_tppLabirinto CabecaDaLabirinto);
+
+    \item 
+    
+    MAT\_tpCondRet MAT\_criaMatriz(char Linhas, char Colunas, void (*destruirElemento)(void *elemento), MAT\_tppMatriz MatrizASerCriada);
+    
+    MAT\_tpCondRet MAT\_vaiParaEsquerda(MAT\_tppMatriz CabecaDaMatriz);
+    
+    MAT\_tpCondRet MAT\_vaiParaDireita(MAT\_tppMatriz CabecaDaMatriz);
+    
+    MAT\_tpCondRet MAT\_vaiParaBaixo(MAT\_tppMatriz CabecaDaMatriz);
+    
+    MAT\_tpCondRet MAT\_inserirElemento(MAT\_tppMatriz CabecaDaMatriz, void *elemento);
+    
+    MAT\_tpCondRet MAT\_resetNoCorrente(MAT\_tppMatriz CabecaDaMatriz);
+    
+    MAT\_tpCondRet MAT\_obterElemento(MAT\_tppMatriz CabecaDaMatriz, void *elemento);
+    
+    void MAT\_destroiMatriz(MAT\_tppMatriz CabecaDaMatriz);
+
+\end{enumerate}
+
+% \input{./chapter_preface/chapter_preface}
+% \input{./chapter_introduction/chapter_introduction}
+% \input{./chapter_overallDescription/chapter_overallDescription}
+% \input{./chapter_externalInterfaceRequirements/chapter_externalInterfaceRequirements}
+% \input{./chapter_systemFeatures/chapter_systemFeatures}
+% \input{./chapter_otherNonFunctionalRequirements/chapter_otherNonFunctionalRequirements}
+% \input{./chapter_otherRequirements/chapter_otherRequirements}
+
+\end{document}

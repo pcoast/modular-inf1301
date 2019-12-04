@@ -161,20 +161,54 @@
                   \item Programa robusto: intercepta a execução quando observa o problema e mantém o dano confinado.
                   \item Programa tolerante a falhas: é robusto e possui mecanismo de recuperação, ou seja, o programa é preparado para condição hostil do ambiente (Ex: permite salvar progresso quando encontra erro).
                   \item Deteriorização controlada: programa recupera de uma instabilidade e continua funcionando mesmo com uma perda de funcionalidade (subconjunto de tolerância a falhas).
-                  \item Esquema de inclusão de instrumentos em C e C++:
+              \end{itemize}
 
-                        % Todo trecho de instrumentação fica antre \#ifdef _DEBUG e \#endif
+        \item Esquema de inclusão de instrumentos em C e C++:
 
-                        % \#ifdef _DEBUG
-                        % - codigos
-                        % - dados
-                        % \#endif
+              Todo trecho de instrumentação fica entre \#ifdef \textunderscore DEBUG e \#endif
+
+              \#ifdef \textunderscore DEBUG
+
+              \begin{itemize}
+
+                \item[]
+
+                  \begin{itemize}
+
+                      \item Codigos
+
+                      \item Dados
+
+                  \end{itemize}
 
               \end{itemize}
 
+
+              \#endif
+
         \item \textbf{Assertivas Executáveis}
 
-              Assertivas se tornam código para testá-las. Assertivas precisam ser corretas e completas. Vantagens: informa um problema quase imediatamente após ter sido gerado, controle de integridade é feito pela máquina, reduz o risco de falha humana.
+              Assertivas se tornam código para testá-las. Assertivas precisam ser corretas e completas. Vantagens: informa um problema quase imediatamente após ter sido gerado, controle de integridade é feito pela máquina e reduz o risco de falha humana. Assertivas precisam ser corretas e completas.
+
+        \item \textbf{Trace:}
+        
+              Instrumento que apresenta um resultado ou mensagem quando é acionado em determinado ponto do programa.
+              
+              Ex: printf
+
+              Existem dois tipos de trace, o de instrução e o de evolução. O trace de instrução executa no ponto onde é chamado. O trace de evolução executa quando uma variável ou estado é alterado(a).
+              
+              A vantagem do trace é que a execução do programa é monitorada. A desvantagem é que seu uso pode gerar relatórios "poluídos".
+
+        \item \textbf{Depurador:}
+        
+              Instrumento que executa a aplicação passo a passo utilizando breakpoints para gerar resultados parciais.
+
+        \item \textbf{Verificador de Estrutura de Dados:}
+        
+              Instrumento que verifica a consistência de uma estrutura de dados implementando uma validação com base no modelo estrutural e nas assertivas estruturais.
+
+        \item \textbf{}
 
     \end{enumerate}
 

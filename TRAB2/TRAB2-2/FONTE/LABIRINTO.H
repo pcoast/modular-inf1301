@@ -1,7 +1,7 @@
 /***************************************************************************
 *   $MCI Módulo de definição: Módulo Labirinto
 *
-*   Arquivo gerado:              LABIRINTO.c
+*   Arquivo gerado:              LABIRINTO.H
 *   Letras identificadoras:      LAB
 *
 *   Projeto: Disciplina INF1301

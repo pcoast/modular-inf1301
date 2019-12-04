@@ -1,0 +1,121 @@
+\chapter{Funcionalidades do Sistema}
+% $<$This template illustrates organizing the functional requirements for the
+% product by system features, the major services provided by the product. You may
+% prefer to organize this section by use case, mode of operation, user class,
+% object class, functional hierarchy, or combinations of these, whatever makes the
+% most logical sense for your product.$>$
+
+\section{Funcionalidade 1}
+% $<$Don’t really say “System Feature 1.” State the feature name in just a few
+% words.$>$
+
+Construção de um labirinto.
+
+\subsection{Descrição e Prioridade}
+% $<$Provide a short description of the feature and indicate whether it is of
+% High, Medium, or Low priority. You could also include specific priority
+% component ratings, such as benefit, penalty, cost, and risk (each rated on a
+% relative scale from a low of 1 to a high of 9).$>$
+
+Funcionalidade que constrói o labirinto a ser resolvido. Prioridade alta. Funcionalidade essencial para o funcionamento da aplicação.
+
+\subsection{Sequências de Estímulo e Resposta}
+% $<$List the sequences of user actions and system responses that stimulate the
+% behavior defined for this feature. These will correspond to the dialog elements
+% associated with use cases.$>$
+O usuário contrói o labirinto manulamente, escrevendo em um arquivo txt. Ao executar a aplicação Labirinto, o labirinto salvo no txt é armazenado, pelo módulo Labirinto, numa matriz criada pelo módulo Matriz.
+
+\subsection{Requisitos Funcionais}
+% $<$Itemize the detailed functional requirements associated with this feature.
+% These are the software capabilities that must be present in order for the user
+% to carry out the services provided by the feature, or to execute the use case.
+% Include how the product should respond to anticipated error conditions or
+% invalid inputs. Requirements should be concise, complete, unambiguous,
+% verifiable, and necessary. Use “TBD” as a placeholder to indicate when necessary
+% information is not yet available.$>$
+
+% $<$Each requirement should be uniquely identified with a sequence number or a
+% meaningful tag of some kind.$>$
+
+\begin{enumerate}
+    \item O arquivo de texto criado pelo usuário deve ser lido durante a execução desta funcionalidade.
+    \item Uma matriz de dimensões adequadas, inferidas a partir do arquivo de texto, é criada.
+    \item A funcionalidade de criação do labirinto deve armazenar na matriz dados que possibilitem navegar dentro do labirinto, sinalizando os caminhos possíveis.
+\end{enumerate}
+
+\section{Funcionalidade 2}
+% $<$Don’t really say “System Feature 1.” State the feature name in just a few
+% words.$>$
+
+Resolve labirinto.
+
+\subsection{Descrição e Prioridade}
+% $<$Provide a short description of the feature and indicate whether it is of
+% High, Medium, or Low priority. You could also include specific priority
+% component ratings, such as benefit, penalty, cost, and risk (each rated on a
+% relative scale from a low of 1 to a high of 9).$>$
+
+Funcionalidade que resolve o labirinto construído. Prioridade alta. Funcionalidade essencial para o funcionamento da aplicação.
+
+\subsection{Sequências de Estímulo e Resposta}
+% $<$List the sequences of user actions and system responses that stimulate the
+% behavior defined for this feature. These will correspond to the dialog elements
+% associated with use cases.$>$
+
+Após o usuário executar a aplicação Labirinto e o labirinto ser criado pela aplicação, a aplicação encontra e demarca um caminho que parte do início e chega no final do labirinto.
+
+\subsection{Requisitos Funcionais}
+% % $<$Itemize the detailed functional requirements associated with this feature.
+% % These are the software capabilities that must be present in order for the user
+% % to carry out the services provided by the feature, or to execute the use case.
+% % Include how the product should respond to anticipated error conditions or
+% % invalid inputs. Requirements should be concise, complete, unambiguous,
+% % verifiable, and necessary. Use “TBD” as a placeholder to indicate when necessary
+% % information is not yet available.$>$
+
+% % $<$Each requirement should be uniquely identified with a sequence number or a
+% % meaningful tag of some kind.$>$
+
+\begin{enumerate}
+    \item A funcionalidade de resolução do labirinto utiliza aprendizado de máquina para encontrar a solução.
+    \item Caso o labirinto não possua solução, a funcionalidade de resolução do labirinto deve deixar isto evidente.
+    \item A solução do labirinto é sinalizada na própria estrutura do labirinto.
+\end{enumerate}
+
+\section{Funcionalidade 3}
+% $<$Don’t really say “System Feature 1.” State the feature name in just a few
+% words.$>$
+
+Imprime solução labirinto.
+
+\subsection{Descrição e Prioridade}
+% $<$Provide a short description of the feature and indicate whether it is of
+% High, Medium, or Low priority. You could also include specific priority
+% component ratings, such as benefit, penalty, cost, and risk (each rated on a
+% relative scale from a low of 1 to a high of 9).$>$
+
+Funcionalidade que imprime o labirinto resolvido com o caminho do início até o fim demarcado para o usuário. Prioridade alta. Funcionalidade essencial para o funcionamento da aplicação.
+
+\subsection{Sequências de Estímulo e Resposta}
+% $<$List the sequences of user actions and system responses that stimulate the
+% behavior defined for this feature. These will correspond to the dialog elements
+% associated with use cases.$>$
+Após o usuário executar a aplicação Labirinto, o labirinto ser criado pela aplicação e a aplicação resolver o labirinto, o labirinto será impresso para o usuário com a sua resolução demarcada.
+
+\subsection{Requisitos Funcionais}
+% $<$Itemize the detailed functional requirements associated with this feature.
+% These are the software capabilities that must be present in order for the user
+% to carry out the services provided by the feature, or to execute the use case.
+% Include how the product should respond to anticipated error conditions or
+% invalid inputs. Requirements should be concise, complete, unambiguous,
+% verifiable, and necessary. Use “TBD” as a placeholder to indicate when necessary
+% information is not yet available.$>$
+
+% $<$Each requirement should be uniquely identified with a sequence number or a
+% meaningful tag of some kind.$>$
+
+\begin{enumerate}
+    \item A impressão deve utilizar caracteres ASCII.
+    \item A impressão aparecerá na tela para o usuário.
+\end{enumerate}
+

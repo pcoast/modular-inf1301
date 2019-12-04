@@ -1,0 +1,83 @@
+\documentclass[a4paper,12pt,oneside]{book}
+%
+\input{./config/packages}
+\input{./config/macros}
+
+% SRS cover page
+\title{
+  \begin{flushright}
+  \Huge{MODELO FÍSICO ESTRUTURAL,}\\
+  ASSERTIVAS\\
+  e\\
+  EXEMPLO FÍSICO\\
+  do módulo\\
+  LISTA DUPLAMENTE\\
+  ENCADEADA COM CABEÇA\\
+  ~\\
+  \LARGE{Versão 1.0}\\
+  ~\\
+  INF1301 - Programação Modular\\ DI/PUC-Rio
+  \end{flushright}
+}
+
+% Author
+\author{Antônio Chaves - AVC\\João Pedro Paiva - JPP\\Pedro Costa - PC}
+\date{\today}
+
+\begin{document}
+
+\frontmatter
+\maketitle
+
+\tableofcontents
+
+\input{./chapter_revisionHistory/chapter_revisionHistory}
+
+\mainmatter
+
+\chapter{Modelo Físico Estrutural}
+
+\begin{center}
+
+    \includegraphics[width=1\textwidth,height=27\baselineskip]{fisico.png}
+
+\end{center}
+
+\chapter{Assertivas Estruturais}\setlength{\parskip}{1\baselineskip}
+
+\sloppy$\forall \textrm{ nó } pNo \in \textrm{lista : } pNo \rightarrow pNoProximo \ != \ NULL \implies pNo \rightarrow pNoProximo \rightarrow pNoAnterior == pNo$
+
+\noindent\sloppy$\forall \textrm{ nó } pNo \in \textrm{lista : } pNo \rightarrow pNoAnterior \ != \ NULL \implies pNo \rightarrow pNoAnterior \rightarrow pNoProximo == pNo$
+
+\noindent O tipo de estrutura apontado pela cabeça da lista é igual ao tipo de estrutura apontado por cada nó.
+
+\noindent O tamanho do nó apontado pela cabeça da lista é igual ao tamanho do nó apontado por cada nó.
+
+\noindent O tamanho da lista apontado pelo nó mais recentemente adicionado é igual ao tamanho da lista apontado pela cabeça.
+
+\noindent O número de nós apontado pela cabeça da lista é igual ao número de nós da lista.
+
+\noindent O ponteiro para função de exclusão do conteúdo do nó não é nulo.
+
+\noindent\sloppy$\forall \textrm{ nó } pNo \in \textrm{lista : } pNo \rightarrow pConteudo \ != \ NULL$
+
+\noindent\sloppy$\forall \textrm{ nó } pNo \in \textrm{lista : } pNo \rightarrow pCabeca == pCabecaDaLista$
+
+\setlength{\parskip}{1pt}
+\chapter{Exemplo Físico}
+
+\begin{center}
+
+    \includegraphics[height=27\baselineskip]{exemplo.png}
+
+\end{center}
+
+% \input{./chapter_preface/chapter_preface}
+% \input{./chapter_introduction/chapter_introduction}
+% \input{./chapter_overallDescription/chapter_overallDescription}
+% \input{./chapter_externalInterfaceRequirements/chapter_externalInterfaceRequirements}
+% \input{./chapter_systemFeatures/chapter_systemFeatures}
+% \input{./chapter_otherNonFunctionalRequirements/chapter_otherNonFunctionalRequirements}
+% \input{./chapter_otherRequirements/chapter_otherRequirements}
+
+\end{document}
