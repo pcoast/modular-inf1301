@@ -15,8 +15,6 @@
 \usepackage{listings}
 \usepackage{amssymb}
 
-\usepackage{amssymb}
-
 \usepackage{caption}
 
 \usepackage{tikz}
@@ -201,6 +199,8 @@
     \vspace{\baselineskip}
     \textbf{Solução}
 
+    \includegraphics[width=\textwidth]{Q1.png}
+
 \end{homeworkProblem}
 
 \vspace{\baselineskip}
@@ -367,6 +367,8 @@
     \vspace{\baselineskip}
     \textbf{Solução}
 
+    \lstinputlisting[style=CStyle]{Q3.C}
+
 \end{homeworkProblem}
 
 \vspace{\baselineskip}
@@ -411,16 +413,20 @@
     \vspace{\baselineskip}
     \textbf{Solução}
 
+    \includegraphics[width=\textwidth]{Q7.png}
+
 \end{homeworkProblem}
 
 \vspace{\baselineskip}
 
 \begin{homeworkProblem}
 
-    Qual é o arrasto de uma repetição existente em uma pesquisa binária recursiva? 
+    Qual é o arrasto de uma repetição existente em uma pesquisa binária recursiva?
 
     \vspace{\baselineskip}
     \textbf{Solução}
+
+    2.
 
 \end{homeworkProblem}
 
@@ -433,6 +439,8 @@
     \vspace{\baselineskip}
     \textbf{Solução}
 
+    Errado. O teste não apresentar erros significa que a implementação possui alta qualidade observada, mas não garante que a qualidade atestada seja igualmente alta caso a análise sobre o teste seja incorreta. Mesmo que o teste seja completo e a análise sobre o teste correta, não significa que o critério de seleção de casos de teste seja válido, o teste pode não acusar falhas quando há, ou confiável, o teste pode não paresentar erros por uma escolha específica ou ação feito em um dos casos de teste.
+
 \end{homeworkProblem}
 
 \vspace{\baselineskip}
@@ -443,6 +451,176 @@
 
     \vspace{\baselineskip}
     \textbf{Solução}
+
+    \bigskip
+
+    \begin{tabular}{ | c | c c c c c c c c c c c c c c | }
+        \hline
+        Deturpação/Caso & 1  & 2  & 3  & 4  & 5  & 6  & 7  & 8  & 9  & 10 & 11 & 12 & 13 & 14 \\
+        ==1             & S  & N  & N  & N  & N  & N  & N  & N  & N  & N  & N  & N  & N  & N  \\
+        ==2             & NT & S  & N  & N  & N  & N  & N  & N  & N  & N  & N  & N  & N  & N  \\
+        ==3             & NT & NT & S  & N  & N  & N  & N  & N  & N  & N  & N  & N  & N  & N  \\
+        ==4             & NT & NT & NT & S  & N  & N  & N  & N  & N  & N  & N  & N  & N  & N  \\
+        ==5             & NT & NT & NT & NT & S  & N  & N  & N  & N  & N  & N  & N  & N  & N  \\
+        ==6             & NT & NT & NT & NT & NT & S  & N  & N  & N  & N  & N  & N  & N  & N  \\
+        ==7             & NT & NT & NT & NT & NT & NT & S  & N  & N  & N  & N  & N  & N  & N  \\
+        ==8             & NT & NT & NT & NT & NT & NT & NT & S  & N  & N  & N  & N  & N  & N  \\
+        ==9             & NT & NT & NT & NT & NT & NT & NT & NT & S  & N  & N  & N  & N  & N  \\
+        ==10            & NT & NT & NT & NT & NT & NT & NT & NT & NT & S  & N  & N  & N  & N  \\
+        ==11            & NT & NT & NT & NT & NT & NT & NT & NT & NT & NT & S  & N  & N  & N  \\
+        ==12            & NT & NT & NT & NT & NT & NT & NT & NT & NT & NT & NT & S  & N  & N  \\
+        ==13            & NT & NT & NT & NT & NT & NT & NT & NT & NT & NT & NT & NT & S  & N  \\
+        ==14            & NT & NT & NT & NT & NT & NT & NT & NT & NT & NT & NT & NT & NT & S  \\
+        \hline
+    \end{tabular}
+
+    \bigskip
+
+    S: sim
+
+    N: não
+
+    NT: não testa
+
+\end{homeworkProblem}
+
+\vspace{\baselineskip}
+
+\begin{homeworkProblem}
+
+    Utilizando o método de partição em classes de equivalência, gere o script para uma exclusão de nó corrente de uma árvore binária.
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+    Passo 1: Árvore vazia, árvore com um único nível, árvore com três níveis (possui nível intermendiário).
+
+    Resultados esperados: excluiu, não excluiu.
+
+    \bigskip
+
+    Passo 2:
+
+    \bigskip
+
+    \begin{tabular}{ c c c c c }
+
+        Caso & Estrutura & Elemento a excluir & Excluiu & Não Excluiu \\
+        \hline
+        \hline
+        S    & Vazia     & Primeiro           & N       & S           \\
+        2    & A         & Raiz               & S       & N           \\
+        3    & (A,(B,C)) & Raiz               & S       & N           \\
+        4    & (A,(B,C)) & Filho à direita    & S       & N           \\
+        5    & (A,(B,C)) & Filho à esquerda   & S       & 0
+    \end{tabular}
+
+    \bigskip
+
+    Passo 3:
+
+    \bigskip
+
+    ==caso1
+
+    =criaarvore	0
+
+    =exclui		0
+
+    \bigskip
+
+    ==caso2
+
+    =insere		A
+
+    =exclui		0
+
+    \bigskip
+
+    ==caso3
+
+    =insere		    A
+
+    =insere		    B
+
+    =insere		    C
+
+    =irpai	        0
+
+    =exclui		    0
+
+    =liberaarvore	0
+
+    \bigskip
+
+    ==caso4
+
+    =insere		    A
+
+    =insere		    B
+
+    =insere		    C
+
+    =exclui		    0
+
+    =liberalista	0
+
+    \bigskip
+
+    ==caso5
+
+    =insere		    A
+
+    =insere		    B
+
+    =insere		    C
+
+    =irpai		    0
+
+    =iresq          0
+
+    =exclui		    0
+
+    =liberalista	0
+
+\end{homeworkProblem}
+
+\vspace{\baselineskip}
+
+\begin{homeworkProblem}
+
+    Apresente uma situação em que as qualidades efetiva e observada são diferentes.
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+    Quando a implementação de um artefato é incorreta e o teste é incompleto, não abordando o aspecto incorreto da implementação, mas a análise dos resultados do teste é correta, a qualidade observada será alta, a qualidade atestada será baixa e a qualidade efetiva será baixa.
+
+\end{homeworkProblem}
+
+\vspace{\baselineskip}
+
+\begin{homeworkProblem}
+
+    Existe relação entre a abordagem de teste orientado à destruição e a qualidade atestada não se aproximar da qualidade requerida. Certo/Errado/Justifique.
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+    A qualidade requerida aumenta quando nos aproximamos daquilo que o cliente quer. A qualidade atestada se refere ao que é descrito por um controle de qualidade. Ao utlizarmos a abordagem de teste orientado à destruição, examinamos somente se a implementação de algum artefato está correta, mas não se aquela é a implementação que o cliente deseja. Utlizando esta abordagem, garantimos que a implementação possua boa qualidade, mas não garantimos qualidade satisfatória.
+
+\end{homeworkProblem}
+
+\vspace{\baselineskip}
+
+\begin{homeworkProblem}
+
+    Explique porque é necessário utilizar campos redundantes ao instrumentar uma estrutura autoverificável.
+
+    \vspace{\baselineskip}
+    \textbf{Solução}
+
+    Os dados redundantes ajudam na confiabilidade daquilo que foi implementado. Por exemplo, se colocarmos um campo que descreve o tipo da estrutura na cabeça da estrutura e nos nós, então podemos verificar se o nó pertence à estrutura pela combinação, ou não, do tipo apontado pelo nó e pela cabeça. A implementação de múltiplos campos com este mesmo objetivo, como um campo que descreve o tamanho do nó colocado na cabeça da estrutura e nos nós, enfatizará ainda mais a corretude da implementação.
 
 \end{homeworkProblem}
 

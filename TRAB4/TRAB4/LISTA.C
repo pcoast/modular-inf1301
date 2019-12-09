@@ -123,7 +123,7 @@ LIS_tpCondRet LIS_criarLista(void (*ExcluirValor)(void *pDado), LIS_tppCabecaLis
 #ifdef _DEBUG
     if (!ExcluirValor)
         return LIS_CondRetFuncaoDeExclusaoNaoExiste;
-    //CED_InicializarControlador();
+        //CED_InicializarControlador();
 #endif
 
     *pCabecaDaLista = (LIS_tpCabecaLista *)malloc(sizeof(LIS_tpCabecaLista));
@@ -453,6 +453,30 @@ LIS_tpCondRet LIS_vaiParaNoAnterior(LIS_tppCabecaLista pCabecaDaLista)
     return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
 }
 
+/*******************************************************************************
+*
+*	$FC Função:
+*       LIS Vai para primeiro nó.
+*
+*******************************************************************************/
+LIS_tpCondRet LIS_vaiParaPrimeiroNo(LIS_tppCabecaLista pCabecaDaLista)
+{
+
+#ifdef _DEBUG
+    if (!pCabecaDaLista)
+        return LIS_CondRetListaNaoExiste;
+#endif
+
+    if (!pCabecaDaLista->pNoCorrente || !pCabecaDaLista->pNoPrimeiro)
+        /* Lista não possui nós */
+        return LIS_CondRetListaVazia; /* Retorna condição de lista vazia */
+
+    pCabecaDaLista->pNoCorrente = pCabecaDaLista->pNoPrimeiro;
+    /* Ponteiro corrente aponta para o primeiro nó */
+
+    return LIS_CondRetOK; /* Retorna condição de teste bem sucedido */
+}
+
 #ifdef _DEBUG
 /*******************************************************************************
 *
@@ -496,11 +520,11 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int deturpacao)
 
     case 6: /* Atribui NULL ao ponteiro para o conteúdo do nó */
         pNoCorrente->pConteudo = NULL;
-		break;
+        break;
 
     case 7: /* Altera o tipo de estrutura apontado no nó */
         pNoCorrente->tipoEstrutura = '0';
-		break;
+        break;
 
     case 8: /* Desencadeia nó sem liberá-lo com free */
 
@@ -550,11 +574,11 @@ LIS_tpCondRet LIS_deturpador(LIS_tppCabecaLista pCabecaDaLista, int deturpacao)
     case 13: /* Atribui NULL ao ponteiro para função de destruição do conteúdo
     de um nó */
         pCabecaDaLista->ExcluirValor = NULL;
-		break;
+        break;
 
     case 14: /* Altera tamanho do nó */
         pCabecaDaLista->pNoCorrente->tamNo = sizeof(LIS_tpNoLista) * 2;
-		break;
+        break;
 
     default:
         break;
@@ -574,71 +598,85 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
 
     int numFalhasObservadas, numNos, numSucessosObservados;
 
-    LIS_tpNoLista *pNo;
+    LIS_tpNoLista *pNo, *ultimoNoDaVolta;
 
     if (!pCabecaDaLista)
         return LIS_CondRetListaNaoExiste;
 
-    CNT_InicializarContadores("contagemacumulada.txt");
+    CNT_InicializarContadores("EXEC/contagemacumulada.txt");
     CNT_IniciarContagem();
-    CNT_LerContadores("contadores.txt");
+    CNT_LerContadores("EXEC/contadores.txt");
 
-    numFalhasObservadas   = 0; /* Inicialização do contador de número de falhas   */
+    numFalhasObservadas = 0;   /* Inicialização do contador de número de falhas   */
     numSucessosObservados = 0; /* Inicialização do contador de número de sucessos */
 
     if (!pCabecaDaLista->ExcluirValor)
     /* Função de destruição do conteúdo de um nó é nula */
     {
         ++numFalhasObservadas;
-        CNT_Contar("13", 0);
+        CNT_Contar("13s", 0);
     }
-    else{
+    else
+    {
         ++numSucessosObservados;
-        CNT_Contar("27", 0);
+        CNT_Contar("13n", 0);
     }
 
     if (pCabecaDaLista->numNos && !pCabecaDaLista->pNoCorrente)
     /* Lista não é vazia (numNos != 0) mas nó corrente é nulo */
     {
         ++numFalhasObservadas;
-        CNT_Contar("9", 0);
+        CNT_Contar("9s", 0);
     }
-    else{
+    else
+    {
         ++numSucessosObservados;
-        CNT_Contar("23", 0);
+        CNT_Contar("9n", 0);
+
+        if (pCabecaDaLista->numNos && pCabecaDaLista->pNoCorrente->pCabeca != pCabecaDaLista)
+        /* Lista não é vazia (numNos != 0) e ponteiro corrente aponta para lixo */
+        {
+            ++numFalhasObservadas;
+            CNT_Contar("11s", 0);
+        }
+        else
+        {
+            ++numSucessosObservados;
+            CNT_Contar("11n", 0);
+        }
     }
 
     if (pCabecaDaLista->numNos && !pCabecaDaLista->pNoPrimeiro)
     /* Lista não é vazia (numNos != 0) mas primeiro nó é nulo */
     {
         ++numFalhasObservadas;
-        CNT_Contar("10", 0);
+        CNT_Contar("10s", 0);
+
+        pCabecaDaLista->pNoPrimeiro = pCabecaDaLista->pNoUltimo;
+
+        while (pCabecaDaLista->pNoPrimeiro->pNoAnterior)
+            pCabecaDaLista->pNoPrimeiro = pCabecaDaLista->pNoPrimeiro->pNoAnterior;
     }
-    else{
-        ++numSucessosObservados;
-        CNT_Contar("24", 0);
-    }
-    
-    if (pCabecaDaLista->numNos && pCabecaDaLista->pNoCorrente->pCabeca != pCabecaDaLista)
-    /* Lista não é vazia (numNos != 0) e ponteiro corrente aponta para lixo */
+    else
     {
-        ++numFalhasObservadas;
-        CNT_Contar("11", 0);
-    }
-    else{
         ++numSucessosObservados;
-        CNT_Contar("25", 0);
-    }
-    if (pCabecaDaLista->numNos && pCabecaDaLista->pNoPrimeiro->pCabeca != pCabecaDaLista)
-    /* Lista não é vazia (numNos != 0) e ponteiro do primeiro nó aponta para
+        CNT_Contar("10n", 0);
+        if (pCabecaDaLista->numNos && pCabecaDaLista->pNoPrimeiro->pCabeca != pCabecaDaLista)
+        /* Lista não é vazia (numNos != 0) e ponteiro do primeiro nó aponta para
     lixo */
-    {
-        ++numFalhasObservadas;
-        CNT_Contar("12", 0);
-    }
-    else{
-        ++numSucessosObservados;
-        CNT_Contar("26", 0);
+        {
+            ++numFalhasObservadas;
+            CNT_Contar("12s", 0);
+            pCabecaDaLista->pNoPrimeiro = pCabecaDaLista->pNoUltimo;
+
+            while (pCabecaDaLista->pNoPrimeiro->pNoAnterior)
+                pCabecaDaLista->pNoPrimeiro = pCabecaDaLista->pNoPrimeiro->pNoAnterior;
+        }
+        else
+        {
+            ++numSucessosObservados;
+            CNT_Contar("12n", 0);
+        }
     }
     /* Vamos caminhar do primeiro nó até o último nó checando cada nó */
 
@@ -646,30 +684,26 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
 
     numNos = pCabecaDaLista->numNos;
 
-    while (pNo) /* Enquanto não caminhou para nó nulo */
+    ultimoNoDaVolta = pCabecaDaLista->pNoPrimeiro;
+
+    while (1) /* Para sempre */
     {
-        if (!numNos)
-        /* Não chegou no final da lista mas o número de nós é zero */
-        {
-            ++numFalhasObservadas;
-            CNT_Contar("4", 0);
+
+        if (!pNo)
             break;
-        }
-        else{
-            ++numSucessosObservados;
-            CNT_Contar("18", 0);
-        }
 
         if (pCabecaDaLista->tipoEstrutura != pNo->tipoEstrutura)
         /* Tipo da estrutura apontado pela cabeça é diferente do apontado pelo
         nó */
         {
             ++numFalhasObservadas;
-            CNT_Contar("7", 0);
-        }    
-        else{
+            CNT_Contar("7s", 0);
+        }
+
+        else
+        {
             ++numSucessosObservados;
-            CNT_Contar("21", 0);
+            CNT_Contar("7n", 0);
         }
 
         if (pCabecaDaLista->tamNo != pNo->tamNo)
@@ -677,109 +711,211 @@ int LIS_verificador(LIS_tppCabecaLista pCabecaDaLista)
         nó */
         {
             ++numFalhasObservadas;
-            CNT_Contar("14", 0);
+            CNT_Contar("14s", 0);
         }
-        else{
+
+        else
+        {
             ++numSucessosObservados;
-            CNT_Contar("28", 0);
+            CNT_Contar("14n", 0);
         }
 
         if (!pNo->pConteudo) /* Conteúdo do nó é nulo */
         {
             ++numFalhasObservadas;
-            CNT_Contar("6", 0);
+            CNT_Contar("6s", 0);
         }
-        else{
+
+        else
+        {
             ++numSucessosObservados;
-            CNT_Contar("20", 0);
+            CNT_Contar("6n", 0);
+        }
+
+        if (!pNo->pNoProximo && numNos == 1)
+        /* Chegou ao último nó e o número de nós restantes é 1 */
+        {
+            break;
+        }
+
+        if (!pNo->pNoProximo && numNos != 1)
+        /* Chegou ao último nó mas o número de nós restantes não é 1,
+        prox nó é nulo sem estar no final da lista */
+        {
+            ++numFalhasObservadas;
+            CNT_Contar("2s", 0);
+            ultimoNoDaVolta = pNo; /* Marca último nó analisado */
+            break;
+        }
+
+        else
+        {
+            ++numSucessosObservados;
+            CNT_Contar("2n", 0);
+        }
+
+        if (pNo->pNoProximo && numNos == 0)
+        /* Número de nós restantes é 0, mas não chegou a um nó nulo */
+        {
+            ++numFalhasObservadas;
+            CNT_Contar("4s", 0);
+            break;
+        }
+
+        else
+        {
+            ++numSucessosObservados;
+            CNT_Contar("4n", 0);
+        }
+
+        if (!pNo->pNoProximo->pNoAnterior)
+        /* Nó anterior ao próximo é nulo */
+        {
+            ++numFalhasObservadas;
+            CNT_Contar("3s", 0);
+        }
+
+        else
+        {
+            ++numSucessosObservados;
+            CNT_Contar("3n", 0);
+
+            if (pNo->pNoProximo->pNoAnterior != pNo)
+            /* Nó anterior ao próximo é nulo */
+            {
+                ++numFalhasObservadas;
+                CNT_Contar("5s", 0);
+            }
+
+            else
+            {
+                ++numSucessosObservados;
+                CNT_Contar("5n", 0);
+            }
         }
 
         pNo = pNo->pNoProximo; /* Vai para próximo nó */
         --numNos;
     }
 
-    if (numNos) /* Chegou num nó nulo, mas o número de nós não é zero */
+    if (pNo != pCabecaDaLista->pNoUltimo) /* Não chegou nó último nó da lista */
     {
-        ++numFalhasObservadas;
-        CNT_Contar("2", 0);
-    }
-    else{
-        ++numSucessosObservados;
-        CNT_Contar("16", 0);
-    }
-    /* Vamos caminhar do último nó até o primeiro nó checando cada nó */
 
-    pNo = pCabecaDaLista->pNoUltimo;
+        /* Vamos caminhar do último nó até o primeiro nó checando cada nó */
+        pNo = pCabecaDaLista->pNoUltimo;
 
-    numNos = pCabecaDaLista->numNos;
+        numNos = pCabecaDaLista->numNos;
 
-    while (pNo) /* Enquanto não caminhou para nó nulo */
-    {
-        if (!numNos)
-        /* Não chegou no início da lista mas o número de nós é zero */
+        while (pNo != ultimoNoDaVolta) /* Para sempre */
         {
-            ++numFalhasObservadas;
-            CNT_Contar("5", 0);
 
-            break;
-        }
-        else{
-            ++numSucessosObservados;
-            CNT_Contar("19", 0);
-        }
-
-        if (pCabecaDaLista->tipoEstrutura != pNo->tipoEstrutura)
-        /* Tipo da estrutura apontado pela cabeça é diferente do apontado pelo
-        nó. Checamos na volta tamém pois pode ser que não tenhamos analisado
-        todos os nós da lista se o prox de um nó intermediário seja nulo */
-        {
-            ++numFalhasObservadas;
-            CNT_Contar("7", 0);
-        }
-        else{
-            ++numSucessosObservados;
-            CNT_Contar("21", 0);
-        }
-
-        if (pCabecaDaLista->tamNo != pNo->tamNo)
-        /* Tamanho do nó apontado pela cabeça é diferente do apontado pelo
+            if (pCabecaDaLista->tipoEstrutura != pNo->tipoEstrutura)
+            /* Tipo da estrutura apontado pela cabeça é diferente do apontado pelo
         nó */
-        {
-            ++numFalhasObservadas;
-            CNT_Contar("14", 0);
-        }
-        else{
-            ++numSucessosObservados;
-            CNT_Contar("28", 0);
-        }
+            {
+                ++numFalhasObservadas;
+                CNT_Contar("7s", 0);
+            }
 
-        if (!pNo->pConteudo) /* Conteúdo do nó é nulo */
-        {
-            ++numFalhasObservadas;
-            CNT_Contar("6", 0);
-        }
-        else{
-            ++numSucessosObservados;
-            CNT_Contar("20", 0);
-        }
-        /* Checamos na volta tamém pois pode ser que não tenhamos analisado
-        todos os nós da lista se o prox de um nó intermediário seja nulo */
+            else
+            {
+                ++numSucessosObservados;
+                CNT_Contar("7n", 0);
+            }
 
-        pNo = pNo->pNoAnterior; /* Vai para nó anterior */
-        --numNos;
+            if (pCabecaDaLista->tamNo != pNo->tamNo)
+            /* Tamanho do nó apontado pela cabeça é diferente do apontado pelo
+        nó */
+            {
+                ++numFalhasObservadas;
+                CNT_Contar("14s", 0);
+            }
+
+            else
+            {
+                ++numSucessosObservados;
+                CNT_Contar("14n", 0);
+            }
+
+            if (!pNo->pConteudo) /* Conteúdo do nó é nulo */
+            {
+                ++numFalhasObservadas;
+                CNT_Contar("6s", 0);
+            }
+
+            else
+            {
+                ++numSucessosObservados;
+                CNT_Contar("6n", 0);
+            }
+
+            if (!pNo->pNoAnterior && numNos == 1)
+            /* Chegou ao primeiro nó e o número de nós restantes é 1 */
+            {
+                break;
+            }
+
+            if (!pNo->pNoAnterior && numNos != 1)
+            /* Chegou ao primeiro nó mas o número de nós restantes não é 1,
+        nó anterior é nulo sem estar no começo da lista */
+            {
+                ++numFalhasObservadas;
+                CNT_Contar("3s", 0);
+                break;
+            }
+
+            else
+            {
+                ++numSucessosObservados;
+                CNT_Contar("3n", 0);
+            }
+
+            if (pNo->pNoAnterior && numNos == 0)
+            /* Número de nós restantes é 0, mas não chegou a um nó nulo */
+            {
+                ++numFalhasObservadas;
+                CNT_Contar("5s", 0);
+                break;
+            }
+
+            else
+            {
+                ++numSucessosObservados;
+                CNT_Contar("5n", 0);
+            }
+
+            if (pNo->pNoAnterior != ultimoNoDaVolta && !pNo->pNoAnterior->pNoProximo)
+            /* Nó sucessor do anterior é nulo */
+            {
+                ++numFalhasObservadas;
+                CNT_Contar("2s", 0);
+            }
+
+            else
+            {
+                ++numSucessosObservados;
+                CNT_Contar("2n", 0);
+
+                if (pNo->pNoAnterior != ultimoNoDaVolta && pNo->pNoAnterior->pNoProximo != pNo)
+                /* Nó anterior ao próximo é nulo */
+                {
+                    ++numFalhasObservadas;
+                    CNT_Contar("4s", 0);
+                }
+
+                else
+                {
+                    ++numSucessosObservados;
+                    CNT_Contar("4n", 0);
+                }
+            }
+
+            pNo = pNo->pNoAnterior; /* Vai para próximo nó */
+            --numNos;
+        }
     }
 
-    if (numNos) /* Chegou num nó nulo, mas o número de nós não é zero */
-    {
-        ++numFalhasObservadas;
-        CNT_Contar("3", 0);
-    }
-    else{
-        ++numSucessosObservados;
-        CNT_Contar("17", 0);
-    }
-
-    CNT_GravarContadores("contagemacumulada.txt");
+    CNT_GravarContadores("EXEC/contagemacumulada.txt");
     CNT_PararContagem();
     //CNT_VerificarContagem();
     CNT_TerminarContadores();

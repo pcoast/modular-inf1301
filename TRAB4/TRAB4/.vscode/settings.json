@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "CESPDIN.C": "cpp",
+        "CONTA.C": "cpp",
+        "GENERICO.C": "cpp",
+        "GERAALT.C": "cpp",
+        "INTRPCED.C": "cpp",
+        "INTRPCNT.C": "cpp",
+        "LERPARM.C": "cpp",
+        "LISTA.C": "cpp",
+        "PRINCIP.C": "cpp",
+        "TABSIMB.C": "cpp",
+        "TESTLIS.C": "cpp",
+        "INTRPCED.H": "cpp"
+    }
+}

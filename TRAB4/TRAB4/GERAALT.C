@@ -1,22 +1,22 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: ALT  Gerador de números aleatórios
+*  $MCI Mï¿½dulo de implementaï¿½ï¿½o: ALT  Gerador de nï¿½meros aleatï¿½rios
 *
 *  Arquivo gerado:              GERAALT.c
 *  Letras identificadoras:      ALT
 *
-*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
+*  Nome da base de software:    Arcabouï¿½o para a automaï¿½ï¿½o de testes de programas redigidos em C
 *  Arquivo da base de software: C:\AUTOTEST\PROJETOS\ARCABOUC.BSW
 *
-*  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
+*  Projeto: INF 1301 / 1628 Automatizaï¿½ï¿½o dos testes de mï¿½dulos C
 *  Gestor:  LES/DI/PUC-Rio
 *  Autores: avs
 *
-*  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     4       avs   01/fev/2006 criar linguagem script simbólica
-*     3       avs   08/dez/2004 uniformização dos exemplos
-*     2       avs   07/jul/2003 unificação de todos os módulos em um só projeto
-*     1       avs   16/abr/2003 início desenvolvimento
+*  $HA Histï¿½rico de evoluï¿½ï¿½o:
+*     Versï¿½o  Autor    Data     Observaï¿½ï¿½es
+*     4       avs   01/fev/2006 criar linguagem script simbï¿½lica
+*     3       avs   08/dez/2004 uniformizaï¿½ï¿½o dos exemplos
+*     2       avs   07/jul/2003 unificaï¿½ï¿½o de todos os mï¿½dulos em um sï¿½ projeto
+*     1       avs   16/abr/2003 inï¿½cio desenvolvimento
 *
 ***************************************************************************/
 
@@ -24,14 +24,14 @@
 #include <time.h>
 
 #define GERAALT_OWN
-#include "GERAALT.h"
+#include "GERAALT.H"
 #undef GERAALT_OWN
 
-/*****  Código das funções exportadas pelo módulo  *****/
+/*****  Cï¿½digo das funï¿½ï¿½es exportadas pelo mï¿½dulo  *****/
 
 /***************************************************************************
 *
-*  Função: ALT  &Inicializar o gerador de números aleatórios
+*  Funï¿½ï¿½o: ALT  &Inicializar o gerador de nï¿½meros aleatï¿½rios
 *  ****/
 
    void ALT_Inicializar( unsigned int Base )
@@ -48,11 +48,11 @@
          srand( Base ) ;
       } /* if */
 
-   } /* Fim função: ALT  &Inicializar o gerador de números aleatórios */
+   } /* Fim funï¿½ï¿½o: ALT  &Inicializar o gerador de nï¿½meros aleatï¿½rios */
 
 /***************************************************************************
 *
-*  Função: ALT  &Gerar inteiro em uniformemente distribuído
+*  Funï¿½ï¿½o: ALT  &Gerar inteiro em uniformemente distribuï¿½do
 *  ****/
 
    int ALT_GerarDistUniforme( int Inf , int Sup )
@@ -72,11 +72,11 @@
       #pragma warning(default:4244)
       return Inf + i ;
 
-   } /* Fim função: ALT  &Gerar inteiro em uniformemente distribuído */
+   } /* Fim funï¿½ï¿½o: ALT  &Gerar inteiro em uniformemente distribuï¿½do */
 
 /***************************************************************************
 *
-*  Função: ALT  &Gerar distribuição dada por tabela de freqüências
+*  Funï¿½ï¿½o: ALT  &Gerar distribuiï¿½ï¿½o dada por tabela de freqï¿½ï¿½ncias
 *  ****/
 
    int ALT_GerarFrequencia( int numElem , int * vetElem , int Limite )
@@ -95,11 +95,11 @@
       } /* for */
       return numElem ;
 
-   } /* Fim função: ALT  &Gerar distribuição dada por tabela de freqüências */
+   } /* Fim funï¿½ï¿½o: ALT  &Gerar distribuiï¿½ï¿½o dada por tabela de freqï¿½ï¿½ncias */
 
 /***************************************************************************
 *
-*  Função: ALT  &Gerar permutação randômica uniformemente distribuída
+*  Funï¿½ï¿½o: ALT  &Gerar permutaï¿½ï¿½o randï¿½mica uniformemente distribuï¿½da
 *  ****/
 
    void ALT_GerarPermutacao( int   tamVetor ,
@@ -118,7 +118,7 @@
          Vetor[ i   ] = Temp ;
       } /* for */
 
-   } /* Fim função: ALT  &Gerar permutação randômica uniformemente distribuída */
+   } /* Fim funï¿½ï¿½o: ALT  &Gerar permutaï¿½ï¿½o randï¿½mica uniformemente distribuï¿½da */
 
-/********** Fim do módulo de implementação: ALT  Gerador de números aleatórios **********/
+/********** Fim do mï¿½dulo de implementaï¿½ï¿½o: ALT  Gerador de nï¿½meros aleatï¿½rios **********/
 

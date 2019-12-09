@@ -2,46 +2,46 @@
 #define INTRPCED_
 /***************************************************************************
 *
-*  $MCD Módulo de definição: ICED Interpretador controle de acesso a espacos de dados dinâmicos
+*  $MCD Mï¿½dulo de definiï¿½ï¿½o: ICED Interpretador controle de acesso a espacos de dados dinï¿½micos
 *
 *  Arquivo gerado:              INTRPCED.H
 *  Letras identificadoras:      ICED
 *
-*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
+*  Nome da base de software:    Arcabouï¿½o para a automaï¿½ï¿½o de testes de programas redigidos em C
 *  Arquivo da base de software: C:\AUTOTEST\PROJETOS\ARCABOUC.BSW
 *
-*  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
+*  Projeto: INF 1301 / 1628 Automatizaï¿½ï¿½o dos testes de mï¿½dulos C
 *  Gestor:  LES/DI/PUC-Rio
 *  Autores: avs
 *
-*  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     4       avs   01/fev/2006 criar linguagem script simbólica
-*     3       avs   08/dez/2004 uniformização dos exemplos
-*     2       avs   07/jul/2003 unificação de todos os módulos em um só projeto
-*     1       avs   16/abr/2003 início desenvolvimento
+*  $HA Histï¿½rico de evoluï¿½ï¿½o:
+*     Versï¿½o  Autor    Data     Observaï¿½ï¿½es
+*     4       avs   01/fev/2006 criar linguagem script simbï¿½lica
+*     3       avs   08/dez/2004 uniformizaï¿½ï¿½o dos exemplos
+*     2       avs   07/jul/2003 unificaï¿½ï¿½o de todos os mï¿½dulos em um sï¿½ projeto
+*     1       avs   16/abr/2003 inï¿½cio desenvolvimento
 *
-*  $EIU Interface com o usuário pessoa
-*     Comandos de controle de espaços dinâmicos sempre disponíveis
+*  $EIU Interface com o usuï¿½rio pessoa
+*     Comandos de controle de espaï¿½os dinï¿½micos sempre disponï¿½veis
 *
 *     =exibirtodosespacos  <regra>
 *        <regra> pode ser uma de
-*           1 - exibe todos os espaços
+*           1 - exibe todos os espaï¿½os
 *           2 - exibe somente os marcados ativo
 *           3 - exibe somente os marcados inativo
 *
 *     =verificartodosespacos  <num erros esperado>
 *
-*     =obternumeroespacosalocados <num espaços esperado>
+*     =obternumeroespacosalocados <num espaï¿½os esperado>
 *
-*     =obternumerototalespacos <num total de alocações esperado>
+*     =obternumerototalespacos <num total de alocaï¿½ï¿½es esperado>
 *
 *     =obternumeroregra  <regra>  <num esperado>
 *        <regra> pode ser uma de
-*           1 - exibe todos os espaços
+*           1 - exibe todos os espaï¿½os
 *           2 - exibe somente os marcados ativo
 *           3 - exibe somente os marcados inativo
-*        <num esperado>  é o número esperado de espaços alocados e que
+*        <num esperado>  ï¿½ o nï¿½mero esperado de espaï¿½os alocados e que
 *                        satisfazem a regra
 *
 *     =obtertotalespacosalocado  <num total bytes alocados esperado>
@@ -50,14 +50,14 @@
 *
 *     =exibirnumeroNULLgerado
 *
-*     =limitarmemoriadisponivel <limite do número de bytes disponíveis
-*                                para a alocação dinâmica>
+*     =limitarmemoriadisponivel <limite do nï¿½mero de bytes disponï¿½veis
+*                                para a alocaï¿½ï¿½o dinï¿½mica>
 *
-*     =limitarnumeroespacos     <limite do número de espaços alocados>
+*     =limitarnumeroespacos     <limite do nï¿½mero de espaï¿½os alocados>
 *
-*     =limitarfrequenciaNULL    <freqüência com que allocações têm sucesso>
-*           é um valor dado em milésimos:  999 indica 99,9% das vezes
-*           CED_Malloc alocará memória
+*     =limitarfrequenciaNULL    <freqï¿½ï¿½ncia com que allocaï¿½ï¿½es tï¿½m sucesso>
+*           ï¿½ um valor dado em milï¿½simos:  999 indica 99,9% das vezes
+*           CED_Malloc alocarï¿½ memï¿½ria
 *
 *     =eliminarlimitesespaco
 *
@@ -69,65 +69,65 @@
    #define INTRPCED_EXT extern
 #endif
 
-/***** Declarações exportadas pelo módulo *****/
+/***** Declaraï¿½ï¿½es exportadas pelo mï¿½dulo *****/
 
-#include    "TST_Espc.h"
+#include    "TST_ESPC.H"
 
 
 /***********************************************************************
 *
-*  $FC Função: ICED &Interpretar comandos controle de espaço
+*  $FC Funï¿½ï¿½o: ICED &Interpretar comandos controle de espaï¿½o
 *
-*  $ED Descrição da função
-*     O módulo INTESPAC interpreta os comandos do arcabouço que controlam
-*     os acessos a espaços de dados dinâmicos.
-*     Não existe contexto para este interpretador
-*     São seguintes os comandos interpretados:
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
+*     O mï¿½dulo INTESPAC interpreta os comandos do arcabouï¿½o que controlam
+*     os acessos a espaï¿½os de dados dinï¿½micos.
+*     Nï¿½o existe contexto para este interpretador
+*     Sï¿½o seguintes os comandos interpretados:
 *
 *     =inicializarespacos
-*         inicializa o sistema de controle de espaços.
+*         inicializa o sistema de controle de espaï¿½os.
 *         Deve ser executado exatamente uma vez.
 *
 *     =exibirtodosespacos         <Regra>
-*         exibe todos os espaços segundo a <Regra> de seleção dada,
+*         exibe todos os espaï¿½os segundo a <Regra> de seleï¿½ï¿½o dada,
 *         que pode ser:
-*             CED_ExibirTodos    = 1  Exibir todos os espaços
-*             CED_ExibirAtivos   = 2  Exibir todos os espaços ativos
-*             CED_ExibirInativos = 3  Exibir todos os espaços inativos
+*             CED_ExibirTodos    = 1  Exibir todos os espaï¿½os
+*             CED_ExibirAtivos   = 2  Exibir todos os espaï¿½os ativos
+*             CED_ExibirInativos = 3  Exibir todos os espaï¿½os inativos
 *
 *     =verificartodosespacos      <numFalhasEsperado>
-*         examina a validade de todo o espaço
+*         examina a validade de todo o espaï¿½o
 *
 *     =obternumeroespacosalocados <numAlocadosEsperado>
-*         obtém o número de espaços controlados alocados no momento
+*         obtï¿½m o nï¿½mero de espaï¿½os controlados alocados no momento
 *
 *     =obternumerototalespacos    <numTotalEsperado>
-*         obtém o número total de vezes em que foram alocados espaços controlados
+*         obtï¿½m o nï¿½mero total de vezes em que foram alocados espaï¿½os controlados
 *
 *     =obternumeroregra           <regra>  <numEsperado>
-*         obtém o número de espaços segundo <regra> de seleção dada (ver acima)
+*         obtï¿½m o nï¿½mero de espaï¿½os segundo <regra> de seleï¿½ï¿½o dada (ver acima)
 *
 *     =obtertotalespacosalocado   <totalEsperado>
-*         obtém o número de bytes úteis alocados no momento
-*         se <totalEsperado> for < 0  exibe somente o número de bytes, sem controlar
+*         obtï¿½m o nï¿½mero de bytes ï¿½teis alocados no momento
+*         se <totalEsperado> for < 0  exibe somente o nï¿½mero de bytes, sem controlar
 *
 *     =limitarmemoriadisponivel   <novoLimite>
-*         estabelece um limite artificial de memória disponível
+*         estabelece um limite artificial de memï¿½ria disponï¿½vel
 *
 *     =limitarnumeroespacos       <novoLimite>
-*         estabelece um limite artificial do néumero de espaços que podem
+*         estabelece um limite artificial do nï¿½umero de espaï¿½os que podem
 *         estar alocados em determinado momento
 *
 *     =eliminarlimitesespaco
-*         retira os limites de alocação estabelecidos
+*         retira os limites de alocaï¿½ï¿½o estabelecidos
 *
-*     As demais funçoes do módulo CESPDIN CED Controle de Espaço Dinâmico
-*     estão disponíveis no arcabouço e podem ser utilizados livremente
-*     por módulos de teste (ou outros) desenvolvidos pelo usuário do
-*     arcabouço. Elas são testadas através do módulo de teste TESTCED
-*     específico para este módulo
+*     As demais funï¿½oes do mï¿½dulo CESPDIN CED Controle de Espaï¿½o Dinï¿½mico
+*     estï¿½o disponï¿½veis no arcabouï¿½o e podem ser utilizados livremente
+*     por mï¿½dulos de teste (ou outros) desenvolvidos pelo usuï¿½rio do
+*     arcabouï¿½o. Elas sï¿½o testadas atravï¿½s do mï¿½dulo de teste TESTCED
+*     especï¿½fico para este mï¿½dulo
 *
-*  $EP Parâmetros
+*  $EP Parï¿½metros
 *     $P ComandoTeste - String contendo o comando
 *
 ***********************************************************************/
@@ -136,7 +136,7 @@
 
 #undef INTRPCED_EXT
 
-/********** Fim do módulo de definição: ICED Interpretador controle de acesso a espacos de dados dinâmicos **********/
+/********** Fim do mï¿½dulo de definiï¿½ï¿½o: ICED Interpretador controle de acesso a espacos de dados dinï¿½micos **********/
 
 #else
 #endif

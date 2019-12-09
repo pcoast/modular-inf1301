@@ -24,12 +24,12 @@
 #include    <stdio.h>
 #include    <stdlib.h>
 
-#include    "TST_Espc.h"
+#include    "TST_ESPC.H"
 
-#include    "Generico.h"
-#include    "LerParm.h"
+#include    "GENERICO.H"
+#include    "LERPARM.H"
 
-#include    "Lista.h"
+#include    "LISTA.H"
 
 
 static const char RESET_LISTA_CMD         [ ] = "=resetteste"     ;
@@ -40,8 +40,10 @@ static const char INS_ELEM_ANTES_CMD      [ ] = "=inselemantes"   ;
 static const char INS_ELEM_APOS_CMD       [ ] = "=inselemapos"    ;
 static const char OBTER_VALOR_CMD         [ ] = "=obtervalorelem" ;
 static const char EXC_ELEM_CMD            [ ] = "=excluirelem"    ;
-static const char IR_PROX				  [ ] = "=irprox"		  ;
+static const char IR_PROX				  [ ] = "=irproximo"	  ;
 static const char IR_ANTERIOR			  [ ] = "=iranterior"     ;
+static const char IR_PRIMEIRO			  [ ] = "=irprimeiro"     ;
+
 
 #ifdef _DEBUG
 static const char DETURPAR			  [ ] = "=deturpa"		  ;
@@ -88,7 +90,7 @@ LIS_tppCabecaLista vtListas[ DIM_VT_LISTA ] ;
 *     =inselemapos                  inxLista  string  CondRetEsp
 *     =obtervalorelem               inxLista  string  CondretPonteiro
 *     =excluirelem                  inxLista  CondRetEsp
-*     =irprox						inxLista
+*     =irproximo						inxLista
 *     =iranterior                   inxLista
 *
 *     =deturpa	                    inxLista  deturpacao
@@ -192,7 +194,7 @@ LIS_tppCabecaLista vtListas[ DIM_VT_LISTA ] ;
             strcpy( pDado , StringDado ) ;
 
 
-            CondRet = LIS_InserirNoAntes( vtListas[ inxLista ] , pDado ) ;
+            CondRet = (TST_tpCondRet) LIS_InserirNoAntes( vtListas[ inxLista ] , pDado ) ;
 
             if ( CondRet != LIS_CondRetOK )
             {
@@ -226,7 +228,7 @@ LIS_tppCabecaLista vtListas[ DIM_VT_LISTA ] ;
             strcpy( pDado , StringDado ) ;
 
 
-            CondRet = LIS_InserirNoApos( vtListas[ inxLista ] , pDado ) ;
+            CondRet = (TST_tpCondRet) LIS_InserirNoApos( vtListas[ inxLista ] , pDado ) ;
 
             if ( CondRet != LIS_CondRetOK )
             {
@@ -254,7 +256,7 @@ LIS_tppCabecaLista vtListas[ DIM_VT_LISTA ] ;
 
             return TST_CompararInt( CondRetEsp ,
 						LIS_ExcluirNo( vtListas[ inxLista ] ) ,
-                     "Condi��o de retorno errada ao excluir."   ) ;
+                     "Condição de retorno errada ao excluir."   ) ;
 
          } /* fim ativa: Testar excluir simbolo */
 
@@ -271,16 +273,16 @@ LIS_tppCabecaLista vtListas[ DIM_VT_LISTA ] ;
                return TST_CondRetParm ;
             } /* if */
 
-			TST_tpCondRet condRetObtida = LIS_obterConteudo(vtListas[inxLista], &pDado);
+			TST_tpCondRet condRetObtida = (TST_tpCondRet) LIS_obterConteudo(vtListas[inxLista], (void**) &pDado);
 
 			if (pDado != NULL) {
-				CondRet = TST_CompararChar(StringDado, pDado, "Valor obtido não bate com o esperado");
+				CondRet = TST_CompararString(StringDado, pDado, "Valor obtido não bate com o esperado");
 
 				if (CondRet != TST_CondRetOK)
 					return CondRet;
 			}
 
-			return TST_CompararInt(CondRetEsp, condRetObtida, "Retorno errado ao obter elemento.");
+			return TST_CompararInt(CondRetEsp, condRetObtida, "Retorno errado ao obter conteúdo do nó.");
 
          } /* fim ativa: Testar obter valor do elemento corrente */
 
@@ -300,7 +302,7 @@ LIS_tppCabecaLista vtListas[ DIM_VT_LISTA ] ;
 
             return TST_CompararInt( CondRetEsp ,
 				LIS_vaiParaProximoNo( vtListas[ inxLista ] ) ,
-                      "Condicao de retorno errada ao ir para o proximo no" ) ;
+                      "Condicao de retorno errada ao ir para o proximo nó" ) ;
 
          } /* fim ativa: LIS  &Avan�ar elemento */
 
@@ -320,7 +322,27 @@ LIS_tppCabecaLista vtListas[ DIM_VT_LISTA ] ;
 
 			 return TST_CompararInt(CondRetEsp,
 				 LIS_vaiParaNoAnterior(vtListas[inxLista]),
-				 "Condicao de retorno errada ao ir para o no anterior");
+				 "Condicao de retorno errada ao ir para o nó anterior");
+
+		 } /* fim ativa: LIS  Voltar elemnento */
+
+         /* LIS Ir para primeiro nó */
+
+        else if (strcmp(ComandoTeste, IR_PRIMEIRO) == 0)
+		 {
+
+			 numLidos = LER_LerParametros("ii", &inxLista,
+				 &CondRetEsp);
+
+			 if ((numLidos != 2)
+				 || (!ValidarInxLista(inxLista, NAO_VAZIO)))
+			 {
+				 return TST_CondRetParm;
+			 } /* if */
+
+			 return TST_CompararInt(CondRetEsp,
+				 LIS_vaiParaPrimeiroNo(vtListas[inxLista]),
+				 "Condicao de retorno errada ao ir para primeiro nó");
 
 		 } /* fim ativa: LIS  Voltar elemnento */
 

@@ -1,23 +1,23 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: ICNT Interpretador de contadores
+*  $MCI Mï¿½dulo de implementaï¿½ï¿½o: ICNT Interpretador de contadores
 *
 *  Arquivo gerado:              INTRPCNT.C
 *  Letras identificadoras:      ICNT
 *
-*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
+*  Nome da base de software:    Arcabouï¿½o para a automaï¿½ï¿½o de testes de programas redigidos em C
 *  Arquivo da base de software: C:\AUTOTEST\PROJETOS\ARCABOUC.BSW
 *
-*  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
+*  Projeto: INF 1301 / 1628 Automatizaï¿½ï¿½o dos testes de mï¿½dulos C
 *  Gestor:  LES/DI/PUC-Rio
 *  Autores: avs
 *
-*  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
+*  $HA Histï¿½rico de evoluï¿½ï¿½o:
+*     Versï¿½o  Autor    Data     Observaï¿½ï¿½es
 *     5       avs   18/mai/2008 corrigir e ampliar CESPDIN
-*     4       avs   01/fev/2006 criar linguagem script simbólica
-*     3       avs   08/dez/2004 uniformização dos exemplos
-*     2       avs   07/jul/2003 unificação de todos os módulos em um só projeto
-*     1       avs   16/abr/2003 início desenvolvimento
+*     4       avs   01/fev/2006 criar linguagem script simbï¿½lica
+*     3       avs   08/dez/2004 uniformizaï¿½ï¿½o dos exemplos
+*     2       avs   07/jul/2003 unificaï¿½ï¿½o de todos os mï¿½dulos em um sï¿½ projeto
+*     1       avs   16/abr/2003 inï¿½cio desenvolvimento
 *
 ***************************************************************************/
 
@@ -28,9 +28,9 @@
 #include "INTRPCNT.H"
 #undef INTRPCNT_OWN
 
-#include    "Generico.h"
-#include    "LerParm.h"
-#include    "conta.h"
+#include    "GENERICO.H"
+#include    "LERPARM.H"
+#include    "CONTA.H"
 
 #define     DIM_MSG             500
 #define     DIM_NOME_ARQ        500
@@ -53,13 +53,13 @@ static const char OBTER_NUM_CONTADORES_CMD[ ]     = "=numcontadores" ;
 static const char OBTER_TOTAL_CONTAGEM_CMD[ ]     = "=contagemtotal" ;
 static const char VERIFICAR_CONTAGENS_CMD[ ]      = "=verificarcontagens" ;
 
-static char CondRetErrada[ ] = "Condição de retorno errada." ;
+static char CondRetErrada[ ] = "Condiï¿½ï¿½o de retorno errada." ;
 
-/*****  Código das funções exportadas pelo módulo  *****/
+/*****  Cï¿½digo das funï¿½ï¿½es exportadas pelo mï¿½dulo  *****/
 
 /***************************************************************************
 *
-*  Função: ICNT &Interpretar comandos de contagem
+*  Funï¿½ï¿½o: ICNT &Interpretar comandos de contagem
 *  ****/
 
    TST_tpCondRet ICNT_EfetuarComadoContagem( char * ComandoTeste )
@@ -103,7 +103,7 @@ static char CondRetErrada[ ] = "Condição de retorno errada." ;
             } /* if */
 
             return TST_CompararInt( CondRetEsp , CondRetEh ,
-                    "Condição de retorno errada." ) ;
+                    "Condiï¿½ï¿½o de retorno errada." ) ;
 
          } /* fim ativa: Tratar CNT  &Inicializar contadores */
 
@@ -153,7 +153,7 @@ static char CondRetErrada[ ] = "Condição de retorno errada." ;
 
          } /* fim ativa: Tratar CNT  &Registrar arquivo acumulador */
 
-      /* Tratar CNT  &Ler arquivo de definição de contadores */
+      /* Tratar CNT  &Ler arquivo de definiï¿½ï¿½o de contadores */
 
          else if ( strcmp( ComandoTeste , LER_CONTADORES_CMD ) == 0 )
          {
@@ -173,9 +173,9 @@ static char CondRetErrada[ ] = "Condição de retorno errada." ;
             } /* if */
 
             return TST_CompararInt( IntEsp , CNT_LerContadores( NomeArquivo ) ,
-                      "Número de erros de leitura errado." ) ;
+                      "Nï¿½mero de erros de leitura errado." ) ;
 
-         } /* fim ativa: Tratar CNT  &Ler arquivo de definição de contadores */
+         } /* fim ativa: Tratar CNT  &Ler arquivo de definiï¿½ï¿½o de contadores */
 
       /* Tratar CNT  &Gravar arquivo de contagem acumulada */
 
@@ -197,7 +197,7 @@ static char CondRetErrada[ ] = "Condição de retorno errada." ;
             } /* if */
 
             return TST_CompararInt( IntEsp , CNT_GravarContadores( NomeArquivo ) ,
-                      "Número de erros de gravação errado." ) ;
+                      "Nï¿½mero de erros de gravaï¿½ï¿½o errado." ) ;
 
          } /* fim ativa: Tratar CNT  &Gravar arquivo de contagem acumulada */
 
@@ -320,14 +320,14 @@ static char CondRetErrada[ ] = "Condição de retorno errada." ;
             } /* if */
 
             TST_ExibirPrefixo( SINALIZA_COMENTARIO , "" ) ;
-            fprintf( TST_ObterArqLog( ) , "Valor do contador \"%s\" é: %d " ,
+            fprintf( TST_ObterArqLog( ) , "Valor do contador \"%s\" ï¿½: %d " ,
                                NomeContador , IntObtido ) ;
 
             return TST_CondRetOK ;
 
          } /* fim ativa: Tratar Exibir valor de contagem */
 
-      /* Tratar CNT  &Obter número de contadores */
+      /* Tratar CNT  &Obter nï¿½mero de contadores */
 
          else if ( strcmp( ComandoTeste , OBTER_NUM_CONTADORES_CMD ) == 0 )
          {
@@ -344,9 +344,9 @@ static char CondRetErrada[ ] = "Condição de retorno errada." ;
             } /* if */
 
             return TST_CompararInt( IntEsp , CNT_ObterNumeroContadores( ) ,
-                      "Número de contadores errado." ) ;
+                      "Nï¿½mero de contadores errado." ) ;
 
-         } /* fim ativa: Tratar CNT  &Obter número de contadores */
+         } /* fim ativa: Tratar CNT  &Obter nï¿½mero de contadores */
 
       /* Tratar CNT  &Obter total de contagem */
 
@@ -388,13 +388,13 @@ static char CondRetErrada[ ] = "Condição de retorno errada." ;
 
             return TST_CompararInt( IntEsp ,
                       CNT_VerificarContagem( ) ,
-                      "Número de contadores zero errado." ) ;
+                      "Nï¿½mero de contadores zero errado." ) ;
 
          } /* fim ativa: Tratar CNT  &Verificar contagem */
 
       return TST_CondRetNaoExecutou ;
 
-   } /* Fim função: ICNT &Interpretar comandos de contagem */
+   } /* Fim funï¿½ï¿½o: ICNT &Interpretar comandos de contagem */
 
-/********** Fim do módulo de implementação: ICNT Interpretador de contadores **********/
+/********** Fim do mï¿½dulo de implementaï¿½ï¿½o: ICNT Interpretador de contadores **********/
 

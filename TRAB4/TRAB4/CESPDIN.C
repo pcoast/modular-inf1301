@@ -27,13 +27,13 @@
 #include    <string.h>
 
 #define CESPDIN_OWN
-#include "CESPDIN.h"
+#include "CESPDIN.H"
 #undef CESPDIN_OWN
 
-#include    "Generico.h"
-#include    "GeraAlt.h"
+#include    "GENERICO.H"
+#include    "GERAALT.H"
 
-#include    ".\tabelas\IdTiposEspaco.def"
+#include    "Tabelas/IdTiposEspaco.def"
 
     /* O pragma � necess�rio para assegurar alinhamento a byte,
        uma vez que toda a aritm�tica com ponteiros assume isso */

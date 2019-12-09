@@ -1,22 +1,22 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: ICED Interpretador controle de acesso a espacos de dados dinâmicos
+*  $MCI Mï¿½dulo de implementaï¿½ï¿½o: ICED Interpretador controle de acesso a espacos de dados dinï¿½micos
 *
 *  Arquivo gerado:              INTRPCED.C
 *  Letras identificadoras:      ICED
 *
-*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
+*  Nome da base de software:    Arcabouï¿½o para a automaï¿½ï¿½o de testes de programas redigidos em C
 *  Arquivo da base de software: C:\AUTOTEST\PROJETOS\ARCABOUC.BSW
 *
-*  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
+*  Projeto: INF 1301 / 1628 Automatizaï¿½ï¿½o dos testes de mï¿½dulos C
 *  Gestor:  LES/DI/PUC-Rio
 *  Autores: avs
 *
-*  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     4       avs   01/fev/2006 criar linguagem script simbólica
-*     3       avs   08/dez/2004 uniformização dos exemplos
-*     2       avs   07/jul/2003 unificação de todos os módulos em um só projeto
-*     1       avs   16/abr/2003 início desenvolvimento
+*  $HA Histï¿½rico de evoluï¿½ï¿½o:
+*     Versï¿½o  Autor    Data     Observaï¿½ï¿½es
+*     4       avs   01/fev/2006 criar linguagem script simbï¿½lica
+*     3       avs   08/dez/2004 uniformizaï¿½ï¿½o dos exemplos
+*     2       avs   07/jul/2003 unificaï¿½ï¿½o de todos os mï¿½dulos em um sï¿½ projeto
+*     1       avs   16/abr/2003 inï¿½cio desenvolvimento
 *
 ***************************************************************************/
 
@@ -27,15 +27,15 @@
 #include "INTRPCED.H"
 #undef INTRPCED_OWN
 
-#include    "Generico.h"
-#include    "CEspDin.h"
-#include    "LerParm.h"
+#include    "GENERICO.H"
+#include    "CESPDIN.H"
+#include    "LERPARM.H"
 
 #define     COMENTARIO  "!!!"
 
 typedef     int      BOOL ;
 
-/* Tabela dos nomes dos comandos de teste específicos */
+/* Tabela dos nomes dos comandos de teste especï¿½ficos */
 
 static const char ExibirTodosEspacosCmd[ ]      = "=exibirtodosespacos" ;
 static const char VerificarTodosEspacosCmd[ ]   = "=verificartodosespacos" ;
@@ -55,7 +55,7 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
             /* Constantes booleanas */
 
       #define     DIM_VT_ESPACO  5
-            /* Dimensão do vetor de ponteiros para estruturas do contexto */
+            /* Dimensï¿½o do vetor de ponteiros para estruturas do contexto */
 
       static void * vtEspaco[ DIM_VT_ESPACO ] ;
             /* Vetor de ponteiros para estruturas do contexto */
@@ -64,13 +64,13 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
             /* Prefixo sinalizador de mensagem de erro */
 
       static int EhPrimeiraVez = TRUE ;
-            /* Controle de primeira execução */
+            /* Controle de primeira execuï¿½ï¿½o */
 
-/*****  Código das funções exportadas pelo módulo  *****/
+/*****  Cï¿½digo das funï¿½ï¿½es exportadas pelo mï¿½dulo  *****/
 
 /***************************************************************************
 *
-*  Função: ICED &Interpretar comandos controle de espaço
+*  Funï¿½ï¿½o: ICED &Interpretar comandos controle de espaï¿½o
 *  ****/
 
    TST_tpCondRet ICED_InterpretarTesteEspaco( char * ComandoTeste )
@@ -84,7 +84,7 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
 
       char Msg[ 40 ] ;
 
-      /* Tratar: CED &Exibir todos os espaços */
+      /* Tratar: CED &Exibir todos os espaï¿½os */
 
          if ( strcmp( ComandoTeste , ExibirTodosEspacosCmd ) == 0 )
          {
@@ -101,7 +101,7 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
 
             return TST_CondRetOK ;
 
-         } /* fim ativa: Tratar: CED &Exibir todos os espaços */
+         } /* fim ativa: Tratar: CED &Exibir todos os espaï¿½os */
 
       /* Tratar: CED &Verificar a integridade de toda a lista */
 
@@ -119,11 +119,11 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
             valObtido = CED_VerificarTudo( NULL ) ;
 
             return TST_CompararBool( valEsperado , valObtido ,
-                   "Condição de validade errada." ) ;
+                   "Condiï¿½ï¿½o de validade errada." ) ;
 
          } /* fim ativa: Tratar: CED &Verificar a integridade de toda a lista */
 
-      /* Tratar: CED &Obter número de espaços ativos */
+      /* Tratar: CED &Obter nï¿½mero de espaï¿½os ativos */
 
          else if ( strcmp( ComandoTeste , ObterNumeroEspacosAtivosCmd ) == 0 )
          {
@@ -139,11 +139,11 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
             valObtido = CED_ObterNumeroEspacosAlocados( ) ;
 
             return TST_CompararInt( valEsperado , valObtido ,
-                   "Número de espaços alocados errado." ) ;
+                   "Nï¿½mero de espaï¿½os alocados errado." ) ;
 
-         } /* fim ativa: Tratar: CED &Obter número de espaços ativos */
+         } /* fim ativa: Tratar: CED &Obter nï¿½mero de espaï¿½os ativos */
 
-      /* Tratar: CED &Obter espaço total alocado */
+      /* Tratar: CED &Obter espaï¿½o total alocado */
 
          else if ( strcmp( ComandoTeste , ObterTotalEspacosAlocadoCmd ) == 0 )
          {
@@ -160,17 +160,17 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
 
             if ( valEsperado < 0 )
             {
-               sprintf( Msg , "Total espaço alocado é: %d bytes" , valObtido ) ;
+               sprintf( Msg , "Total espaï¿½o alocado ï¿½: %d bytes" , valObtido ) ;
                TST_ExibirPrefixo( COMENTARIO , Msg ) ;
                return TST_CondRetOK ;
             } /* if */
 
             return TST_CompararInt( valEsperado , valObtido ,
-                   "Espaço total alocado errado." ) ;
+                   "Espaï¿½o total alocado errado." ) ;
 
-         } /* fim ativa: Tratar: CED &Obter espaço total alocado */
+         } /* fim ativa: Tratar: CED &Obter espaï¿½o total alocado */
 
-      /* Tratar: CED &Obter total de espaços alocados */
+      /* Tratar: CED &Obter total de espaï¿½os alocados */
 
          else if ( strcmp( ComandoTeste , ObterNumeroTotalEspacosCmd ) == 0 )
          {
@@ -186,11 +186,11 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
             valObtido = CED_ObterTotalAlocacoes( ) ;
 
             return TST_CompararInt( valEsperado , valObtido ,
-                   "Número total de espaços alocados errado." ) ;
+                   "Nï¿½mero total de espaï¿½os alocados errado." ) ;
 
-         } /* fim ativa: Tratar: CED &Obter total de espaços alocados */
+         } /* fim ativa: Tratar: CED &Obter total de espaï¿½os alocados */
 
-      /* Tratar: CED &Obter números de espaços */
+      /* Tratar: CED &Obter nï¿½meros de espaï¿½os */
 
          else if ( strcmp( ComandoTeste , ObterNumeroRegraCmd ) == 0 )
          {
@@ -206,11 +206,11 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
             valObtido = CED_ObterNumeroEspacos( Regra ) ;
 
             return TST_CompararInt( valEsperado , valObtido ,
-                   "Número de espaços segundo regra errado." ) ;
+                   "Nï¿½mero de espaï¿½os segundo regra errado." ) ;
 
-         } /* fim ativa: Tratar: CED &Obter números de espaços */
+         } /* fim ativa: Tratar: CED &Obter nï¿½meros de espaï¿½os */
 
-      /* Tratar: CED &Obter número total de NULLs gerados */
+      /* Tratar: CED &Obter nï¿½mero total de NULLs gerados */
 
          else if ( strcmp( ComandoTeste , ObterNumNULLCmd ) == 0 )
          {
@@ -225,25 +225,25 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
 
             return TST_CompararInt( valEsperado ,
                                     CED_ObterNumNULL( ) ,
-                   "Número de NULLs gerados está errado." ) ;
+                   "Nï¿½mero de NULLs gerados estï¿½ errado." ) ;
 
-         } /* fim ativa: Tratar: CED &Obter número total de NULLs gerados */
+         } /* fim ativa: Tratar: CED &Obter nï¿½mero total de NULLs gerados */
 
-      /* Tratar: Exibir número total de NULLs gerados */
+      /* Tratar: Exibir nï¿½mero total de NULLs gerados */
 
          else if ( strcmp( ComandoTeste , ExibirNumNULLCmd ) == 0 )
          {
 
             TST_ExibirPrefixo( SINALIZA_COMENTARIO ,
-                      "O número total de NULLs simulados é: " ) ;
+                      "O nï¿½mero total de NULLs simulados ï¿½: " ) ;
 
             fprintf( TST_ObterArqLog( ) , " %d" , CED_ObterNumNULL( )) ;
 
             return TST_CondRetOK ;
 
-         } /* fim ativa: Tratar: Exibir número total de NULLs gerados */
+         } /* fim ativa: Tratar: Exibir nï¿½mero total de NULLs gerados */
 
-      /* Tratar: CED &Limitar memória disponível */
+      /* Tratar: CED &Limitar memï¿½ria disponï¿½vel */
 
          else if ( strcmp( ComandoTeste , LimitarMemoriaDisponivelCmd ) == 0 )
          {
@@ -261,9 +261,9 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
 
             return TST_CondRetOK ;
 
-         } /* fim ativa: Tratar: CED &Limitar memória disponível */
+         } /* fim ativa: Tratar: CED &Limitar memï¿½ria disponï¿½vel */
 
-      /* Tratar: CED &Limitar número de espaços alocados */
+      /* Tratar: CED &Limitar nï¿½mero de espaï¿½os alocados */
 
          else if ( strcmp( ComandoTeste , LimitarNumeroEspacosCmd ) == 0 )
          {
@@ -281,9 +281,9 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
 
             return TST_CondRetOK ;
 
-         } /* fim ativa: Tratar: CED &Limitar número de espaços alocados */
+         } /* fim ativa: Tratar: CED &Limitar nï¿½mero de espaï¿½os alocados */
 
-      /* Tratar: CED &Limitar freqüencia de NULL */
+      /* Tratar: CED &Limitar freqï¿½encia de NULL */
 
          else if ( strcmp( ComandoTeste , LimitarFrequenciaNULLCmd ) == 0 )
          {
@@ -300,12 +300,12 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
             valObtido = CED_LimitarFrequencia( valEsperado ) ;
             if ( !valObtido )
             {
-               return TST_NotificarFalha( "Freqüência limite de malloc em erro." ) ;
+               return TST_NotificarFalha( "Freqï¿½ï¿½ncia limite de malloc em erro." ) ;
             } /* if */
 
             return TST_CondRetOK ;
 
-         } /* fim ativa: Tratar: CED &Limitar freqüencia de NULL */
+         } /* fim ativa: Tratar: CED &Limitar freqï¿½encia de NULL */
 
       /* Testar: CED &Eliminar limites */
 
@@ -320,7 +320,7 @@ static const char EliminarLimiteEspacoCmd[ ]    = "=eliminarlimitesespaco" ;
 
       return TST_CondRetNaoExecutou ;
 
-   } /* Fim função: ICED &Interpretar comandos controle de espaço */
+   } /* Fim funï¿½ï¿½o: ICED &Interpretar comandos controle de espaï¿½o */
 
-/********** Fim do módulo de implementação: ICED Interpretador controle de acesso a espacos de dados dinâmicos **********/
+/********** Fim do mï¿½dulo de implementaï¿½ï¿½o: ICED Interpretador controle de acesso a espacos de dados dinï¿½micos **********/
 

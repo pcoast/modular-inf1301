@@ -52,13 +52,12 @@ typedef enum
 
     LIS_CondRetListaVazia, /* A lista não contém nós */
 
-    LIS_CondRetFimLista, /* Foi atingido o fim de lista */
+    LIS_CondRetNoNaoExiste, /* Tentou caminhar para um nó inexistente */
 
     LIS_CondRetNaoAchou, /* Não encontrou o valor procurado */
 
-    LIS_CondRetFaltouMemoria, /* Faltou memória ao tentar criar um nó */
+    LIS_CondRetFaltouMemoria /* Faltou memória ao tentar criar um nó */
 
-    LIS_CondRetNoNaoExiste /* Tentou caminhar para um nó inexistente */
 
 #ifdef _DEBUG
 
@@ -74,9 +73,6 @@ typedef enum
 
     LIS_CondRetConteudoNaoExiste,
     /* Tentou incluir um conteúdo nulo em um nó da lista */
-
-    LIS_CondRetTamDesigual,
-    /* Tamanho da lista apontado pela cabeça não é o apontado pelo nó novo */
 
 #endif
 
@@ -378,6 +374,39 @@ LIS_tpCondRet LIS_vaiParaNoAnterior(LIS_tppCabecaLista pCabecaDaLista);
 *
 *   $FV Valor retornado
 *       LIS_CondRetNoNaoExiste
+*       LIS_CondRetOK
+*
+*******************************************************************************/
+
+/*******************************************************************************
+*
+*	$FC Função:
+*       LIS Vai para primeiro nó.
+*
+*
+*	$AE Assertivas de entrada esperadas:
+*		Cabeça da lista não é nula, mas pode ou não ser vazia.
+*		Valem as assertivas estruturais da lista duplamente encadeada com
+*       cabeça.
+*
+*
+*  $EP Parâmetros
+*       $P pCabecaDaLista - O parâmetro que receberá o endereço do ponteiro para
+*           a cabeça da lista.
+*           Este parâmetro é passado por referência.
+*
+*******************************************************************************/
+LIS_tpCondRet LIS_vaiParaPrimeiroNo(LIS_tppCabecaLista pCabecaDaLista);
+/*******************************************************************************
+*
+*	$AS Assertivas de saída esperadas:
+*       Nó corrente aponta para o primeiro nó.
+*		Valem as assertivas estruturais da lista duplamente encadeada com
+*       cabeça.
+*
+*
+*   $FV Valor retornado
+*       LIS_CondRetListaVazia
 *       LIS_CondRetOK
 *
 *******************************************************************************/

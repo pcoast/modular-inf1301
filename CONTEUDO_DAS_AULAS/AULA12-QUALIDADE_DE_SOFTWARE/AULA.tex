@@ -1,0 +1,129 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% fphw Assignment
+% LaTeX Template
+% Version 1.0 (27/04/2019)
+%
+% This template originates from:
+% https://www.LaTeXTemplates.com
+%
+% Authors:
+% Class by Felipe Portales-Oliva (f.portales.oliva@gmail.com) with template 
+% content and modifications by Vel (vel@LaTeXTemplates.com)
+%
+% Template (this file) License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+	12pt, % Default font size, values between 10pt-12pt are allowed
+	%letterpaper, % Uncomment for US letter paper size
+	%spanish, % Uncomment for Spanish
+]{fphw}
+
+% Template-specific packages
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage{mathpazo} % Use the Palatino font
+\usepackage{setspace}
+
+\usepackage{graphicx} % Required for including images
+
+\usepackage{booktabs} % Required for better horizontal rules in tables
+
+\usepackage{listings} % Required for insertion of code
+
+\usepackage{enumerate} % To modify the enumerate environment
+
+\usepackage{parskip}% http://ctan.org/pkg/parskip
+
+\usepackage{amsmath}
+
+\usepackage{amssymb}
+
+\usepackage{caption}
+
+\usepackage{tikz}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+
+            \usetikzlibrary{decorations.pathreplacing,positioning, arrows.meta}
+
+            \newcommand{\ImageWidth}{\textwidth}
+
+\usepackage{enumitem}
+
+\usepackage[ruled,portuguese,onelanguage,longend]{algorithm2e} %for psuedo code}% http://ctan.org/pkg/algorithm2e
+% \makeatletter
+% \renewcommand{\@algocf@capt@plain}{above}% formerly {bottom}
+% \makeatother
+
+\usepackage{multicol}
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{AULA 12 - Qualidade de Software} % Assignment title
+
+\author{AVC, JPP, PC} % Student name
+
+\date{} % Due date
+
+\institute{Pontifícia Universidade Católica do Rio de Janeiro \\ Departamento de Informática} % Institute or school name
+
+\class{Programação Modular (INF1301)} % Course or class name
+
+\professor{Flavio Bevilacqua} % Professor or teacher in charge of the assignment
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Output the assignment title, created automatically using the information in the custom commands above
+
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT CONTENT
+%----------------------------------------------------------------------------------------
+\begin{doublespace}
+
+    \begin{enumerate}[label=\textbf{\arabic*)}]
+
+        \item \textbf{Definição:}
+
+              Qualidade é aproximar o produto gerado à necessidade do cliente.
+
+              Boa qualidade indica que o objeto possui características que o cliente considera positivas. Qualidade satisfatória indica que o objeto possui as características exatas que o cliente deseja.
+
+        \item \textbf{Controle de Qualidade}
+
+              O controle de qualidade não garante qualidade satisfatória pois não consegue definir o que a aplicação deveria fazer.
+
+        \item \textbf{Tipos de Qualidade}
+
+              \begin{itemize}
+
+                  \item Requerida: aquilo que o cliente quer. Parâmetro da qualidade efetiva.
+                  \item Efetiva: o que o artefato efetivamente possui. Parâmetro da qualidade atestada. Queremos aproximar a qualidade efetiva da qualidade requerida.
+                  \item Atestada: qualidade atestada por um controle de qualidade. Parâmetro da qualidade observada. Queremos aproximar a qualidade atestada da qualidade efetiva.
+                  \item Observada: análise feita a partir do resultado do controle. Queremos aproximar a qualidade observada da qualidade atestada.
+
+              \end{itemize}
+
+              Quando o programa possui erros que não foram testados, então a qualidade efetiva será menor do que a qualidade atestada.
+
+              Quando a análise do resultado do controle de qualidade é incorreta, a qualidade observada será diferente da atestada.
+
+              Quando não testamos tudo que o cliente requeriu, a qualidade atestada é maior do que a qualidade requerida.
+
+
+    \end{enumerate}
+
+
+\end{doublespace}
+%----------------------------------------------------------------------------------------
+
+\end{document}

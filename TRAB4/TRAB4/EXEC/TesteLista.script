@@ -1,0 +1,97 @@
+// Script:    TesteLista.script
+// Autor:     Pedro Costa
+// Data:      02/dez/2019
+// Propósito: Testar o módulo lista genérica duplamente encadeada autoverificável e sua instrumentação
+
+== Inicializar valores
+=declararparm   lista0  int 0
+=declararparm   lista1  int 1
+=declararparm   lista2  int 2
+
+=declararparm   str0    string  "abcdefg"
+=declararparm   str1    string  "qwerty"
+=declararparm   str2    string  "123"
+=declararparm   str3    string  "xpto"
+
+=declararparm   OK             int  0
+=declararparm   ListaVazia     int  1
+=declararparm   NoNaoExiste    int  2
+=declararparm   NaoAchou       int  3
+=declararparm   FaltouMemoria  int  4
+
+=declararparm   pNULL          int  0
+=declararparm   pNaoNULL       int  1
+
+
+== Criando lista // Cria lista e adiciona conteúdo
+
+=criarlista 0
+=verifica 0 0
+
+=inselemapos 0 str0 0 // str0
+=verifica 0 0
+
+=inselemapos 0 str1 0  // str0 str1
+=verifica 0 0
+
+=inselemantes 0 str2 0  // str0 str2 str1
+=verifica 0 0
+
+=inselemapos 0 str3 0  // str0 str2 str3 str1
+=verifica 0 0
+
+
+== TestaConteudoLista // Vê se o conteúdo da lista foi inserido corretamente
+
+=irprimeiro 0 0 // Ida
+=obtervalorelem 0 str0 0
+
+=irproximo 0 0
+=obtervalorelem 0 str2 0
+
+=irproximo 0 0
+=obtervalorelem 0 str3 0
+
+=irproximo 0 0
+=obtervalorelem 0 str1 0
+
+=irproximo 0 2 // Chegou no final da lista
+
+=iranterior 0 0
+=obtervalorelem 0 str3 0
+
+=iranterior 0 0
+=obtervalorelem 0 str2 0
+
+=iranterior 0 0
+=obtervalorelem 0 str0 0
+
+=iranterior 0 2 // Chegou no inicio da lista
+
+== Deturpando a primeira lista // Início deturpação. Ponteiro corrente está no primeiro nó
+
+=deturpa 0 7 // Altera tipo da estrutura apontado pelo nó corrente
+=verifica 0 1
+
+=deturpa 0 13 // Atribui NULL ao ponteiro para função de destruição do conteúdo de um nó
+=verifica 0 2
+
+=deturpa 0 14 // Altera tamanho apontado pelo nó corrente
+=verifica 0 3
+
+=deturpa 0 6 // Atribui NULL ao ponteiro para o conteúdo do nó corrente
+=verifica 0 4
+
+=irproximo 0 0
+
+=deturpa 0 14
+=verifica 0 5
+
+//=deturpa 0 2 // Atribui NULL ao ponteiro para o próximo do nó corrente
+//=verifica 0 5
+
+//=irproximo 0 0
+
+
+//=deturpa 0 3 // Atribui NULL ao ponteiro para o anterior do nó corrente
+//=verifica 0 6

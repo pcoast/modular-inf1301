@@ -1,37 +1,37 @@
 /***************************************************************************
-*  $MCI Módulo de implementação: TSTG Controlador de teste genérico
+*  $MCI Mï¿½dulo de implementaï¿½ï¿½o: TSTG Controlador de teste genï¿½rico
 *
 *  Arquivo gerado:              GENERICO.c
 *  Letras identificadoras:      TST
 *
-*  Nome da base de software:    Arcabouço para a automação de testes de programas redigidos em C
+*  Nome da base de software:    Arcabouï¿½o para a automaï¿½ï¿½o de testes de programas redigidos em C
 *  Arquivo da base de software: C:\AUTOTEST\PROJETOS\ARCABOUC.BSW
 *
-*  Projeto: INF 1301 / 1628 Automatização dos testes de módulos C
+*  Projeto: INF 1301 / 1628 Automatizaï¿½ï¿½o dos testes de mï¿½dulos C
 *  Gestor:  LES/DI/PUC-Rio
 *  Autores: avs
 *
-*  $HA Histórico de evolução:
-*     Versão  Autor    Data     Observações
-*     4       avs   01/fev/2006 criar linguagem script simbólica
-*     3       avs   08/dez/2004 uniformização dos exemplos
-*     2       avs   07/jul/2003 unificação de todos os módulos em um só projeto
-*     1       avs   16/abr/2003 início desenvolvimento
+*  $HA Histï¿½rico de evoluï¿½ï¿½o:
+*     Versï¿½o  Autor    Data     Observaï¿½ï¿½es
+*     4       avs   01/fev/2006 criar linguagem script simbï¿½lica
+*     3       avs   08/dez/2004 uniformizaï¿½ï¿½o dos exemplos
+*     2       avs   07/jul/2003 unificaï¿½ï¿½o de todos os mï¿½dulos em um sï¿½ projeto
+*     1       avs   16/abr/2003 inï¿½cio desenvolvimento
 *
 ***************************************************************************/
 
 #include    <string.h>
 #include    <stdio.h>
-#include    <process.h>
+#include    "process.h"
 
 #define GENERICO_OWN
-#include "GENERICO.h"
+#include "GENERICO.H"
 #undef GENERICO_OWN
 
-#include    "lerparm.h"
-#include    "intrpCNT.h"
-#include    "intrpCED.h"
-#include    "CEspDin.h"
+#include    "LERPARM.H"
+#include    "INTRPCNT.H"
+#include    "INTRPCED.H"
+#include    "CESPDIN.H"
 
 /* Constantes internas */
 
@@ -50,7 +50,7 @@
 
 #define     TRIM_CHAR           " \n\r\t\x026"
 
-/* Comandos genéricos do script de teste */
+/* Comandos genï¿½ricos do script de teste */
 
 static const char COMMENT_CMD[ ]           = "//" ;
 static const char INICIO_CMD[ ]            = "==" ;
@@ -63,7 +63,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
 /***********************************************************************
 *
-*  $TC Tipo de dados: TST Cond ret módulo de teste genérico
+*  $TC Tipo de dados: TST Cond ret mï¿½dulo de teste genï¿½rico
 *
 *
 ***********************************************************************/
@@ -74,11 +74,11 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
                /* Generico executou correto */
 
          CondNaoAbriu
-               /* Genérico não abriu arquivo */
+               /* Genï¿½rico nï¿½o abriu arquivo */
 
    } tpCond ;
 
-/*****  Dados encapsulados no módulo  *****/
+/*****  Dados encapsulados no mï¿½dulo  *****/
 
       static char NomeArqLog[ DIM_NOME_ARQ ] = "" ;
             /* Nome do arquivo log */
@@ -90,19 +90,19 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
             /* Nome do arquivo acumulador */
 
       static int ContaCasosTeste = 0 ;
-            /* Número de casos de teste efetuados */
+            /* Nï¿½mero de casos de teste efetuados */
 
       static int ContaFalhas = 0 ;
-            /* Número de falhas encontradas */
+            /* Nï¿½mero de falhas encontradas */
 
       static int ContaComandosExecutados = 0 ;
-            /* Número de comandos específicos interpretados corretamente */
+            /* Nï¿½mero de comandos especï¿½ficos interpretados corretamente */
 
       #define  DIM_LINHA     16
       #define  TITULO_CHAR   "0123456789ABCDEF"
-            /* Cabeçalho de exibição de espaço útil */
+            /* Cabeï¿½alho de exibiï¿½ï¿½o de espaï¿½o ï¿½til */
 
-/***** Protótipos das funções encapuladas no módulo *****/
+/***** Protï¿½tipos das funï¿½ï¿½es encapuladas no mï¿½dulo *****/
 
    static void InicializarTeste( void ) ;
 
@@ -120,11 +120,11 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
    static void ExibirResultados( FILE * pArq ) ;
 
-/*****  Código das funções exportadas pelo módulo  *****/
+/*****  Cï¿½digo das funï¿½ï¿½es exportadas pelo mï¿½dulo  *****/
 
 /***************************************************************************
 *
-*  Função: TSTG &Controlar uma sessão de teste
+*  Funï¿½ï¿½o: TSTG &Controlar uma sessï¿½o de teste
 *  ****/
 
    int TST_ControlarSessaoTeste( char * NomeConstrutoParm ,
@@ -135,7 +135,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
       TST_tpCondRet CondRet ;
 
-      /* Inicializar a sessão de teste */
+      /* Inicializar a sessï¿½o de teste */
 
          InicializarTeste( ) ;
 
@@ -169,7 +169,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
          CondRet = RealizarTeste( NomeConstrutoParm ) ;
 
-      /* Concluir a execução do teste */
+      /* Concluir a execuï¿½ï¿½o do teste */
 
          TerminarTeste( ) ;
 
@@ -180,11 +180,11 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
          return 4 ;
 
-   } /* Fim função: TSTG &Controlar uma sessão de teste */
+   } /* Fim funï¿½ï¿½o: TSTG &Controlar uma sessï¿½o de teste */
 
 /***************************************************************************
 *
-*  Função: TSTG &Comparar booleano
+*  Funï¿½ï¿½o: TSTG &Comparar booleano
 *  ****/
 
    TST_tpCondRet TST_CompararBool( int    ValorEsperado ,
@@ -197,7 +197,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
       {
          ContaFalhas ++ ;
          TST_ExibirPrefixo( SINALIZA_ERRO , pMensagem ) ;
-         fprintf( pArqLog , "Deveria ser: FALSE É: TRUE" ,
+         fprintf( pArqLog , "Deveria ser: FALSE ï¿½: TRUE" ,
                   ValorEsperado , ValorObtido ) ;
          return TST_CondRetErro ;
       } /* if */
@@ -207,18 +207,18 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
       {
          ContaFalhas ++ ;
          TST_ExibirPrefixo( SINALIZA_ERRO , pMensagem ) ;
-         fprintf( pArqLog , "Deveria ser: TRUE É: FALSE" ,
+         fprintf( pArqLog , "Deveria ser: TRUE ï¿½: FALSE" ,
                   ValorEsperado , ValorObtido ) ;
          return TST_CondRetErro ;
       } /* if */
 
       return TST_CondRetOK ;
 
-   } /* Fim função: TSTG &Comparar booleano */
+   } /* Fim funï¿½ï¿½o: TSTG &Comparar booleano */
 
 /***************************************************************************
 *
-*  Função: TSTG &Comparar caractere
+*  Funï¿½ï¿½o: TSTG &Comparar caractere
 *  ****/
 
    TST_tpCondRet TST_CompararChar( char   ValorEsperado ,
@@ -230,17 +230,17 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
       {
          ContaFalhas ++ ;
          TST_ExibirPrefixo( SINALIZA_ERRO , pMensagem ) ;
-         fprintf( pArqLog , "Deveria ser: '%c'  É: '%c'" ,
+         fprintf( pArqLog , "Deveria ser: '%c'  ï¿½: '%c'" ,
                   ValorEsperado , ValorObtido ) ;
          return TST_CondRetErro ;
       } /* if */
       return TST_CondRetOK ;
 
-   } /* Fim função: TSTG &Comparar caractere */
+   } /* Fim funï¿½ï¿½o: TSTG &Comparar caractere */
 
 /***************************************************************************
 *
-*  Função: TSTG &Comparar inteiro
+*  Funï¿½ï¿½o: TSTG &Comparar inteiro
 *  ****/
 
    TST_tpCondRet TST_CompararInt( long   ValorEsperado ,
@@ -252,17 +252,17 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
       {
          ContaFalhas ++ ;
          TST_ExibirPrefixo( SINALIZA_ERRO , pMensagem ) ;
-         fprintf( pArqLog , "Deveria ser: %ld  É: %ld" ,
+         fprintf( pArqLog , "Deveria ser: %ld  ï¿½: %ld" ,
                   ValorEsperado , ValorObtido ) ;
          return TST_CondRetErro ;
       } /* if */
       return TST_CondRetOK ;
 
-   } /* Fim função: TSTG &Comparar inteiro */
+   } /* Fim funï¿½ï¿½o: TSTG &Comparar inteiro */
 
 /***************************************************************************
 *
-*  Função: TSTG &Comparar flutuante
+*  Funï¿½ï¿½o: TSTG &Comparar flutuante
 *  ****/
 
    TST_tpCondRet TST_CompararFloat( double   ValorEsperado ,
@@ -280,18 +280,18 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
       {
          ContaFalhas ++ ;
          TST_ExibirPrefixo( SINALIZA_ERRO , pMensagem ) ;
-         fprintf( pArqLog , "Tolerância %lg, esperado: %lg , obtido: %lg" ,
+         fprintf( pArqLog , "Tolerï¿½ncia %lg, esperado: %lg , obtido: %lg" ,
                   Tolerancia , ValorEsperado , ValorObtido ) ;
          return TST_CondRetErro ;
       } /* if */
       return TST_CondRetOK ;
          
 
-   } /* Fim função: TSTG &Comparar flutuante */
+   } /* Fim funï¿½ï¿½o: TSTG &Comparar flutuante */
 
 /***************************************************************************
 *
-*  Função: TSTG &Comparar string
+*  Funï¿½ï¿½o: TSTG &Comparar string
 *  ****/
 
    TST_tpCondRet TST_CompararString( char * ValorEsperado ,
@@ -303,17 +303,17 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
       {
          ContaFalhas ++ ;
          TST_ExibirPrefixo( SINALIZA_ERRO , pMensagem ) ;
-         fprintf( pArqLog , "Deveria ser: >%s<  É: >%s<" ,
+         fprintf( pArqLog , "Deveria ser: >%s<  ï¿½: >%s<" ,
                   ValorEsperado , ValorObtido ) ;
          return TST_CondRetErro ;
       } /* if */
       return TST_CondRetOK ;
 
-   } /* Fim função: TSTG &Comparar string */
+   } /* Fim funï¿½ï¿½o: TSTG &Comparar string */
 
 /***************************************************************************
 *
-*  Função: TSTG &Comparar espaço
+*  Funï¿½ï¿½o: TSTG &Comparar espaï¿½o
 *  ****/
 
    TST_tpCondRet TST_CompararEspaco( void * ValorEsperado ,
@@ -324,7 +324,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
       int i ;
 
-      /* Tratar espaços não iguais */
+      /* Tratar espaï¿½os nï¿½o iguais */
 
          if ( memcmp( ValorObtido , ValorEsperado , TamEspaco ) != 0 )
          {
@@ -335,10 +335,10 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
             for( i = 0 ; i < TamEspaco ; i += DIM_LINHA )
             {
-               fprintf( pArqLog , "\n   %05d Nao é: " , i ) ;
+               fprintf( pArqLog , "\n   %05d Nao ï¿½: " , i ) ;
                ImprimirHexadecimal( ValorEsperado , i , TamEspaco ) ;
 
-               fprintf( pArqLog , "\n         É    : " ) ;
+               fprintf( pArqLog , "\n         ï¿½    : " ) ;
                ImprimirHexadecimal( ValorObtido , i , TamEspaco ) ;
 
                fprintf( pArqLog , "\n" ) ;
@@ -346,15 +346,15 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
             return TST_CondRetErro ;
 
-         } /* fim ativa: Tratar espaços não iguais */
+         } /* fim ativa: Tratar espaï¿½os nï¿½o iguais */
 
       return TST_CondRetOK ;
 
-   } /* Fim função: TSTG &Comparar espaço */
+   } /* Fim funï¿½ï¿½o: TSTG &Comparar espaï¿½o */
 
 /***************************************************************************
 *
-*  Função: TSTG &Comparar ponteiro
+*  Funï¿½ï¿½o: TSTG &Comparar ponteiro
 *  ****/
 
    TST_tpCondRet TST_CompararPonteiro( void * PonteiroEsperado ,
@@ -366,17 +366,17 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
       {
          ContaFalhas ++ ;
          TST_ExibirPrefixo( SINALIZA_ERRO , pMensagem ) ;
-         fprintf( pArqLog , "Deveria ser: %p  É: %p" ,
+         fprintf( pArqLog , "Deveria ser: %p  ï¿½: %p" ,
                   PonteiroEsperado , PonteiroObtido ) ;
          return TST_CondRetErro ;
       } /* if */
       return TST_CondRetOK ;
 
-   } /* Fim função: TSTG &Comparar ponteiro */
+   } /* Fim funï¿½ï¿½o: TSTG &Comparar ponteiro */
 
 /***************************************************************************
 *
-*  Função: TSTG &Comparar ponteiro nulo
+*  Funï¿½ï¿½o: TSTG &Comparar ponteiro nulo
 *  ****/
 
    TST_tpCondRet TST_CompararPonteiroNulo( int    ModoEsperado ,
@@ -391,21 +391,21 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
          TST_ExibirPrefixo( SINALIZA_ERRO , pMensagem ) ;
          if ( ModoEsperado )
          {
-            fprintf( pArqLog , "Deveria ser: não NULL  É: NULL" ) ;
+            fprintf( pArqLog , "Deveria ser: nï¿½o NULL  ï¿½: NULL" ) ;
          } else
          {
-            fprintf( pArqLog , "Deveria ser: NULL  É: %p" ,
+            fprintf( pArqLog , "Deveria ser: NULL  ï¿½: %p" ,
                      PonteiroObtido ) ;
          } /* if */
          return TST_CondRetErro ;
       } /* if */
       return TST_CondRetOK ;
 
-   } /* Fim função: TSTG &Comparar ponteiro nulo */
+   } /* Fim funï¿½ï¿½o: TSTG &Comparar ponteiro nulo */
 
 /***************************************************************************
 *
-*  Função: TSTG &Assertiva controlada
+*  Funï¿½ï¿½o: TSTG &Assertiva controlada
 *  ****/
 
    void TST_Assert( int Expressao , int Linha , char * NomeArq )
@@ -440,11 +440,11 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
       exit( 4 ) ;
 
-   } /* Fim função: TSTG &Assertiva controlada */
+   } /* Fim funï¿½ï¿½o: TSTG &Assertiva controlada */
 
 /***************************************************************************
 *
-*  Função: TSTG &Exibir prefixo da mensagem
+*  Funï¿½ï¿½o: TSTG &Exibir prefixo da mensagem
 *  ****/
 
    void TST_ExibirPrefixo( char * Indicador , char * pMensagem )
@@ -453,11 +453,11 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
       fprintf( pArqLog , "\n%s %4d  Linha: %5d  %s " ,
                Indicador , ContaFalhas , LER_ObterNumLinhas( ) , pMensagem ) ;
 
-   } /* Fim função: TSTG &Exibir prefixo da mensagem */
+   } /* Fim funï¿½ï¿½o: TSTG &Exibir prefixo da mensagem */
 
 /***************************************************************************
 *
-*  Função: TSTG &Notificar falha
+*  Funï¿½ï¿½o: TSTG &Notificar falha
 *  ****/
 
    TST_tpCondRet TST_NotificarFalha( char * pMensagem )
@@ -467,11 +467,11 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
       TST_ExibirPrefixo( SINALIZA_ERRO , pMensagem ) ;
       return TST_CondRetErro ;
 
-   } /* Fim função: TSTG &Notificar falha */
+   } /* Fim funï¿½ï¿½o: TSTG &Notificar falha */
 
 /***************************************************************************
 *
-*  Função: TSTG &Incrementar contador de falhas
+*  Funï¿½ï¿½o: TSTG &Incrementar contador de falhas
 *  ****/
 
    void TST_ContarFalhas( )
@@ -479,11 +479,11 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
       ContaFalhas ++ ;
 
-   } /* Fim função: TSTG &Incrementar contador de falhas */
+   } /* Fim funï¿½ï¿½o: TSTG &Incrementar contador de falhas */
 
 /***************************************************************************
 *
-*  Função: TSTG &Obter número de casos de teste efetuados
+*  Funï¿½ï¿½o: TSTG &Obter nï¿½mero de casos de teste efetuados
 *  ****/
 
    int TST_ObterNumCasosTeste( )
@@ -491,11 +491,11 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
       return ContaCasosTeste ;
 
-   } /* Fim função: TSTG &Obter número de casos de teste efetuados */
+   } /* Fim funï¿½ï¿½o: TSTG &Obter nï¿½mero de casos de teste efetuados */
 
 /***************************************************************************
 *
-*  Função: TSTG &Obter número de comandos específicos corretamente interpretados
+*  Funï¿½ï¿½o: TSTG &Obter nï¿½mero de comandos especï¿½ficos corretamente interpretados
 *  ****/
 
    int TST_ObterNumComandosExecutados( void )
@@ -503,11 +503,11 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
       return ContaComandosExecutados ;
 
-   } /* Fim função: TSTG &Obter número de comandos específicos corretamente interpretados */
+   } /* Fim funï¿½ï¿½o: TSTG &Obter nï¿½mero de comandos especï¿½ficos corretamente interpretados */
 
 /***************************************************************************
 *
-*  Função: TSTG &Obter número de falhas encontradas
+*  Funï¿½ï¿½o: TSTG &Obter nï¿½mero de falhas encontradas
 *  ****/
 
    int TST_ObterNumFalhas( void )
@@ -515,27 +515,27 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
       return ContaFalhas ;
 
-   } /* Fim função: TSTG &Obter número de falhas encontradas */
+   } /* Fim funï¿½ï¿½o: TSTG &Obter nï¿½mero de falhas encontradas */
 
 
 /***********************************************************************
 *
-*  $FC Função: TSTG &Obter origem do nome da extensão de arquivo
+*  $FC Funï¿½ï¿½o: TSTG &Obter origem do nome da extensï¿½o de arquivo
 *
-*  $ED Descrição da função
-*     Procura o início do nome da extensão contido no nome do arquivo
-*     dado por parâmetro
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
+*     Procura o inï¿½cio do nome da extensï¿½o contido no nome do arquivo
+*     dado por parï¿½metro
 *
 *     Evite o uso de nomes de arquivos com dois ou mais caracteres ".".
-*     Isto pode confundir no caso de se desejar a adição de algum nome
-*     de extensão padrão.
+*     Isto pode confundir no caso de se desejar a adiï¿½ï¿½o de algum nome
+*     de extensï¿½o padrï¿½o.
 *
-*  $EP Parâmetros
+*  $EP Parï¿½metros
 *     $P NomeArqParm - nome de arquivo a ser analisado
 *
 *  $FV Valor retornado
-*     Ponteiro para o caractere '.' que separa a extensão.
-*     Será NULL caso o nome do arquivo não contenha extensão.
+*     Ponteiro para o caractere '.' que separa a extensï¿½o.
+*     Serï¿½ NULL caso o nome do arquivo nï¿½o contenha extensï¿½o.
 *
 ***********************************************************************/
 
@@ -558,11 +558,11 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
       return NULL ;
 
-   } /* Fim função: TSTG &Obter origem do nome da extensão de arquivo */
+   } /* Fim funï¿½ï¿½o: TSTG &Obter origem do nome da extensï¿½o de arquivo */
 
 /***************************************************************************
 *
-*  Função: TSTG &Obter ponteiro para arquivo LOG
+*  Funï¿½ï¿½o: TSTG &Obter ponteiro para arquivo LOG
 *  ****/
 
    FILE * TST_ObterArqLog( void )
@@ -575,11 +575,11 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
          return pArqLog ;
       } /* if */
 
-   } /* Fim função: TSTG &Obter ponteiro para arquivo LOG */
+   } /* Fim funï¿½ï¿½o: TSTG &Obter ponteiro para arquivo LOG */
 
 /***************************************************************************
 *
-*  Função: TSTG &Exibir um espaço qualquer em formato hexadecimal e char
+*  Funï¿½ï¿½o: TSTG &Exibir um espaï¿½o qualquer em formato hexadecimal e char
 *  ****/
 
    void TST_ExibirEspacoHexa( int    tamEspaco ,
@@ -593,7 +593,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
       pEspaco = ( char * ) Ponteiro ;
 
-      /* Exibir cabeçalho */
+      /* Exibir cabeï¿½alho */
 
          fprintf( pArqLog , "\n        " ) ;
 
@@ -614,24 +614,24 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
          fprintf( pArqLog , "\n" ) ;
 
-   } /* Fim função: TSTG &Exibir um espaço qualquer em formato hexadecimal e char */
+   } /* Fim funï¿½ï¿½o: TSTG &Exibir um espaï¿½o qualquer em formato hexadecimal e char */
 
 
-/*****  Código das funções encapsuladas no módulo  *****/
+/*****  Cï¿½digo das funï¿½ï¿½es encapsuladas no mï¿½dulo  *****/
 
 
 /***********************************************************************
 *
-*  $FC Função: TSTG -Inicializar o módulo de teste
+*  $FC Funï¿½ï¿½o: TSTG -Inicializar o mï¿½dulo de teste
 *
-*  $ED Descrição da função
-*     Inicializa todas as variáveis globais exportadas e encapsuladas
-*     do módulo de teste genérico.
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
+*     Inicializa todas as variï¿½veis globais exportadas e encapsuladas
+*     do mï¿½dulo de teste genï¿½rico.
 *
-*     Embora pouco recomendável (ver descrição do módulo TesteSpc)
-*     esta função pode ser alterada para assegurar o estabelecimento
-*     do contexto inicial do módulo TesteSpc. Este deve conter uma
-*     função de inicialização a ser chamada pela presente função.
+*     Embora pouco recomendï¿½vel (ver descriï¿½ï¿½o do mï¿½dulo TesteSpc)
+*     esta funï¿½ï¿½o pode ser alterada para assegurar o estabelecimento
+*     do contexto inicial do mï¿½dulo TesteSpc. Este deve conter uma
+*     funï¿½ï¿½o de inicializaï¿½ï¿½o a ser chamada pela presente funï¿½ï¿½o.
 *
 ***********************************************************************/
 
@@ -647,16 +647,16 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
       TST_ASSERT( LER_InicializarLeitura( ) ) ;
 
-   } /* Fim função: TSTG -Inicializar o módulo de teste */
+   } /* Fim funï¿½ï¿½o: TSTG -Inicializar o mï¿½dulo de teste */
 
 
 /***********************************************************************
 *
-*  $FC Função: TSTG -Terminar a execução do módulo de teste
+*  $FC Funï¿½ï¿½o: TSTG -Terminar a execuï¿½ï¿½o do mï¿½dulo de teste
 *
-*  $ED Descrição da função
-*     Fecha todos os arquivos e desaloca todos os espaços de dados
-*     alocados sob controle do módulo de teste genérico
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
+*     Fecha todos os arquivos e desaloca todos os espaï¿½os de dados
+*     alocados sob controle do mï¿½dulo de teste genï¿½rico
 *
 ***********************************************************************/
 
@@ -736,35 +736,35 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
          } /* fim ativa: Fechar o arquivo de log */
 
-   } /* Fim função: TSTG -Terminar a execução do módulo de teste */
+   } /* Fim funï¿½ï¿½o: TSTG -Terminar a execuï¿½ï¿½o do mï¿½dulo de teste */
 
 
 /***********************************************************************
 *
-*  $FC Função: TSTG -Abrir arquivo log
+*  $FC Funï¿½ï¿½o: TSTG -Abrir arquivo log
 *
-*  $ED Descrição da função
-*     Abre o arquivo log a ser utilizado como saída durante os testes.
-*     Todas as saídas geradas pelo módulo de teste são dirigidos para
-*     este arquivo. Caso não tenha sido aberto, será utilizado o
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
+*     Abre o arquivo log a ser utilizado como saï¿½da durante os testes.
+*     Todas as saï¿½das geradas pelo mï¿½dulo de teste sï¿½o dirigidos para
+*     este arquivo. Caso nï¿½o tenha sido aberto, serï¿½ utilizado o
 *     arquivo stdout.
 *
-*     A extensão default do arquivo log é ".log" e será acrescida ao nome
-*     do arquivo caso este não contenha nome de extensão.
+*     A extensï¿½o default do arquivo log ï¿½ ".log" e serï¿½ acrescida ao nome
+*     do arquivo caso este nï¿½o contenha nome de extensï¿½o.
 *
-*  $EP Parâmetros
+*  $EP Parï¿½metros
 *     $P NomeArqParm - nome do arquivo. Pode (deve) ser um nome relativo
-*                      ao diretório corrente. Caso o arquivo
-*                      exista, será destruido sem perguntar se pode.
+*                      ao diretï¿½rio corrente. Caso o arquivo
+*                      exista, serï¿½ destruido sem perguntar se pode.
 *
 *  $FV Valor retornado
 *     TST_CondOK       - abriu corretamente
 *     TST_CondNaoAbriu - ocorreu algum problema ao tentar abrir.
-*                        O problema não é descriminado.
-*                        O arquivo de saída do log volta a ser stdout
+*                        O problema nï¿½o ï¿½ descriminado.
+*                        O arquivo de saï¿½da do log volta a ser stdout
 *
-*  $EIU Interface com usuário pessoa
-*     Esta função deve ser chamada antes de iniciar a execução dos testes.
+*  $EIU Interface com usuï¿½rio pessoa
+*     Esta funï¿½ï¿½o deve ser chamada antes de iniciar a execuï¿½ï¿½o dos testes.
 *
 ***********************************************************************/
 
@@ -788,83 +788,83 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
       return CondNaoAbriu ;
 
-   } /* Fim função: TSTG -Abrir arquivo log */
+   } /* Fim funï¿½ï¿½o: TSTG -Abrir arquivo log */
 
 
 /***********************************************************************
 *
-*  $FC Função: TSTG -Interpretar toda a massa de teste
+*  $FC Funï¿½ï¿½o: TSTG -Interpretar toda a massa de teste
 *
-*  $ED Descrição da função
-*     Interpreta o arquivo de diretivas (script) de teste já aberto
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
+*     Interpreta o arquivo de diretivas (script) de teste jï¿½ aberto
 *
-*     A função de teste é dividida em três classes de comandos:
+*     A funï¿½ï¿½o de teste ï¿½ dividida em trï¿½s classes de comandos:
 *
-*     - os de teste genérico, que coordenam e controlam a realização do
-*       teste. Estes comandos são interpretados por esta função.
-*     - os de teste e controle de módulos componentes do arcabouço.
-*       Estes comandos são interpretados por funções de teste específicas
-*       para cada um dos módulos componentes.
-*     - os de teste específico do módulo (ou módulos) a ser testado.
-*       O módulo de teste específico interpreta os comandos projetados
-*       para realizar os testes do módulo a testar.
+*     - os de teste genï¿½rico, que coordenam e controlam a realizaï¿½ï¿½o do
+*       teste. Estes comandos sï¿½o interpretados por esta funï¿½ï¿½o.
+*     - os de teste e controle de mï¿½dulos componentes do arcabouï¿½o.
+*       Estes comandos sï¿½o interpretados por funï¿½ï¿½es de teste especï¿½ficas
+*       para cada um dos mï¿½dulos componentes.
+*     - os de teste especï¿½fico do mï¿½dulo (ou mï¿½dulos) a ser testado.
+*       O mï¿½dulo de teste especï¿½fico interpreta os comandos projetados
+*       para realizar os testes do mï¿½dulo a testar.
 *
-*     A função de teste genérico lê um arquivo de diretivas de teste.
-*     Cada linha deste arquivo é um comando de teste.
-*     A função de teste lê uma a uma as linhas do arquivo, limpa os
+*     A funï¿½ï¿½o de teste genï¿½rico lï¿½ um arquivo de diretivas de teste.
+*     Cada linha deste arquivo ï¿½ um comando de teste.
+*     A funï¿½ï¿½o de teste lï¿½ uma a uma as linhas do arquivo, limpa os
 *     caracteres em branco no final da linha e procura interpretar o
 *     comando.
 *
-*     As funções de teste específicas comunicam os resultados da execução
-*     de cada comando por meio de uma condição de retorno.
+*     As funï¿½ï¿½es de teste especï¿½ficas comunicam os resultados da execuï¿½ï¿½o
+*     de cada comando por meio de uma condiï¿½ï¿½o de retorno.
 *
 *     Cada linha do arquivo script de teste corresponde a um comando de
 *     teste.
 *
-*     Caso seja encontrada uma falha não esperada (ver comando =recuperar)
-*     os restantes comandos do caso de teste serão ignorados e contados
+*     Caso seja encontrada uma falha nï¿½o esperada (ver comando =recuperar)
+*     os restantes comandos do caso de teste serï¿½o ignorados e contados
 *     como problemas.
 *
-*     A sintaxe utilizada pelos comandos de teste é semelhante a assembler.
-*     Esta sintaxe facilita a análise:
+*     A sintaxe utilizada pelos comandos de teste ï¿½ semelhante a assembler.
+*     Esta sintaxe facilita a anï¿½lise:
 *
-*        =<cmd> <parâmetros>
+*        =<cmd> <parï¿½metros>
 *
 *     em que:
 *        =            - todos os comandos a serem interpretados iniciam
 *                       com este caractere
-*        <cmd>        - é o string que identifica o comando
-*        <parâmetros> - são zero ou mais itens a serem utilizados
-*                       pelo comando de teste. Os itens devem, de preferência,
-*                       ser separados um do outro por um caractere "espaço"
+*        <cmd>        - ï¿½ o string que identifica o comando
+*        <parï¿½metros> - sï¿½o zero ou mais itens a serem utilizados
+*                       pelo comando de teste. Os itens devem, de preferï¿½ncia,
+*                       ser separados um do outro por um caractere "espaï¿½o"
 *
-*     Deve ser adotado o seguinte padrão de uso:
+*     Deve ser adotado o seguinte padrï¿½o de uso:
 *
-*     - procure sempre utlizar uma das funções TST_CompararXXX, na forma:
+*     - procure sempre utlizar uma das funï¿½ï¿½es TST_CompararXXX, na forma:
 *          return TST_CompararXXX( valoresperado, funcao a testar , mensagem )
 *
-*     - as funções de comparação fornecidas sempre geram as mensagens no
-*       padrão estipulado
+*     - as funï¿½ï¿½es de comparaï¿½ï¿½o fornecidas sempre geram as mensagens no
+*       padrï¿½o estipulado
 *
-*     - quando não for possível utilizar uma função de comparação, reporte
-*       a falha, esperadas ou não, através da função
+*     - quando nï¿½o for possï¿½vel utilizar uma funï¿½ï¿½o de comparaï¿½ï¿½o, reporte
+*       a falha, esperadas ou nï¿½o, atravï¿½s da funï¿½ï¿½o
 *          TST_ImprimirPrefixo( Mensagem )
 *
 *     - a seguir mostre o valor esperado e o obtido
 *
-*     - Informações relativas a falhas dos testes são sinalizadas por
-*       uma mensagem iniciando com ">>>" o número da linha do comando de teste
-*       e o número de falhas encontradas até o momento.
+*     - Informaï¿½ï¿½es relativas a falhas dos testes sï¿½o sinalizadas por
+*       uma mensagem iniciando com ">>>" o nï¿½mero da linha do comando de teste
+*       e o nï¿½mero de falhas encontradas atï¿½ o momento.
 *
-*     - Informações relativas à execução dos testes são sinalizadas por
+*     - Informaï¿½ï¿½es relativas ï¿½ execuï¿½ï¿½o dos testes sï¿½o sinalizadas por
 *       uma mensagem iniciando com "!!!".
 *
 *  $FV Valor retornado
 *     TST_CondRetErro   - caso tenha sido encontrado um ou mais problemas
 *     TST_CondRetOK     - caso o teste tenha terminado com zero problemas
-*                         não esperados.
+*                         nï¿½o esperados.
 *
-*  $FGP Tipos e Variáveis globais externas do próprio módulo
+*  $FGP Tipos e Variï¿½veis globais externas do prï¿½prio mï¿½dulo
 *     pArqScript - deve referenciar o arquivo script aberto
 *     pArqLog    - deve referenciar o arquivo log aberto
 *
@@ -912,12 +912,12 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
             ComandoTeste[ 0 ] = 0 ;
             ComandoTeste[ DIM_COMANDO_TESTE - 1 ] = 0 ;
-            ComandoTeste[ DIM_COMANDO_TESTE - 2 ] = '\xA9' ; /* controles de extravasão do buffer de leitura */
+            ComandoTeste[ DIM_COMANDO_TESTE - 2 ] = '\xA9' ; /* controles de extravasï¿½o do buffer de leitura */
 
             if ( sscanf( LER_Buffer , "%s" , ComandoTeste ) != 1 )
             {
                ContaFalhas ++ ;
-               TST_ExibirPrefixo( SINALIZA_ERRO , "Linha não contém comando:" ) ;
+               TST_ExibirPrefixo( SINALIZA_ERRO , "Linha nï¿½o contï¿½m comando:" ) ;
                fprintf( pArqLog , " %s" , LER_Buffer ) ;
                LER_TamBuffer = -1 ;
 
@@ -925,7 +925,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
                      && ( ComandoTeste[ DIM_COMANDO_TESTE - 2 ] != '\xA9' ))
             {
                ContaFalhas ++ ;
-               TST_ExibirPrefixo( SINALIZA_ERRO , "Comando extravasou o espaço para leitura:" ) ;
+               TST_ExibirPrefixo( SINALIZA_ERRO , "Comando extravasou o espaï¿½o para leitura:" ) ;
                fprintf( pArqLog , " %s" , LER_Buffer ) ;
                LER_TamBuffer = -1 ;
                break ;
@@ -940,14 +940,14 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
          } /* fim ativa: Tratar linha em branco */
 
-      /* Tratar comentário */
+      /* Tratar comentï¿½rio */
 
          else if ( memcmp( ComandoTeste , COMMENT_CMD , strlen( COMMENT_CMD )) == 0 )
          {
 
             TST_ExibirPrefixo( SINALIZA_COMENTARIO , LER_Buffer ) ;
 
-         } /* fim ativa: Tratar comentário */
+         } /* fim ativa: Tratar comentï¿½rio */
 
       /* Tratar comando breakpoint */
 
@@ -965,12 +965,12 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
             ContaFalhas ++ ;
             TST_ExibirPrefixo( SINALIZA_COMENTARIO ,
-                      "Solicitado o cancelamento da execução do script de teste." ) ;
+                      "Solicitado o cancelamento da execuï¿½ï¿½o do script de teste." ) ;
             break ;
 
          } /* fim ativa: Tratar de comando de cancelamento */
 
-      /* Tratar início de caso de teste */
+      /* Tratar inï¿½cio de caso de teste */
 
          else if ( memcmp( ComandoTeste , INICIO_CMD , strlen( INICIO_CMD )) == 0 )
          {
@@ -978,7 +978,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
             if ( EhCasoTesteVazio != 0 )
             {
                ContaFalhas ++ ;
-               TST_ExibirPrefixo( SINALIZA_ERRO , "O caso de teste anterior está vazio." ) ;
+               TST_ExibirPrefixo( SINALIZA_ERRO , "O caso de teste anterior estï¿½ vazio." ) ;
             } /* if */
 
             fprintf( pArqLog , "\n%5d  %s" , LER_ObterNumLinhas( ) , LER_Buffer ) ;
@@ -987,9 +987,9 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
             EhCasoTesteVazio = 1 ;
 
-         } /* fim ativa: Tratar início de caso de teste */
+         } /* fim ativa: Tratar inï¿½cio de caso de teste */
 
-      /* Interpretar comandos de teste específicos */
+      /* Interpretar comandos de teste especï¿½ficos */
 
          else if ( SaltaComandos == 0 )
          {
@@ -1010,7 +1010,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
                } /* fim ativa: Tratar retorno OK */
 
-            /* Tratar retorno função testada não retornou OK */
+            /* Tratar retorno funï¿½ï¿½o testada nï¿½o retornou OK */
 
                case TST_CondRetErro :
                {
@@ -1025,7 +1025,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
                      if ( LER_Buffer[ 0 ] != 0 )
                      {
                         ContaFalhas ++ ;
-                        TST_ExibirPrefixo( SINALIZA_ERRO , "Não é comando recuperar:" ) ;
+                        TST_ExibirPrefixo( SINALIZA_ERRO , "Nï¿½o ï¿½ comando recuperar:" ) ;
                         fprintf( pArqLog , " %s" , LER_Buffer ) ;
                         SaltaComandos = 1 ;
                      } /* if */
@@ -1033,15 +1033,15 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
                   break ;
 
-               } /* fim ativa: Tratar retorno função testada não retornou OK */
+               } /* fim ativa: Tratar retorno funï¿½ï¿½o testada nï¿½o retornou OK */
 
-            /* Tratar retorno erro de parâmetro em comando */
+            /* Tratar retorno erro de parï¿½metro em comando */
 
                case TST_CondRetParm :
                {
 
                   ContaFalhas ++ ;
-                  TST_ExibirPrefixo( SINALIZA_ERRO , "Erro nos parâmetros do comando:" ) ;
+                  TST_ExibirPrefixo( SINALIZA_ERRO , "Erro nos parï¿½metros do comando:" ) ;
                   fprintf( pArqLog , " %s" , LER_Buffer ) ;
 
                   NumLidos = LER_LerLinhaScript( ) ;
@@ -1056,21 +1056,21 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
                   break ;
 
-               } /* fim ativa: Tratar retorno erro de parâmetro em comando */
+               } /* fim ativa: Tratar retorno erro de parï¿½metro em comando */
 
-            /* Tratar comando ainda não implementado */
+            /* Tratar comando ainda nï¿½o implementado */
 
                case TST_CondRetNaoImplementado :
                {
 
                   ContaFalhas ++ ;
-                  TST_ExibirPrefixo( SINALIZA_ERRO , "Comando de teste ainda não implementado:" ) ;
+                  TST_ExibirPrefixo( SINALIZA_ERRO , "Comando de teste ainda nï¿½o implementado:" ) ;
                   fprintf( pArqLog , " %s" , LER_Buffer ) ;
                   SaltaComandos = 1 ;
 
                   break ;
 
-               } /* fim ativa: Tratar comando ainda não implementado */
+               } /* fim ativa: Tratar comando ainda nï¿½o implementado */
 
             /* Tratar retorno comando desconhecido */
 
@@ -1079,7 +1079,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
                {
 
                   ContaFalhas ++ ;
-                  TST_ExibirPrefixo( SINALIZA_ERRO , "Comando não conhecido:" ) ;
+                  TST_ExibirPrefixo( SINALIZA_ERRO , "Comando nï¿½o conhecido:" ) ;
                   fprintf( pArqLog , " %s" , LER_Buffer ) ;
                   SaltaComandos = 1 ;
 
@@ -1087,19 +1087,19 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
                } /* fim ativa: Tratar retorno comando desconhecido */
 
-            /* Tratar retorno faltou memória */
+            /* Tratar retorno faltou memï¿½ria */
 
                case TST_CondRetMemoria :
                {
 
                   ContaFalhas ++ ;
-                  TST_ExibirPrefixo( SINALIZA_ERRO , "Faltou memória para o comando:" ) ;
+                  TST_ExibirPrefixo( SINALIZA_ERRO , "Faltou memï¿½ria para o comando:" ) ;
                   fprintf( pArqLog , " %s" , LER_Buffer ) ;
                   SaltaComandos = 1 ;
 
                   break ;
 
-               } /* fim ativa: Tratar retorno faltou memória */
+               } /* fim ativa: Tratar retorno faltou memï¿½ria */
 
             /* Tratar retorno desconhecido */
 
@@ -1107,7 +1107,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
                {
 
                   ContaFalhas ++ ;
-                  TST_ExibirPrefixo( SINALIZA_ERRO , "Condição de retorno não conhecida:" ) ;
+                  TST_ExibirPrefixo( SINALIZA_ERRO , "Condiï¿½ï¿½o de retorno nï¿½o conhecida:" ) ;
                   fprintf( pArqLog , " %d" , CondRetornada ) ;
                   SaltaComandos = 1 ;
 
@@ -1115,9 +1115,9 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
                } /* fim ativa: Tratar retorno desconhecido */
 
-            } /* fim seleciona: Interpretar comandos de teste específicos */
+            } /* fim seleciona: Interpretar comandos de teste especï¿½ficos */
 
-         } /* fim ativa: Interpretar comandos de teste específicos */
+         } /* fim ativa: Interpretar comandos de teste especï¿½ficos */
 
       /* Tratar salto de comandos */
 
@@ -1130,7 +1130,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
          } /* fim ativa: Tratar salto de comandos */
 
-      /* Avançar para a próxima linha */
+      /* Avanï¿½ar para a prï¿½xima linha */
 
          NumLidos = LER_LerLinhaScript( ) ;
 
@@ -1143,23 +1143,23 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
          return TST_CondRetOK ;
       } /* if */
 
-   } /* Fim função: TSTG -Interpretar toda a massa de teste */
+   } /* Fim funï¿½ï¿½o: TSTG -Interpretar toda a massa de teste */
 
 
 /***********************************************************************
 *
-*  $FC Função: TSTG -Efetuar os comandos de teste específicos
+*  $FC Funï¿½ï¿½o: TSTG -Efetuar os comandos de teste especï¿½ficos
 *
-*  $ED Descrição da função
-*     Esse módulo implementa a seqüência (daisy chain) de interpretação
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
+*     Esse mï¿½dulo implementa a seqï¿½ï¿½ncia (daisy chain) de interpretaï¿½ï¿½o
 *     de comandos de teste.
-*     Todos os módulos que implementam instrumentação pertencente ao
-*     arcabouço devem retornar TST_CondRetNaoExecutou  caso o
-*     comando a interpretar não possa ser interpretado pelo módulo
-*     em questão.
+*     Todos os mï¿½dulos que implementam instrumentaï¿½ï¿½o pertencente ao
+*     arcabouï¿½o devem retornar TST_CondRetNaoExecutou  caso o
+*     comando a interpretar nï¿½o possa ser interpretado pelo mï¿½dulo
+*     em questï¿½o.
 *
-*     O interpretador de comandos específicos do módulo a testar
-*     deve ser sempre o último a ser chamado. Caso não consiga
+*     O interpretador de comandos especï¿½ficos do mï¿½dulo a testar
+*     deve ser sempre o ï¿½ltimo a ser chamado. Caso nï¿½o consiga
 *     identificar o comando a interpretar, deve retornar
 *     TST_CondRetNaoConhec
 *
@@ -1173,7 +1173,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
       int IntEsp   = -1 ,
           numLidos = -1  ;
 
-      /* Tratar comando de recuperação de falhas acumuladas */
+      /* Tratar comando de recuperaï¿½ï¿½o de falhas acumuladas */
 
          if ( strcmp( ComandoTeste , ACEITA_ERRO_CMD ) == 0 )
          {
@@ -1192,9 +1192,9 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
             } /* if */
 
             return TST_CompararInt( IntEsp , ContaFalhas ,
-                      "Número de falhas esperadas errado." ) ;
+                      "Nï¿½mero de falhas esperadas errado." ) ;
 
-         } /* fim ativa: Tratar comando de recuperação de falhas acumuladas */
+         } /* fim ativa: Tratar comando de recuperaï¿½ï¿½o de falhas acumuladas */
 
       /* Interpretar comandos de leitura */
 
@@ -1220,20 +1220,20 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
             return CondRetornada ;
          } /* if */
 
-      /* Interpretar comandos específicos do módulo a testar */
+      /* Interpretar comandos especï¿½ficos do mï¿½dulo a testar */
 
          return TST_EfetuarComando( ComandoTeste ) ;
 
-   } /* Fim função: TSTG -Efetuar os comandos de teste específicos */
+   } /* Fim funï¿½ï¿½o: TSTG -Efetuar os comandos de teste especï¿½ficos */
 
 
 /***********************************************************************
 *
-*  $FC Função: TSTG -Exibir linha hexadecimal
+*  $FC Funï¿½ï¿½o: TSTG -Exibir linha hexadecimal
 *
-*  $ED Descrição da função
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
 *     Imprime um string de valores hexadecimais a partir de um offseta
-*     de um espaço indicado por ponteiro.
+*     de um espaï¿½o indicado por ponteiro.
 *
 ***********************************************************************/
 
@@ -1263,7 +1263,7 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
             fprintf( pArqLog , " %02X" , ValChar ) ;
          } /* for */
 
-      /* Imprime espaços para alinhar a parte ASCII */
+      /* Imprime espaï¿½os para alinhar a parte ASCII */
 
          for( ; i < DIM_LINHA ; i ++ )
          {
@@ -1285,15 +1285,15 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
             fprintf( pArqLog , "%c" , Ch ) ;
          } /* for */
 
-   } /* Fim função: TSTG -Exibir linha hexadecimal */
+   } /* Fim funï¿½ï¿½o: TSTG -Exibir linha hexadecimal */
 
 
 /***********************************************************************
 *
-*  $FC Função: TSTG -Exibir resultados do teste
+*  $FC Funï¿½ï¿½o: TSTG -Exibir resultados do teste
 *
-*  $ED Descrição da função
-*     Exibe os contadores e a condição final dos testes
+*  $ED Descriï¿½ï¿½o da funï¿½ï¿½o
+*     Exibe os contadores e a condiï¿½ï¿½o final dos testes
 *
 ***********************************************************************/
 
@@ -1302,27 +1302,27 @@ static const char InicializarEspacosCmd[ ] = "=inicializarespacos" ;
 
       /* Exibir contagens */
 
-         fprintf( pArq , "\n\n%s Número de linhas lidas:       %5i" ,
+         fprintf( pArq , "\n\n%s Nï¿½mero de linhas lidas:       %5i" ,
                   SINALIZA_COMENTARIO , LER_ObterNumLinhas( ) ) ;
-         fprintf( pArq ,   "\n%s Número de casos de teste:     %5i" ,
+         fprintf( pArq ,   "\n%s Nï¿½mero de casos de teste:     %5i" ,
                   SINALIZA_COMENTARIO , ContaCasosTeste ) ;
-         fprintf( pArq ,   "\n%s Número comandos corretos:     %5i" ,
+         fprintf( pArq ,   "\n%s Nï¿½mero comandos corretos:     %5i" ,
                   SINALIZA_COMENTARIO , ContaComandosExecutados ) ;
-         fprintf( pArq ,   "\n%s Número de falhas encontradas: %5i" ,
+         fprintf( pArq ,   "\n%s Nï¿½mero de falhas encontradas: %5i" ,
                   SINALIZA_COMENTARIO , ContaFalhas ) ;
 
       /* Exibir laudo final */
 
          if ( ContaFalhas == 0 )
          {
-            fprintf( pArq ,   "\n\n%s Não foram encontrados problemas\n" ,
+            fprintf( pArq ,   "\n\n%s Nï¿½o foram encontrados problemas\n" ,
                      SINALIZA_COMENTARIO ) ;
          } else {
             fprintf( pArq ,   "\n\n%s Foram encontrados problemas\n" ,
                      SINALIZA_COMENTARIO ) ;
          } /* if */
 
-   } /* Fim função: TSTG -Exibir resultados do teste */
+   } /* Fim funï¿½ï¿½o: TSTG -Exibir resultados do teste */
 
-/********** Fim do módulo de implementação: TSTG Controlador de teste genérico **********/
+/********** Fim do mï¿½dulo de implementaï¿½ï¿½o: TSTG Controlador de teste genï¿½rico **********/
 

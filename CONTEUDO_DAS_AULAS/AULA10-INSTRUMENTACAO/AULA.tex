@@ -89,7 +89,7 @@
 %----------------------------------------------------------------------------------------
 \begin{doublespace}
 
-    \begin{enumerate}[label=\textbf{\arabic*})]
+    \begin{enumerate}[label=\textbf{\arabic*)}]
 
         \item \textbf{Problema ao realizar testes}
 
@@ -208,7 +208,37 @@
         
               Instrumento que verifica a consistência de uma estrutura de dados implementando uma validação com base no modelo estrutural e nas assertivas estruturais.
 
-        \item \textbf{}
+        \item \textbf{Deturpador de Estrutura de Dados:}
+        
+              Instrumento que adultera uma estrutura de forma controlada com o objetivo de validar o verificador.
+
+        \item \textbf{Controlador de Cobertura:}
+        
+              Insturmento compostp por um vetor de controladores que registra cada percurso testado em um critério caixa aberta. Para que o teste seja completo é necessário que todos os controladores ao final sejam maiores do que zero.
+
+        \item \textbf{Estrutura Autoverificável:}
+        
+              É a estrutura que contém todos os campos redundantes necessários para que ela seja totalmente verificada.
+
+              Pergunta 1: É possível detereminar o tipo do elemento apontado pela estrutura? Não; pois ela aponta para void* .
+
+              Solução: adicionamos um campo de tipna cabeça da estrutura e em cada nó que define a estrutura.
+
+              Pergunta 2: É possível acessar qualquer parte da estrutura a partir de qualquer origem?
+
+              Solução: Ponteiro para o nó anterior e ponteiro para o cabeça.
+
+              Pergunta 3: É possível determinar o tamanho do espaço apontado pela estrutura?
+
+              Solução: Campo quantidade de nós no cabeça, campo tamanho (em bytes) da estrutura no cabeça, campo tamanho (em bytes) nos nós.
+
+              Pergunta 4: É possível determinar se todo o espaço alocado está ativo?
+
+              OBS: Espaço alocado é aquele que demos malloc. Espaço ativo é aquele que faz parte da estrutura. Espaço alocado e inativo é aquele que sofreu vazamento de memória.
+
+              Solução: Lista de Espaços Alocados (LEA).
+
+              \includegraphics[width=0.9\textwidth]{ModeloFisicoDaListaAutoverificavel.png}
 
     \end{enumerate}
 

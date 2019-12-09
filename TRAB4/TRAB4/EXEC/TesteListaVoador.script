@@ -1,7 +1,7 @@
 // Script:    TesteLista.script
 // Autor:     Pedro Costa
 // Data:      02/dez/2019
-// Propósito: Testar o módulo lista genérica duplamente encadeada autoverificável e sua instrumentação
+// Propï¿½sito: Testar o mï¿½dulo lista genï¿½rica duplamente encadeada autoverificï¿½vel e sua instrumentaï¿½ï¿½o
 
 == Inicializar valores
 =declararparm   lista0  int 0
@@ -15,7 +15,7 @@
 
 =declararparm   OK             int  0
 =declararparm   ListaVazia     int  1
-=declararparm   FimLista       int  2
+=declararparm   NoNaoExiste    int  2
 =declararparm   NaoAchou       int  3
 =declararparm   FaltouMemoria  int  4
 
